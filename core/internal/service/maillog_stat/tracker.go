@@ -10,7 +10,6 @@ import (
 	"image"
 	"image/color"
 	"image/png"
-	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -167,27 +166,13 @@ func NewMailTracker(mailHTML string, campaignID int, messageID, recipient, baseU
 		messageID:        strings.Trim(messageID, "<>"),
 		recipient:        recipient,
 		baseURL:          fmt.Sprintf("%s/pmta", strings.TrimRight(baseURL, "/")),
-		hrefPattern:      regexp.MustCompile(`href\s*=\s*"([^"]+)"`),
+		hrefPattern:      mailLinkAttribute,
 	}
 }
 
 // TrackLinks handles the tracking of links in the email HTML
 func (t *MailTracker) TrackLinks() {
-	t.mailHTML = t.hrefPattern.ReplaceAllStringFunc(t.mailHTML, func(s string) string {
-		matches := t.hrefPattern.FindStringSubmatch(s)
-		if len(matches) < 2 {
-			return s
-		}
-
-		// Validate URL
-		u, err := url.Parse(matches[1])
-		if err != nil || u.Scheme == "" || u.Host == "" {
-			return s
-		}
-		if strings.HasSuffix(u.Path,"unsubscribe_new.html")||strings.HasSuffix(u.Path,"unsubscribe.html")||strings.HasSuffix(u.Path,"subscribe_form.html"){return s}
-
-		return fmt.Sprintf(`href="%s"`, t.GetTrackingURL(matches[1]))
-	})
+	t.mailHTML = rewriteTrackedLinks(t.mailHTML, t.GetTrackingURL)
 
 	t.modified = t.originalMailHTML != t.mailHTML
 }

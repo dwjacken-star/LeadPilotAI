@@ -40,7 +40,7 @@ func GetLastMaillogTimeMillis() int64 {
 }
 
 // SetLastMaillogTimeMillis sets the last mail log time in milliseconds
-func SetLastMaillogTimeMillis(timeMillis int64) {
+func SetLastMaillogTimeMillis(timeMillis int64) error {
 	_, err := g.DB().Model("bm_options").OnConflict("name").OnDuplicate(g.Map{
 		"value": gdb.Raw("excluded.value"),
 	}).Save(g.Map{
@@ -50,8 +50,8 @@ func SetLastMaillogTimeMillis(timeMillis int64) {
 
 	if err != nil {
 		g.Log().Error(context.Background(), "SetLastMaillogTimeMillis error:", err.Error())
-		return
 	}
+	return err
 }
 
 type MailRecorfContract interface {
@@ -654,8 +654,8 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 	removedRecords := make([]*MailRemoved, 0, 256)
 	deferredRecords := make([]*MailDeferredRecord, 0, 256)
 
-	existsPostfixMessageIdsForSends := make(map[string]struct{}, 256)
-	existsPostfixMessageIdsForReceives := make(map[string]struct{}, 256)
+	sendIndexes := make(map[string]int, 256)
+	receiveIndexes := make(map[string]int, 256)
 
 	for record := range recordChan {
 		// g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: record", record)
@@ -670,23 +670,15 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 
 		switch r := record.(type) {
 		case *MailSendRecord:
-			if _, ok := existsPostfixMessageIdsForSends[r.GetPostfixMessageID()]; ok {
-				continue
-			}
 			r.Description = public.SanitizeUTF8(r.Description)
 			r.Relay = public.SanitizeUTF8(r.Relay)
 			r.Dsn = public.SanitizeUTF8(r.Dsn)
-			sendRecords = append(sendRecords, r)
-			existsPostfixMessageIdsForSends[r.GetPostfixMessageID()] = struct{}{}
+			sendRecords = keepLatestMailRecord(sendRecords, sendIndexes, r)
 		case *MailReceiveRecord:
-			if _, ok := existsPostfixMessageIdsForReceives[r.GetPostfixMessageID()]; ok {
-				continue
-			}
 			r.Description = public.SanitizeUTF8(r.Description)
 			r.Relay = public.SanitizeUTF8(r.Relay)
 			r.Dsn = public.SanitizeUTF8(r.Dsn)
-			receiveRecords = append(receiveRecords, r)
-			existsPostfixMessageIdsForReceives[r.GetPostfixMessageID()] = struct{}{}
+			receiveRecords = keepLatestMailRecord(receiveRecords, receiveIndexes, r)
 		case *MailSender:
 			senderRecords = append(senderRecords, r)
 		case *MailRemoved:
@@ -703,40 +695,38 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 		}
 	}
 
-	if lastMaillogTime > 0 {
-		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: lastMaillogTime", lastMaillogTime)
-		SetLastMaillogTimeMillis(lastMaillogTime)
-	}
-
 	if len(sendRecords) > 0 {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: sendRecords", len(sendRecords))
 		_, err = g.DB().Model("mailstat_send_mails").OnConflict("postfix_message_id").OnDuplicate(g.Map{
-			"status":          gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.status else mailstat_send_mails.status end"),
-			"delay":           gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.delay else mailstat_send_mails.delay end"),
-			"delays":          gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.delays else mailstat_send_mails.delays end"),
-			"dsn":             gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.dsn else mailstat_send_mails.dsn end"),
-			"relay":           gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.relay else mailstat_send_mails.relay end"),
-			"description":     gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.description else mailstat_send_mails.description end"),
-			"log_time_millis": gdb.Raw("case when excluded.log_time_millis > mailstat_send_mails.log_time_millis then excluded.log_time_millis else mailstat_send_mails.log_time_millis end"),
+			"status":          gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.status else mailstat_send_mails.status end"),
+			"recipient":       gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.recipient else mailstat_send_mails.recipient end"),
+			"mail_provider":   gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.mail_provider else mailstat_send_mails.mail_provider end"),
+			"delay":           gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.delay else mailstat_send_mails.delay end"),
+			"delays":          gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.delays else mailstat_send_mails.delays end"),
+			"dsn":             gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.dsn else mailstat_send_mails.dsn end"),
+			"relay":           gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.relay else mailstat_send_mails.relay end"),
+			"description":     gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.description else mailstat_send_mails.description end"),
+			"log_time_millis": gdb.Raw("case when excluded.log_time_millis >= mailstat_send_mails.log_time_millis then excluded.log_time_millis else mailstat_send_mails.log_time_millis end"),
 		}).Batch(5000).Save(sendRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
 	if len(receiveRecords) > 0 {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: receiveRecords", len(receiveRecords))
 		_, err = g.DB().Model("mailstat_receive_mails").OnConflict("postfix_message_id").OnDuplicate(g.Map{
-			"status":          gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.status else mailstat_receive_mails.status end"),
-			"delay":           gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.delay else mailstat_receive_mails.delay end"),
-			"delays":          gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.delays else mailstat_receive_mails.delays end"),
-			"dsn":             gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.dsn else mailstat_receive_mails.dsn end"),
-			"relay":           gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.relay else mailstat_receive_mails.relay end"),
-			"description":     gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.description else mailstat_receive_mails.description end"),
-			"log_time_millis": gdb.Raw("case when excluded.log_time_millis > mailstat_receive_mails.log_time_millis then excluded.log_time_millis else mailstat_receive_mails.log_time_millis end"),
+			"status":          gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.status else mailstat_receive_mails.status end"),
+			"recipient":       gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.recipient else mailstat_receive_mails.recipient end"),
+			"delay":           gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.delay else mailstat_receive_mails.delay end"),
+			"delays":          gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.delays else mailstat_receive_mails.delays end"),
+			"dsn":             gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.dsn else mailstat_receive_mails.dsn end"),
+			"relay":           gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.relay else mailstat_receive_mails.relay end"),
+			"description":     gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.description else mailstat_receive_mails.description end"),
+			"log_time_millis": gdb.Raw("case when excluded.log_time_millis >= mailstat_receive_mails.log_time_millis then excluded.log_time_millis else mailstat_receive_mails.log_time_millis end"),
 		}).Batch(5000).Save(receiveRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
@@ -744,7 +734,7 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: sendRecords", len(senderRecords))
 		_, err = g.DB().Model("mailstat_senders").Batch(5000).InsertIgnore(senderRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
@@ -752,7 +742,7 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: removedRecords", len(removedRecords))
 		_, err = g.DB().Model("mailstat_removed").Batch(5000).InsertIgnore(removedRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
@@ -760,7 +750,7 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: messageIDRecords", len(messageIDRecords))
 		_, err = g.DB().Model("mailstat_message_ids").Batch(5000).InsertIgnore(messageIDRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
@@ -768,10 +758,14 @@ func (ms *MaillogStat) AnalysisAndSaveToDatabase(ctx context.Context) error {
 		g.Log().Debug(context.Background(), "AnalysisAndSaveToDatabase: deferredRecords", len(deferredRecords))
 		_, err = g.DB().Model("mailstat_deferred_mails").Batch(5000).Insert(deferredRecords)
 		if err != nil {
-			g.Log().Error(context.Background(), err.Error())
+			return err
 		}
 	}
 
+	// Advance only after all writes succeed, so transient failures can be replayed.
+	if lastMaillogTime > 0 {
+		return SetLastMaillogTimeMillis(lastMaillogTime)
+	}
 	return nil
 }
 

@@ -206,6 +206,8 @@
     "clicked": "Tıklandı",
     "bounced": "Geri döndü",
     "delayedQueue": "Gecikmeli Kuyruk",
+    "queueUnavailable": "Geçerli Postfix kuyruğu okunamadı. — boş kuyruk değil, kullanılamayan istatistik demektir. Posta hizmetini ve Docker bağlantısını kontrol edin.",
+    "clickTrackingCoverage": "Bu dönemde {total} teslimatın {clickTracked} tanesinde ölçülebilir tıklama takibi var.",
     "mailProviders": "E-posta Sağlayıcıları",
     "sendStats": "Gönderim İstatistikleri",
     "provider": {

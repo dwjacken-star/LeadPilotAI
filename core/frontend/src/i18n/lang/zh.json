@@ -206,6 +206,8 @@
     "clicked": "已点击",
     "bounced": "已退回",
     "delayedQueue": "延迟队列",
+    "queueUnavailable": "无法读取当前 Postfix 队列。— 表示统计不可用，不表示队列为空；请检查邮件服务及 Docker 连接。",
+    "clickTrackingCoverage": "当前范围：{clickTracked} / {total} 封投递记录具有可统计的点击追踪。",
     "mailProviders": "邮件提供商",
     "sendStats": "发送统计",
     "provider": {

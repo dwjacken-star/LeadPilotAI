@@ -206,6 +206,8 @@
     "clicked": "Đã nhấp",
     "bounced": "Bị trả lại",
     "delayedQueue": "Hàng đợi trì hoãn",
+    "queueUnavailable": "Không đọc được hàng đợi Postfix hiện tại. — nghĩa là không có số liệu, không phải hàng đợi trống. Kiểm tra dịch vụ thư và kết nối Docker.",
+    "clickTrackingCoverage": "Trong khoảng thời gian này, {clickTracked} trên {total} bản ghi có theo dõi lượt nhấp đo được.",
     "mailProviders": "Nhà cung cấp email",
     "sendStats": "Thống kê gửi",
     "provider": {

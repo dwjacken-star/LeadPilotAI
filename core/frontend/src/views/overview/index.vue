@@ -12,8 +12,11 @@
 		<n-alert type="info" :show-icon="false" class="mb-4"
 			>{{ t('overview.trackingNotice') }}<br />{{
 				t('overview.trackingCoverage', coverage)
-			}}</n-alert
+			}}<br />{{ t('overview.clickTrackingCoverage', coverage) }}</n-alert
 		>
+		<n-alert v-if="queueAccess && delayedQueue < 0" type="warning" class="mb-4">
+			{{ t('overview.queueUnavailable') }}
+		</n-alert>
 		<!-- Main Metric Cards -->
 		<div class="metrics-cards">
 			<metric-card
@@ -27,7 +30,7 @@
 				v-if="queueAccess"
 				class="cursor-pointer"
 				:title="$t('overview.delayedQueue')"
-				:value="delayedQueue"
+				:value="delayedQueue < 0 ? '—' : delayedQueue"
 				:text-color="delayedQueue > 0 ? theme.warningColor : ''"
 				@click="onClickDelayedQueue">
 			</metric-card>
@@ -64,6 +67,7 @@ import { getDayTimeRange, isArray, isObject } from '@/utils'
 import { useModal } from '@/hooks/modal/useModal'
 import { getOverviewInfo } from '@/api/modules/overview'
 import type { MailOverview, MailProvider, RateData } from './types'
+import { overviewRate, deferredQueueCount } from './metrics'
 
 import FilterBar from './components/FilterBar.vue'
 import MetricCard from './components/MetricCard.vue'
@@ -81,19 +85,19 @@ const domain = ref('')
 const dateRange = ref(getDayTimeRange())
 
 const providers = ref<MailProvider[]>([])
-const coverage = reactive({ tracked: 0, total: 0 })
+const coverage = reactive({ tracked: 0, clickTracked: 0, total: 0 })
 let overviewSerial = 0
 let overviewInFlight = 0
 let refreshTimer: ReturnType<typeof setInterval> | undefined
 
 const rateData = reactive<RateData>({
-	delivery_rate: { label: t('overview.delivered'), value: 0, unit: '%' },
-	open_rate: { label: t('overview.opened'), value: 0, unit: '%' },
-	click_rate: { label: t('overview.clicked'), value: 0, unit: '%' },
-	bounce_rate: { label: t('overview.bounced'), value: 0, unit: '%' },
+	delivery_rate: { label: t('overview.delivered'), value: -1, unit: '%' },
+	open_rate: { label: t('overview.opened'), value: -1, unit: '%' },
+	click_rate: { label: t('overview.clicked'), value: -1, unit: '%' },
+	bounce_rate: { label: t('overview.bounced'), value: -1, unit: '%' },
 })
 
-const delayedQueue = ref(0)
+const delayedQueue = ref(-1)
 const queueAccess = ref(false)
 
 const sendMail = ref<MailOverview['send_mail_chart']>({
@@ -148,12 +152,10 @@ const handleDataUpdate = useDebounceFn(fetchOverviewData, 300)
 
 // Function to update rate data
 const updateRateData = (dashboard: MailOverview['dashboard']) => {
-	Object.entries(dashboard).forEach(([key, value]) => {
-		if (key in rateData) {
-			rateData[key].value = value
-		}
+	Object.keys(rateData).forEach(key => {
+		rateData[key].value = overviewRate(dashboard[key as keyof typeof dashboard])
 	})
-	delayedQueue.value = dashboard.delayed_queue
+	delayedQueue.value = deferredQueueCount(dashboard.delayed_queue)
 }
 
 // Function to fetch overview data
@@ -170,6 +172,7 @@ async function fetchOverviewData() {
 		if (serial === overviewSerial && isObject<MailOverview>(res)) {
 			queueAccess.value = res.queue_access === true
 			coverage.tracked = Number(res.dashboard.open_tracked) || 0
+			coverage.clickTracked = Number(res.dashboard.click_tracked) || 0
 			coverage.total = Number(res.dashboard.sends) || 0
 			updateRateData(res.dashboard)
 

@@ -6,6 +6,7 @@
   "scripts": {
     "i18n:check": "node scripts/check-i18n.cjs",
     "test:repair": "node --experimental-strip-types --test tests/repair.test.mjs",
+    "test:ui-regressions": "node --test tests/ui-regressions.test.cjs tests/overview.test.cjs",
     "test:workspace": "node --test tests/workspace-normalize.test.cjs tests/workspace-permissions.test.cjs",
     "test:growth": "node --experimental-strip-types --test tests/growth.test.mjs tests/growth-display.test.mjs",
     "build": "rsbuild build",

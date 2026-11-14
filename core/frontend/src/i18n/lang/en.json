@@ -206,6 +206,8 @@
     "clicked": "Clicked",
     "bounced": "Bounced",
     "delayedQueue": "Delayed Queue",
+    "queueUnavailable": "The current Postfix queue could not be read. — means unavailable, not an empty queue. Check the mail service and Docker connection.",
+    "clickTrackingCoverage": "In this period, {clickTracked} of {total} delivery records have measurable click tracking.",
     "mailProviders": "Mail Providers",
     "sendStats": "Send Statistics",
     "provider": {

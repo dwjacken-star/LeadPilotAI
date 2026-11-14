@@ -206,6 +206,8 @@
     "clicked": "Geklickt",
     "bounced": "Unzustellbar",
     "delayedQueue": "Verzögerte Warteschlange",
+    "queueUnavailable": "Die aktuelle Postfix-Warteschlange konnte nicht gelesen werden. — bedeutet nicht verfügbar, nicht leer. Prüfen Sie Maildienst und Docker-Verbindung.",
+    "clickTrackingCoverage": "In diesem Zeitraum haben {clickTracked} von {total} Zustellungen messbares Klick-Tracking.",
     "mailProviders": "E-Mail-Anbieter",
     "sendStats": "Versandstatistik",
     "provider": {

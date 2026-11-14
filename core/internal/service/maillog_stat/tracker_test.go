@@ -37,7 +37,7 @@ func TestNewMailTracker(t *testing.T) {
 				messageID:        "abc123",
 				recipient:        "test@example.com",
 				baseURL:          "https://example.com/pmta",
-				hrefPattern:      regexp.MustCompile(`href\s*=\s*"([^"]+)"`),
+				hrefPattern:      regexp.MustCompile(mailLinkAttributeExpression),
 			},
 		},
 		{
@@ -57,7 +57,7 @@ func TestNewMailTracker(t *testing.T) {
 				messageID:        "def456",
 				recipient:        "user@example.org",
 				baseURL:          "https://test.com/pmta",
-				hrefPattern:      regexp.MustCompile(`href\s*=\s*"([^"]+)"`),
+				hrefPattern:      regexp.MustCompile(mailLinkAttributeExpression),
 			},
 		},
 		{
@@ -77,7 +77,7 @@ func TestNewMailTracker(t *testing.T) {
 				messageID:        "ghi789",
 				recipient:        "empty@example.net",
 				baseURL:          "https://empty.com/pmta",
-				hrefPattern:      regexp.MustCompile(`href\s*=\s*"([^"]+)"`),
+				hrefPattern:      regexp.MustCompile(mailLinkAttributeExpression),
 			},
 		},
 	}

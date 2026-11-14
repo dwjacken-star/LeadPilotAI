@@ -5,6 +5,10 @@ const path = require('node:path')
 const ts = require('typescript')
 const { parse, compileScript } = require('vue/compiler-sfc')
 const Vue = require('vue')
+const calculations = {}
+new Function('exports', ts.transpileModule(fs.readFileSync(path.join(__dirname, '../src/views/overview/metrics.ts'), 'utf8'), {
+	compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText)(calculations)
 
 const plain = {
 	setup: (_, { slots }) => () => Vue.h('div', {}, slots.default?.()),
@@ -30,6 +34,7 @@ function component(file, dependencies, globals = {}) {
 		exports,
 		name => {
 			if (name in dependencies) return dependencies[name]
+			if (name === './metrics') return calculations
 			if (name.endsWith('.vue')) return { default: plain }
 			return require(name)
 		},
@@ -83,7 +88,7 @@ test('Overview hides global queues for ordinary users and retains administrator 
 					requests.push(params)
 					return {
 						queue_access: queueAccess,
-						dashboard: { sends: 2, open_tracked: 1, delivery_rate: 50, delayed_queue: 987 },
+						dashboard: { sends: 2, open_tracked: 1, click_tracked: 1, delivery_rate: 50, click_rate: 25, bounce_rate: 10, delayed_queue: 987 },
 						mail_providers: [], send_mail_chart: { dashboard: {}, data: [] },
 						bounce_rate_chart: { data: [] }, open_rate_chart: { data: [] }, click_rate_chart: { data: [] },
 					}
@@ -96,6 +101,8 @@ test('Overview hides global queues for ordinary users and retains administrator 
 			await settle()
 			assert.deepEqual(requests, [{ domain: '', start_time: 100, end_time: 200 }])
 			assert.ok(text(root).includes('overview.delivered:50'))
+			assert.ok(text(root).includes('overview.clicked:25'), 'nonzero click rates must reach the metric card')
+			assert.ok(text(root).includes('overview.bounced:10'), 'nonzero bounce rates must reach the metric card')
 			const queue = find(root, node => node.type === 'button' && node.text.startsWith('overview.delayedQueue'))
 			if (queueAccess) {
 				assert.ok(queue, 'administrator queue card must remain available')

@@ -206,6 +206,8 @@
     "clicked": "クリック済み",
     "bounced": "バウンス（送信失敗）",
     "delayedQueue": "遅延キュー",
+    "queueUnavailable": "現在の Postfix キューを読み取れません。— は利用不可を表し、空のキューではありません。メールサービスと Docker 接続を確認してください。",
+    "clickTrackingCoverage": "対象期間の {total} 件中、{clickTracked} 件に計測可能なクリック追跡があります。",
     "mailProviders": "メールプロバイダー",
     "sendStats": "送信統計",
     "provider": {

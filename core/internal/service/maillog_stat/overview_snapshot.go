@@ -16,8 +16,8 @@ import (
 // Recipient matching is essential: a queue can contain several recipients.
 func eventExists(table string) string {
 	return fmt.Sprintf(`(EXISTS(SELECT 1 FROM %[1]s ev WHERE ev.postfix_message_id=sm.postfix_message_id AND lower(ev.recipient)=lower(sm.recipient)) OR
- EXISTS(SELECT 1 FROM mailstat_message_ids mid JOIN %[1]s ev ON ev.message_id=mid.message_id
- WHERE mid.postfix_message_id=sm.postfix_message_id AND lower(ev.recipient)=lower(sm.recipient)))`, table)
+ EXISTS(SELECT 1 FROM mailstat_message_ids mid JOIN %[1]s ev ON ev.message_id IN(mid.message_id,btrim(mid.message_id,'<>'),'<'||btrim(mid.message_id,'<>')||'>')
+ WHERE mid.postfix_message_id=sm.postfix_message_id AND btrim(mid.message_id,'<>')<>'' AND lower(ev.recipient)=lower(sm.recipient)))`, table)
 }
 
 func (o *Overview) snapshotQuery(campaignID int64, domain string, startTime, endTime int64) (string, []interface{}) {
@@ -163,6 +163,8 @@ func (o *Overview) overviewContext(ctx context.Context, campaignID int64, domain
 	})
 	dashboard["delayed_queue"] = 0
 	if queueAccess {
+		// Unknown Docker/postqueue results must never masquerade as an empty queue.
+		dashboard["delayed_queue"] = -1
 		if count, e := o.getPostfixDeferredQueueCount(ctx); e == nil {
 			dashboard["delayed_queue"] = count
 		}

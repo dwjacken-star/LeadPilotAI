@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gogf/gf/v2/database/gdb"
-	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 )
@@ -146,8 +145,8 @@ func (o *Overview) overviewDashboard(campaignID int64, domain string, startTime,
 		aggregate["click_rate"] = -1.0
 	}
 
-	// delayed_queue
-	aggregate["delayed_queue"] = 0
+	// A queue read failure is unknown, not a measured zero.
+	aggregate["delayed_queue"] = -1
 	delayedCount, err := o.getPostfixDeferredQueueCount(context.Background())
 	if err == nil {
 		aggregate["delayed_queue"] = delayedCount
@@ -167,13 +166,13 @@ func (o *Overview) getPostfixDeferredQueueCount(ctx context.Context) (int, error
 	cacheKey := "postfix_deferred_queue_count"
 	v := public.GetCache(cacheKey)
 	if v != nil {
-		if num, ok := v.(int); ok {
+		if num, ok := v.(int); ok && num >= 0 {
 			return num, nil
-		} else {
-			return 0, nil
 		}
 	}
 
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	dk, err := docker.NewDockerAPI()
 	if err != nil {
 		return 0, err
@@ -182,28 +181,18 @@ func (o *Overview) getPostfixDeferredQueueCount(ctx context.Context) (int, error
 
 	cmd := []string{"postqueue", "-j"}
 	result, err := dk.ExecCommandByName(ctx, consts.SERVICES.Postfix, cmd, "root")
-	if err != nil || result == nil || result.ExitCode != 0 {
+	if err != nil {
+		return 0, err
+	}
+	if result == nil || result.ExitCode != 0 {
+		return 0, fmt.Errorf("unable to read Postfix deferred queue")
+	}
+	count, err := parseDeferredQueue(result.Output)
+	if err != nil {
 		return 0, err
 	}
 
-	lines := strings.Split(result.Output, "\n")
-	count := 0
-	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		var item struct {
-			QueueName string `json:"queue_name"`
-		}
-		if err := gjson.Unmarshal([]byte(line), &item); err != nil {
-			continue
-		}
-		if item.QueueName == "deferred" {
-			count++
-		}
-	}
-
-	public.SetCache(cacheKey, count, 120)
+	public.SetCache(cacheKey, count, 15)
 	return count, nil
 }
 

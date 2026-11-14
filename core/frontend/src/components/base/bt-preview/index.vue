@@ -2,19 +2,23 @@
 	<iframe
         :title="$t('common.actions.preview')"
         sandbox="allow-popups allow-popups-to-escape-sandbox"
-		width="100%"
+		:width="width"
 		:height="height"
-		:srcdoc="normalizeEmailHTML(value)"
-		:style="{ border: 'none', borderRadius: '4px' }">
+		:srcdoc="emailPreviewDocument(value)"
+		:style="{ border: 'none', borderRadius: '4px', display: 'block', background: '#fff', width: previewLength(width), maxWidth: '100%', height: previewLength(height) }">
 	</iframe>
 </template>
 
 <script lang="ts" setup>
-import {normalizeEmailHTML} from '@/utils/email-content'
+import { emailPreviewDocument, previewLength } from '@/utils/email-preview'
 defineProps({
 	value: {
 		type: String,
 		default: '',
+	},
+	width: {
+		type: [String, Number],
+		default: '100%',
 	},
 	height: {
 		type: [String, Number],
