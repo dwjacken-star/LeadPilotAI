@@ -1,0 +1,2 @@
+# LeadPilotAI
+基于BillionMail深度定制的外贸营销拓客软件
