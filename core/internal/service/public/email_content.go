@@ -18,11 +18,11 @@ var emailPlainBrandFooter = regexp.MustCompile(`(?i)(Powered\s+by\s+)(?:BillionM
 // Template actions remain intact when a legacy caller adds its footer before rendering.
 func NormalizeEmailHTML(content string) string {
 	content = emailBrandFooter.ReplaceAllStringFunc(content, func(footer string) string {
-		footer = strings.ReplaceAll(footer, "https://www.billionmail.com/", "https://mail.best-maple.com/")
-		footer = strings.ReplaceAll(footer, "https://www.billionmail.com", "https://mail.best-maple.com/")
-		return emailBrandFooter.ReplaceAllString(footer, "${1}LeadPilot AI${2}")
+		footer = strings.ReplaceAll(footer, "https://www.billionmail.com/", "https://github.com/dwjacken-star/LeadPilotAI")
+		footer = strings.ReplaceAll(footer, "https://www.billionmail.com", "https://github.com/dwjacken-star/LeadPilotAI")
+		return emailBrandFooter.ReplaceAllString(footer, "${1}leadpilotmail${2}")
 	})
-	content = emailPlainBrandFooter.ReplaceAllString(content, "${1}LeadPilot AI")
+	content = emailPlainBrandFooter.ReplaceAllString(content, "${1}leadpilotmail")
 	if strings.TrimSpace(content) == "" {
 		return content
 	}

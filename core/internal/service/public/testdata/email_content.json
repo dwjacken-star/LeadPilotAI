@@ -27,7 +27,7 @@
   {
     "name": "legacy powered-by footer",
     "input": "<div><span>Powered by </span><a href=\"https://www.billionmail.com/\" style=\"color:#999\">BillionMail</a></div>",
-    "expected": "<div><span>Powered by </span><a href=\"https://mail.best-maple.com/\" style=\"color:#999\">LeadPilot AI</a></div>"
+    "expected": "<div><span>Powered by </span><a href=\"https://github.com/dwjacken-star/LeadPilotAI\" style=\"color:#999\">leadpilotmail</a></div>"
   },
   {
     "name": "empty content",

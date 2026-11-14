@@ -4,7 +4,7 @@ export function escapeEmailText(value:string):string {
  return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&#34;').replace(/'/g,'&#39;')
 }
 export function normalizeEmailHTML(content:string):string {
- content=content.replace(/(Powered\s+by\s*(?:<\/span>\s*)?<a\b[^>]*>)(?:BillionMail|MapleMail)(<\/a>)/gis,(_match,prefix,suffix)=>prefix.replace(/https:\/\/www\.billionmail\.com\/?/g,'https://mail.best-maple.com/')+'LeadPilot AI'+suffix).replace(/(Powered\s+by\s+)(?:BillionMail|MapleMail)\b/gi,'$1LeadPilot AI')
+ content=content.replace(/(Powered\s+by\s*(?:<\/span>\s*)?<a\b[^>]*>)(?:BillionMail|MapleMail)(<\/a>)/gis,(_match,prefix,suffix)=>prefix.replace(/https:\/\/www\.billionmail\.com\/?/g,'https://github.com/dwjacken-star/LeadPilotAI')+'leadpilotmail'+suffix).replace(/(Powered\s+by\s+)(?:BillionMail|MapleMail)\b/gi,'$1leadpilotmail')
  if(!content.trim())return content
  const actions:string[]=[]
  let masked=content.replace(/{{[\s\S]*?}}/g,value=>{actions.push(value);return `MAPLEMAILACTIONTOKEN${actions.length-1}END`})
