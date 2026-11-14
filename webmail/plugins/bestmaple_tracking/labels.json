@@ -1,0 +1,56 @@
+{
+  "en": {
+    "title": "Email delivery settings",
+    "unsubscribe": "Subscription / unsubscribe links",
+    "track_click": "Track clicks",
+    "track_open": "Track opens",
+    "warmup": "IP warmup",
+    "hint": "Warmup limits sending speed; retry later when the quota is unavailable. Use one recipient for personalized links and tracking. Open tracking requires image loading.",
+    "identity": "Effective sender"
+  },
+  "zh": {
+    "title": "邮件发送参数",
+    "unsubscribe": "插入订阅 / 退订链接",
+    "track_click": "点击跟踪",
+    "track_open": "打开跟踪",
+    "warmup": "关联 IP 预热",
+    "hint": "预热会限制发送速度，额度不足时阻止本次发送，请保存草稿并稍后重试。跟踪和个性化订退链接请单收件人发送；打开统计需要收件人加载图片。",
+    "identity": "实际发信身份"
+  },
+  "ja": {
+    "title": "メール送信設定",
+    "unsubscribe": "購読 / 配信停止リンク",
+    "track_click": "クリック追跡",
+    "track_open": "開封追跡",
+    "warmup": "IP ウォームアップ",
+    "hint": "ウォームアップの上限に達した場合は後で再送してください。個別リンクと追跡は宛先を一件にしてください。開封追跡には画像の読み込みが必要です。",
+    "identity": "送信元"
+  },
+  "de": {
+    "title": "E-Mail-Versandeinstellungen",
+    "unsubscribe": "Abonnement-/Abmeldelinks",
+    "track_click": "Klicks verfolgen",
+    "track_open": "Öffnungen verfolgen",
+    "warmup": "IP-Warmup",
+    "hint": "Warmup begrenzt die Sendegeschwindigkeit; versuchen Sie es später erneut, wenn das Kontingent nicht verfügbar ist. Verwenden Sie einen Empfänger für personalisierte Links und Tracking. Öffnungs-Tracking erfordert das Laden von Bildern.",
+    "identity": "Effektiver Absender"
+  },
+  "tr": {
+    "title": "E-posta gönderim ayarları",
+    "unsubscribe": "Abonelik / abonelikten çıkma bağlantıları",
+    "track_click": "Tıklamaları izle",
+    "track_open": "Açılmaları izle",
+    "warmup": "IP ısındırma",
+    "hint": "Isındırma gönderim hızını sınırlar; kota kullanılamadığında daha sonra yeniden deneyin. Kişiselleştirilmiş bağlantılar ve izleme için tek alıcı kullanın. Açılma izleme, görsellerin yüklenmesini gerektirir.",
+    "identity": "Geçerli gönderen"
+  },
+  "vi": {
+    "title": "Cài đặt gửi email",
+    "unsubscribe": "Liên kết đăng ký / hủy đăng ký",
+    "track_click": "Theo dõi nhấp chuột",
+    "track_open": "Theo dõi lượt mở",
+    "warmup": "Làm nóng IP",
+    "hint": "Làm nóng giới hạn tốc độ gửi; hãy thử lại sau khi hạn mức không khả dụng. Dùng một người nhận cho liên kết được cá nhân hóa và theo dõi. Theo dõi lượt mở yêu cầu tải hình ảnh.",
+    "identity": "Người gửi thực tế"
+  }
+}

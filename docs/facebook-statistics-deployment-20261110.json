@@ -1,0 +1,33 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261110-facebook-sync-v1",
+  "archive": "9aaf9cafec371d52c05bc4e5a69081a53188e112dea67754c659cf67d23b7436",
+  "backend": "8c0b74b92a0942a984f6d0e4230afab57cec5b80bfcda6c747b779864401ca0d",
+  "index": "8db89c30699afdba64ff2389dae6fe453f152ab26c22f201616264b4d4f89c24",
+  "plugin": {
+    "bestmaple_tracking.php": "9cca3ea61e65d51053008caa8ebbade621fd258a2a56e5d3476b63f7a48c6a69",
+    "delivery.css": "24f209beb23dce3def714b73e088a429128e1155f4d69e9d19e4037ce9f7ae1d",
+    "delivery.js": "197797b29f28afab1e2b49ab9d8c63dcfa054199658c4bea84d07d5bdd8b0aad",
+    "delivery.php": "bede34498aeab098688270bac3f74bcf94bce7abdc4286ff2cfa718e8bcc65e0",
+    "reply-preview.css": "28ffd41ddfeff63d0cbd15741b8357ac3f081740d2bbc49f9612e3fccff21147",
+    "reply-preview.js": "2e33a6afcc151212b6acb141a9fd1afbf88a4dd24c446a2f0b6bade6a269d80e"
+  },
+  "feature_assets": {
+    "/static/js/index.59cd04d7.js": "284998666207ca3ca5fd5ec260b955bf337e4f2d04cb79fe2e8289ba9a959c6e",
+    "/static/js/async/1579.e4e758b0.js": "ea0a428b94605b49da2689b1accf8ee24712b9a8d6a8f11821595a818376f577",
+    "/static/js/async/2151.1671ecc1.js": "393a015ec3b54f79cc2a3f3411dfa5e4cbb15119af81dbc29ddc92c25add5d39",
+    "/static/js/async/4872.216bf2d6.js": "feef8f11d03e37cec8a390cb522ca58c82666b8eb001d98e183ef4ef3098478e",
+    "/static/js/async/5715.3ff470a0.js": "8c0fbc43cb82558f86d6fbc8f0860a19598050001c4f44689dc486093121cdff"
+  },
+  "brand_assets": {
+    "/favicon.ico": "63c0a62f283de923f32e9367bd5380ab92dbb7ccc0df5242f407ae6d7773c586",
+    "/leadpilot-wordmark.png": "f0af75f1f4485f7305ef8c529967fa8e64e9110f6cd77e8bd379bd15ac874318",
+    "/leadpilot-symbol.png": "2b1a006f9a955f0a9f4dcfe2b646e442e26108efa1b385055baaee6ba579290e"
+  },
+  "backup": "/opt/BillionMail/backup/20261110-leadpilot-ai-155148",
+  "previous_image": "leadpilot/leadpilot-ai:20261110-v2",
+  "deployed_at": "2026-11-10T15:53:38.133764+00:00",
+  "database_recreated": false,
+  "customer_email_sent": false,
+  "health_checks": true,
+  "browser_checks": "not performed: required browser runtime unavailable"
+}

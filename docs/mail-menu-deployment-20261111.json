@@ -1,0 +1,41 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261111-mail-menu-v3",
+  "archive": "da9cd302641701ab509881fef007076de3f6cb8d29012d639b1b646dc1132384",
+  "backend": "a8400220667883bed81f77d86c8120b2819c9a82f2f8e96ba38d488e022bf0c8",
+  "index": "0876242f5ddca14e9e59199a40c63b020713a7861364d9f4e5b3a7d499d3f24a",
+  "plugin": {
+    "bestmaple_tracking.php": "9cca3ea61e65d51053008caa8ebbade621fd258a2a56e5d3476b63f7a48c6a69",
+    "compose-theme.js": "fe06b5a42f7568f8d5f7dc7612a539ac97bd1222b6ab71732ae8696f40645e62",
+    "delivery.css": "24f209beb23dce3def714b73e088a429128e1155f4d69e9d19e4037ce9f7ae1d",
+    "delivery.js": "1f3c8bc94d55a8d4fd0befd762c42db39d82f00d2523b70cddba611f95ee9bd2",
+    "delivery.php": "8ab5c2725e194daaf5e75104418f26a5d540a88eab0eeb1289882aa73f0eabc8",
+    "labels.json": "4dbf8cf66fee8c9bfb94fc63e22c391fb24aa93dbd07e7a7ed3778678b98998b",
+    "native-labels.json": "ffd3407007e6fdc3a0a1d9feda984d70277fdf392b352b8ddcac0dd945086dae",
+    "reply-preview.css": "28ffd41ddfeff63d0cbd15741b8357ac3f081740d2bbc49f9612e3fccff21147",
+    "reply-preview.js": "82612fca133d8e3b45737cf9741620117e0d388d3ee358e1ac0bd0d3c172880f",
+    "workbench-i18n.js": "3a328ee82fd270f42d96848c68fb3beb8ec32ec1d454eaae8249fd7eecb0dcf3",
+    "workbench-model.js": "2db73be374322e3a34ddb18543d42d60a3e912ed19a99c1262d04733fe256776",
+    "workbench.css": "5f90169f331364ec77d5ba8cb4a71a1495f4d40d8a591925abdd50d43c45270c",
+    "workbench.js": "76f88034ecbc72d0dc91972a7002dc8862e4c1fe9989f6438b015376f1c26f12",
+    "workbench.php": "7ec2b0374ae2be70168759f1ac798141cfd12d0bf38e7c37f3b9fdcdf1be5412",
+    "skins/elastic/templates/workbench.html": "e56f6f155893ebc85e7bf7eb3cc64745134faa7aee08c3fb8e8842b680fb5d22"
+  },
+  "feature_assets": {
+    "/static/js/index.9ef0d665.js": "af1308f6f559eb08b205e852aad152ffde5914e90d6179060d8221a628d43483",
+    "/static/js/async/1618.44ba5499.js": "d19c6ea58453b809381b6e0bd4d3addb7dda2a985d3eb1ac99acaf3956fa65dc",
+    "/static/js/async/412.527ca5d1.js": "65bc38032de1c793d3c6625266ec02ea22d6c558da26b6d9670f990a7fad6b4b",
+    "/static/js/async/5756.c259958c.js": "a63b93ddbc6fc38a91a1eb5cc71b6a14f49b5eed0c148d265dc796dca7f20b0a"
+  },
+  "brand_assets": {
+    "/favicon.ico": "63c0a62f283de923f32e9367bd5380ab92dbb7ccc0df5242f407ae6d7773c586",
+    "/leadpilot-wordmark.png": "f0af75f1f4485f7305ef8c529967fa8e64e9110f6cd77e8bd379bd15ac874318",
+    "/leadpilot-symbol.png": "2b1a006f9a955f0a9f4dcfe2b646e442e26108efa1b385055baaee6ba579290e"
+  },
+  "backup": "/opt/BillionMail/backup/20261111-ai-locale-033756",
+  "previous_image": "leadpilot/leadpilot-ai:20261111-ai-locale-v2",
+  "deployed_at": "2026-11-11T03:38:49.598995+00:00",
+  "database_recreated": false,
+  "customer_email_sent": false,
+  "health_checks": true,
+  "browser_checks": "not performed: required browser runtime unavailable"
+}

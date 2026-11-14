@@ -1,0 +1,11 @@
+{
+  "name": "LeadPilot AI Mail",
+  "author": "BESTMAPLE",
+  "extends": "elastic",
+  "config": {
+    "supported_layouts": [
+      "widescreen"
+    ],
+    "dark_mode_support": true
+  }
+}

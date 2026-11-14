@@ -1,0 +1,9 @@
+[Unit]
+Description=Renew BillionMail console IP certificate
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/billionmail-renew-ip-cert
+TimeoutStartSec=300

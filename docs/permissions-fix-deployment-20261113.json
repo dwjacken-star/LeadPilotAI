@@ -1,0 +1,167 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261113-permissions-v1",
+  "url": "https://mail.best-maple.com/bm",
+  "server": "47.237.67.184",
+  "deployed_at": "2026-11-13T10:30:37.651884+00:00",
+  "backup": "/opt/BillionMail/backup/20261113-permissions-102938",
+  "previous_image": "leadpilot/leadpilot-ai:20261112-translation-v1",
+  "backend_sha256": "27382faeda37fd632b3ab3e1e2560ff995f7dc62d068ca11d37785cd2781e6d8",
+  "index_sha256": "e2f748f74922a652c1a2ab4d36b921ebeba6382b6a370f0820514d3dcfb988f1",
+  "checks": {
+    "isolated_postgresql_tests_passed": true,
+    "enabled_catalogs_match_registry": true,
+    "compatible_qwen_defaults_persisted": true,
+    "social_text_and_image_models_match_catalog": true,
+    "template_chat_default_matches_catalog": true,
+    "provider_credentials_and_unrelated_settings_preserved": true,
+    "other_containers_preserved": true,
+    "public_https_and_build_hashes_verified": true,
+    "business_menus_and_operation_buttons_tested": true,
+    "view_only_and_cross_department_isolation_tested": true,
+    "unknown_and_duplicate_permission_labels_fixed": true,
+    "live_common_business_reads_allowed": true,
+    "live_restricted_mailbox_role_unchanged": true,
+    "global_settings_and_legacy_admin_endpoints_still_denied": true,
+    "role_scopes_memberships_and_other_roles_preserved": true,
+    "permission_ui_assets_served_with_expected_hashes": true,
+    "core_healthy_with_no_restarts": true,
+    "cutover_backup_restore_catalog_valid": true,
+    "isolated_test_container_removed": true,
+    "role_repair_recorded_once_in_security_audit": true
+  },
+  "defaults": {
+    "chat": "ai::text_qwen::qwen-plus",
+    "embedding": "ai::text_qwen::qwen3.7-text-embedding-flash",
+    "image": "ai::text_qwen::qwen-image-2.1-pro",
+    "text": "ai::text_qwen::qwen-plus",
+    "vision": "ai::text_qwen::qwen3-vl-plus"
+  },
+  "runtime_watermarks_excluded_from_config_comparison": [
+    "last_maillog_aggregate_time_millis",
+    "last_maillog_time_millis",
+    "last_post_time"
+  ],
+  "database_recreated": false,
+  "mail_services_recreated": false,
+  "test_customer_emails_sent": false,
+  "test_public_posts_created": false,
+  "role_permission_repair": {
+    "role_id": 4,
+    "added": [
+      "social:account:view"
+    ],
+    "removed": [
+      "growth:settings",
+      "social:settings"
+    ],
+    "applied": true
+  },
+  "readonly_role_api_probes": [
+    {
+      "role": "common",
+      "operation": "marketing_tasks",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "templates",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "contact_groups",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "contacts",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "contact_tags",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "social_accounts",
+      "allowed": true
+    },
+    {
+      "role": "common",
+      "operation": "social_platform_settings",
+      "allowed": false
+    },
+    {
+      "role": "common",
+      "operation": "growth_settings",
+      "allowed": false
+    },
+    {
+      "role": "common",
+      "operation": "model_registry",
+      "allowed": false
+    },
+    {
+      "role": "common",
+      "operation": "role_administration",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "marketing_tasks",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "templates",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "contact_groups",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "contacts",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "contact_tags",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "social_accounts",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "social_platform_settings",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "growth_settings",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "model_registry",
+      "allowed": false
+    },
+    {
+      "role": "mailbox_ai_write_only",
+      "operation": "role_administration",
+      "allowed": false
+    }
+  ],
+  "verified_permission_ui_assets": [
+    "static/js/index.95fba8e9.js",
+    "static/js/async/405.38da5f20.js",
+    "static/js/async/7718.4a0d5ed9.js",
+    "static/js/async/847.06160d1c.js"
+  ]
+}

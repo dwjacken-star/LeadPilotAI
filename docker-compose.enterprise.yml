@@ -1,0 +1,7 @@
+# Run together with docker-compose.yml; existing data volumes are preserved.
+services:
+  core-billionmail:
+    image: billionmail/department-workspace:local
+    build:
+      context: .
+      dockerfile: Dockerfiles/core/Dockerfile.enterprise

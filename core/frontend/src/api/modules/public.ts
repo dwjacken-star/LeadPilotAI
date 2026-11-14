@@ -1,0 +1,37 @@
+import { AxiosProgressEvent } from 'axios'
+import { instance } from '@/api'
+import i18n from '@/i18n'
+
+export const uploadFile = (
+	params: FormData,
+	onUploadProgress?: (e: AxiosProgressEvent) => void
+) => {
+	return instance.post('/file/upload', params, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+		},
+		onUploadProgress: e => {
+			onUploadProgress?.(e)
+		},
+	})
+}
+
+export const downloadFile = (params: { file_path: string }) => {
+	return instance.get('/file/download', {
+		params,
+		responseType: 'blob',
+	})
+}
+
+export const getLanguages = () => {
+	return instance.get('/languages/get')
+}
+
+export const setLanguage = (params: { language: string }) => {
+	return instance.post('/languages/set', params, {
+		fetchOptions: {
+			loading: i18n.global.t('common.actions.settings'),
+			successMessage: true,
+		},
+	})
+}

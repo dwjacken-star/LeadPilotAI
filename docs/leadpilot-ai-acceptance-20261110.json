@@ -1,0 +1,71 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261110-v2",
+  "archive": "1a5d717b93713aa2ad2f4675d985f97172df13eaa0af304a49309d81f858eaf2",
+  "backend": "20c79e66c7f831e8582548697b61039c549783be607be1f463d1b6c6e2fc4d7e",
+  "index": "b1da6cd5c589976e55ebb86af43fc24af91280a69c1dc24ccd5bf43429330991",
+  "plugin": {
+    "bestmaple_tracking.php": "9cca3ea61e65d51053008caa8ebbade621fd258a2a56e5d3476b63f7a48c6a69",
+    "delivery.css": "24f209beb23dce3def714b73e088a429128e1155f4d69e9d19e4037ce9f7ae1d",
+    "delivery.js": "197797b29f28afab1e2b49ab9d8c63dcfa054199658c4bea84d07d5bdd8b0aad",
+    "delivery.php": "bede34498aeab098688270bac3f74bcf94bce7abdc4286ff2cfa718e8bcc65e0",
+    "reply-preview.css": "28ffd41ddfeff63d0cbd15741b8357ac3f081740d2bbc49f9612e3fccff21147",
+    "reply-preview.js": "2e33a6afcc151212b6acb141a9fd1afbf88a4dd24c446a2f0b6bade6a269d80e"
+  },
+  "feature_assets": {
+    "/static/js/index.d7514d3e.js": "cebac7a0e5c3a09efaf56bb00a18815f1302744a5995c8b7703ac84b4a07d4ed",
+    "/static/js/async/1579.e4e758b0.js": "ea0a428b94605b49da2689b1accf8ee24712b9a8d6a8f11821595a818376f577",
+    "/static/js/async/4872.216bf2d6.js": "feef8f11d03e37cec8a390cb522ca58c82666b8eb001d98e183ef4ef3098478e",
+    "/static/js/async/5715.3ff470a0.js": "8c0fbc43cb82558f86d6fbc8f0860a19598050001c4f44689dc486093121cdff",
+    "/static/js/async/8121.8e5ce460.js": "bc767c5ad6799416dbb9b589adbc8d83b2284b51374d9834d4f144437ee76313"
+  },
+  "brand_assets": {
+    "/favicon.ico": "63c0a62f283de923f32e9367bd5380ab92dbb7ccc0df5242f407ae6d7773c586",
+    "/leadpilot-wordmark.png": "f0af75f1f4485f7305ef8c529967fa8e64e9110f6cd77e8bd379bd15ac874318",
+    "/leadpilot-symbol.png": "2b1a006f9a955f0a9f4dcfe2b646e442e26108efa1b385055baaee6ba579290e"
+  },
+  "backup": "/opt/BillionMail/backup/20261110-leadpilot-ai-141253",
+  "previous_image": "leadpilot/leadpilot-ai:20261110-v1",
+  "deployed_at": "2026-11-10T14:15:54.614672+00:00",
+  "database_recreated": false,
+  "customer_email_sent": false,
+  "health_checks": true,
+  "browser_checks": "not performed: required browser runtime unavailable",
+  "live_api_checks": {
+    "existing_data_credentials_configuration_and_other_services_preserved": true,
+    "no_customer_message_or_public_post_created": true,
+    "fourteen_skills_and_six_workflows": true,
+    "authenticated_lists_and_overview": true,
+    "named_provider_settings_mask_keys": true,
+    "repeated_draft_saves_one_record_and_market_times_preserved": true,
+    "account_platform_filters_and_four_hour_manual_sync_endpoint": true,
+    "social_task_deletion_removes_task_without_deleting_external_posts": true,
+    "growth_plan_delete_endpoint": true,
+    "real_ai_keyword_expansion_returns_deduplicated_suggestions": true,
+    "industry_pack_configuration_saved": true,
+    "xlsx_template_preview_invalid_download_and_idempotent_import": true,
+    "paginated_option_endpoints": true,
+    "workflow_draft_seconds_and_scope_saved": true,
+    "real_configured_ai_and_persistent_worker_completed": true,
+    "unconfigured_whatsapp_webhook_fails_closed": true,
+    "intelligence_workflow_and_industry_pack_delete_endpoints": true,
+    "temporary_acceptance_data_cleaned": true
+  },
+  "live_ai_check": {
+    "workflow": "WF05 synthetic inbound event without a customer message",
+    "status": "completed",
+    "completed_steps": [
+      "MASTER",
+      "S08",
+      "S09",
+      "S12",
+      "S14"
+    ],
+    "actual_model": "deepseek-flash",
+    "actual_ai_calls": 1,
+    "actual_tokens": 1876,
+    "outbound_messages": 0
+  },
+  "local_backend_packages_passed": 9,
+  "frontend_tests_passed": 21,
+  "aligned_language_keys": 2574
+}

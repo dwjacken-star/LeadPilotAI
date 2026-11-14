@@ -1,0 +1,68 @@
+{
+  "release": "leadpilot/leadpilot-ai:20261112-social-multi-v1",
+  "implemented": {
+    "independent_oauth_tasks": true,
+    "copied_links_for_independent_browser_profiles": true,
+    "encrypted_pending_credentials": true,
+    "original_operator_explicit_confirmation": true,
+    "reconnect_target_and_authorizer_checks": true,
+    "department_isolation_and_concurrent_deduplication": true,
+    "linkedin_person_and_company_automatic_publishing": true,
+    "facebook_page_automatic_publishing": true,
+    "facebook_person_manual_publishing_only": true,
+    "ai_text_and_prompt_image_generation": true,
+    "existing_content_and_image_review_preserved": true,
+    "durable_in_app_manual_due_reminders": true,
+    "copy_text_and_download_uuid_images": true,
+    "explicit_manual_confirmation_without_platform_receipt": true,
+    "six_language_ui": true
+  },
+  "validation": {
+    "linux_isolated_postgresql_packages": [
+      "internal/service/social",
+      "internal/controller/social",
+      "internal/service/growth",
+      "internal/service/governance"
+    ],
+    "backend_top_level_tests_passed": 22,
+    "final_oauth_concurrency_config_and_http_boundary_regressions": true,
+    "frontend_tests_passed": 22,
+    "translation_keys_aligned": 3023,
+    "translation_languages": ["en", "zh", "ja", "de", "tr", "vi"],
+    "targeted_eslint_errors": 0,
+    "targeted_eslint_existing_warnings": 18,
+    "prettier_check": true,
+    "frontend_production_build": true,
+    "go_vet_affected_packages": true,
+    "linux_production_binary_build": true,
+    "real_browser": "Microsoft Edge headless, mocked local API, external requests blocked",
+    "browser_viewports": ["1440x1100", "390x844"],
+    "browser_explicit_oauth_confirmation": true,
+    "browser_manual_uuid_image_download": true,
+    "browser_manual_confirmation": true,
+    "browser_uncaught_errors": 0,
+    "live_platform_oauth_tested": false,
+    "live_public_posting_tested": false
+  },
+  "deployment": {
+    "status": "deployed_verified",
+    "deployed_at": "2026-11-11T23:59:59.077406+00:00",
+    "server": "47.237.67.184",
+    "url": "https://mail.best-maple.com/bm",
+    "backup": "/opt/BillionMail/backup/20261112-social-multi-235809",
+    "receipt": "docs/social-multi-account-deployment-20261112.json",
+    "release_archive": ".tools/leadpilot-social-multi-release.tar.gz",
+    "release_manifest": ".tools/leadpilot-social-multi-release.json",
+    "production_modified": true,
+    "production_database_recreated": false,
+    "customer_emails_sent": false,
+    "public_posts_created": false
+  },
+  "limitations": [
+    "Browser profiles must be created or selected by the operator; ordinary tabs and popups do not isolate platform cookies.",
+    "LinkedIn organization publishing still requires approved organization scopes and a valid Page role.",
+    "Write-only LinkedIn personal publishing does not claim post readback, comments or statistics permissions.",
+    "Image generation requires a configured Images API compatible model; tests used controlled fixtures rather than paid provider calls.",
+    "Manual Facebook confirmations are operator declarations, not verified platform publication receipts."
+  ]
+}

@@ -1,0 +1,11 @@
+# LeadPilot AI model management and localization
+
+- All runtime AI providers and models use `bm_options.ai_model_registry`, with encrypted credentials using the existing master key. Startup imports legacy provider files and growth options once; it retains originals for rollback. Editing a saved provider with a blank key preserves that key. Changed endpoints require a new key. Catalog endpoints expose model metadata only.
+- Business forms select a platform and model: campaign composing, templates, outreach plans, workflow and skill configuration, material recognition, inbox rules, CRM replies, keyword expansion, social content/analysis and image editing, and native mailbox drafting. Scheduled work persists the selection. Unknown, disabled or incompatible models fail instead of silently switching providers. Capability defaults apply to unattended calls without an explicit override.
+- Existing models with the same native model ID on different platforms remain distinct. Usage logs include the selected platform reference. Existing legacy task references resolve compatibly.
+- Supported interface languages: English, Simplified Chinese, Japanese, German, Turkish and Vietnamese. Resources cover the management login, administration, native mailbox custom tools and subscription pages. Native Roundcube localization is retained. Language selection no longer overwrites the server-wide language for other users.
+- The compose iframe receives theme CSS in its head. It never rewrites the submitted message body. Received mail and original quoted content retain their author formatting.
+
+Validation: disposable PostgreSQL regression suite including encrypted registry lifecycle and selected-platform HTTP routing; frontend regression and workspace tests; six-language resource parity, placeholders and message compilation; PHP/JavaScript syntax; iframe theme test; production frontend and Go build. No customer email or public social post is used for acceptance.
+
+Browser visual acceptance and actual inbox delivery are separate from these automated checks. Providers require working credentials and models compatible with the requested capability; adding a catalog entry alone does not establish provider support.

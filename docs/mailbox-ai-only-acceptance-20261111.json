@@ -1,0 +1,19 @@
+{
+  "mailbox": "sales@best-maple.com",
+  "business_account": "mail_ai_sales",
+  "account_id": 11,
+  "department_id": 2,
+  "role": "mailbox_ai_write_only",
+  "permissions": [
+    "campaign:create"
+  ],
+  "scope": "self",
+  "models_available": 3,
+  "native_vietnamese_draft_generated": true,
+  "selected_model_used": "ai::growth_default::deepseek-flash",
+  "crm_reads_writes_followups_denied": true,
+  "administrator_binding": false,
+  "customer_email_sent": false,
+  "management_account_password_discarded": true,
+  "backup": "/opt/BillionMail/backup/mail-ai-only-20261111-034237"
+}

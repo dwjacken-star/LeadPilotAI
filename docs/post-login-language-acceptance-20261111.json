@@ -1,0 +1,29 @@
+{
+  "mailbox": "sales@best-maple.com",
+  "six_language_login_and_refresh": {
+    "vi": true,
+    "en": true,
+    "ja": true,
+    "de": true,
+    "tr": true,
+    "zh": true
+  },
+  "original_native_language_restored": true,
+  "customer_email_sent": false,
+  "database_recreated": false,
+  "admin_six_language_requests": [
+    "en",
+    "zh",
+    "ja",
+    "de",
+    "tr",
+    "vi"
+  ],
+  "admin_cached_login_state_tests": 2,
+  "admin_workspace_regression_tests": 3,
+  "production_frontend_build": true,
+  "image": "leadpilot/leadpilot-ai:20261111-login-language-v5",
+  "existing_credentials_and_config_preserved": true,
+  "mailbox_ai_only_permission_preserved": true,
+  "browser_visual_acceptance": "not performed; state and HTTP session tests completed"
+}

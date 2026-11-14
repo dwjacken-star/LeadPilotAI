@@ -1,0 +1,37 @@
+[
+  {
+    "name": "paragraphs and Windows line endings",
+    "input": "Dear Buyer,\r\nGreetings from BESTMAPLE!\r\n\r\nProducts:\r\n✓ Compressors\r\n✓ Condensers\r\n\r\nBest regards,\r\nSales Team",
+    "expected": "<div style=\"font-family:Arial,'Microsoft YaHei',sans-serif;font-size:14px;line-height:1.6;color:#222;\"><p style=\"margin:0 0 16px;white-space:pre-wrap;\">Dear Buyer,<br>Greetings from BESTMAPLE!</p><p style=\"margin:0 0 16px;white-space:pre-wrap;\">Products:<br>✓ Compressors<br>✓ Condensers</p><p style=\"margin:0 0 16px;white-space:pre-wrap;\">Best regards,<br>Sales Team</p></div>"
+  },
+  {
+    "name": "literal angle brackets and safe escaping",
+    "input": "Contact <sales@example.com>\nA&B  < 10\n\"Hello\" '你好'",
+    "expected": "<div style=\"font-family:Arial,'Microsoft YaHei',sans-serif;font-size:14px;line-height:1.6;color:#222;\"><p style=\"margin:0 0 16px;white-space:pre-wrap;\">Contact &lt;sales@example.com&gt;<br>A&amp;B  &lt; 10<br>&#34;Hello&#34; &#39;你好&#39;</p></div>"
+  },
+  {
+    "name": "personalization remains executable",
+    "input": "Dear {{ get .Subscriber \"name\" }},\nWelcome!",
+    "expected": "<div style=\"font-family:Arial,'Microsoft YaHei',sans-serif;font-size:14px;line-height:1.6;color:#222;\"><p style=\"margin:0 0 16px;white-space:pre-wrap;\">Dear {{ get .Subscriber \"name\" }},<br>Welcome!</p></div>"
+  },
+  {
+    "name": "complete styled HTML is preserved",
+    "input": "<!DOCTYPE html><HTML><HEAD><style>.quote{color:#176f65}</style></HEAD><BODY><table width=\"600\"><tr><td><p class=\"quote\" style=\"margin:20px\">Quote</p><ul><li>Compressor</li></ul></td></tr></table></BODY></HTML>",
+    "expected": "<!DOCTYPE html><HTML><HEAD><style>.quote{color:#176f65}</style></HEAD><BODY><table width=\"600\"><tr><td><p class=\"quote\" style=\"margin:20px\">Quote</p><ul><li>Compressor</li></ul></td></tr></table></BODY></HTML>"
+  },
+  {
+    "name": "HTML fragment is preserved",
+    "input": "<p style=\"font-size:18px\">Hello<br>Buyer</p><ol><li>One</li><li>Two</li></ol>",
+    "expected": "<p style=\"font-size:18px\">Hello<br>Buyer</p><ol><li>One</li><li>Two</li></ol>"
+  },
+  {
+    "name": "legacy powered-by footer",
+    "input": "<div><span>Powered by </span><a href=\"https://www.billionmail.com/\" style=\"color:#999\">BillionMail</a></div>",
+    "expected": "<div><span>Powered by </span><a href=\"https://mail.best-maple.com/\" style=\"color:#999\">LeadPilot AI</a></div>"
+  },
+  {
+    "name": "empty content",
+    "input": "",
+    "expected": ""
+  }
+]

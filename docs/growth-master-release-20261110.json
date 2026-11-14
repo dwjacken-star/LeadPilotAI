@@ -1,0 +1,56 @@
+{
+  "image": "billionmail/maplemail-ali:20261110-growth-master-v1",
+  "archive": "b168e1250f0f0c2b237800c065d65e7cbbbea9168c3699a543802a2f03e0a090",
+  "backend": "d5156ca9ff90354f1ccc753723ffbd0dd9b6a2db4d8a0672d67a966939f54f7e",
+  "index": "a060a946fcd071847e2c9b256293e9fabcb9d90fe4a01441780cbcc3f0ef54aa",
+  "plugin": {
+    "bestmaple_tracking.php": "9cca3ea61e65d51053008caa8ebbade621fd258a2a56e5d3476b63f7a48c6a69",
+    "delivery.css": "24f209beb23dce3def714b73e088a429128e1155f4d69e9d19e4037ce9f7ae1d",
+    "delivery.js": "197797b29f28afab1e2b49ab9d8c63dcfa054199658c4bea84d07d5bdd8b0aad",
+    "delivery.php": "91aeccc2a0ddb15d1d1c1da83cf646efd6513ba43780b3d4041f25e719885c99",
+    "reply-preview.css": "28ffd41ddfeff63d0cbd15741b8357ac3f081740d2bbc49f9612e3fccff21147",
+    "reply-preview.js": "2e33a6afcc151212b6acb141a9fd1afbf88a4dd24c446a2f0b6bade6a269d80e"
+  },
+  "feature_assets": {
+    "/static/js/index.7a08410b.js": "1ee2467e024a1b0e342466f750d48f87659974a1f86a9d1c27a20195c7102753",
+    "/static/js/async/7257.948fa228.js": "9a5c71d22f68ec4c36974301d59158e0ede9b44d67e04ad99fd073b2bf696080"
+  },
+  "backup": "/opt/BillionMail/backup/20261110-growth-master-094226",
+  "previous_image": "billionmail/maplemail-ali:20261110-social-run-now-v1",
+  "deployed_at": "2026-11-10T09:51:38.632315+00:00",
+  "database_recreated": false,
+  "customer_email_sent": false,
+  "health_checks": true,
+  "browser_checks": "not performed: required browser runtime unavailable",
+  "live_api_checks": {
+    "existing_data_credentials_configuration_and_other_services_preserved": true,
+    "no_customer_message_or_public_post_created": true,
+    "fourteen_skills_and_six_workflows": true,
+    "authenticated_lists_and_overview": true,
+    "industry_pack_configuration_saved": true,
+    "xlsx_template_preview_invalid_download_and_idempotent_import": true,
+    "paginated_option_endpoints": true,
+    "workflow_draft_seconds_and_scope_saved": true,
+    "real_configured_ai_and_persistent_worker_completed": true,
+    "unconfigured_whatsapp_webhook_fails_closed": true,
+    "temporary_acceptance_data_cleaned": true
+  },
+  "live_ai_check": {
+    "workflow": "WF05 synthetic inbound event without a customer message",
+    "status": "completed",
+    "completed_steps": [
+      "MASTER",
+      "S08",
+      "S09",
+      "S12",
+      "S14"
+    ],
+    "actual_model": "deepseek-flash",
+    "actual_ai_calls": 1,
+    "actual_tokens": 1736,
+    "outbound_messages": 0
+  },
+  "local_backend_packages_passed": 8,
+  "frontend_tests_passed": 20,
+  "aligned_language_keys": 2544
+}

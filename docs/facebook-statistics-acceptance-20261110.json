@@ -1,0 +1,111 @@
+{
+  "checks": {
+    "existing_data_credentials_configuration_and_other_services_preserved": true,
+    "no_customer_message_or_public_post_created": true,
+    "valid_page_account_stays_connected": true,
+    "real_facebook_views_saved_and_returned_by_report_api": true,
+    "facebook_views_not_relabelled_as_linkedin_impressions": true,
+    "unreadable_post_isolated_and_other_posts_still_synced": true,
+    "published_receipts_preserved_without_republishing": true,
+    "post_list_exposes_separate_sync_status_and_reason": true,
+    "xlsx_report_contains_facebook_views_column_and_values": true
+  },
+  "checked_at": "2026-11-10 23:54:34.272268+08",
+  "facebook_account_id": 1,
+  "account_status": "connected",
+  "account_sync_notice": "POST_SYNC_UNAVAILABLE:1",
+  "metrics": [
+    {
+      "delivery_id": 17,
+      "sync_state": "unavailable",
+      "sync_error": "FACEBOOK_POST_UNAVAILABLE:10/0",
+      "counts": {},
+      "availability": {
+        "sync": "object_unavailable",
+        "reach": "object_unavailable",
+        "views": "object_unavailable",
+        "clicks": "object_unavailable",
+        "shares": "object_unavailable",
+        "comments": "object_unavailable",
+        "reactions": "object_unavailable",
+        "impressions": "object_unavailable"
+      },
+      "as_of": "2026-11-10 23:54:32"
+    },
+    {
+      "delivery_id": 15,
+      "sync_state": "synced",
+      "sync_error": "",
+      "counts": {
+        "views": 17,
+        "clicks": 0,
+        "comments": 0,
+        "reactions": 1
+      },
+      "availability": {
+        "reach": "not_supported",
+        "views": "available",
+        "clicks": "available",
+        "comments": "available",
+        "reactions": "available",
+        "impressions": "not_supported",
+        "views_metric": "post_media_view",
+        "clicks_metric": "post_clicks",
+        "comments_collection": "complete",
+        "reactions_collection": "complete"
+      },
+      "as_of": "2026-11-10 23:54:29"
+    },
+    {
+      "delivery_id": 14,
+      "sync_state": "synced",
+      "sync_error": "",
+      "counts": {
+        "views": 18,
+        "clicks": 0,
+        "comments": 0,
+        "reactions": 1
+      },
+      "availability": {
+        "reach": "not_supported",
+        "views": "available",
+        "clicks": "available",
+        "comments": "available",
+        "reactions": "available",
+        "impressions": "not_supported",
+        "views_metric": "post_media_view",
+        "clicks_metric": "post_clicks",
+        "comments_collection": "complete",
+        "reactions_collection": "complete"
+      },
+      "as_of": "2026-11-10 23:54:25"
+    },
+    {
+      "delivery_id": 13,
+      "sync_state": "synced",
+      "sync_error": "",
+      "counts": {
+        "views": 13,
+        "clicks": 0,
+        "comments": 0,
+        "reactions": 1
+      },
+      "availability": {
+        "reach": "not_supported",
+        "views": "available",
+        "clicks": "available",
+        "comments": "available",
+        "reactions": "available",
+        "impressions": "not_supported",
+        "views_metric": "post_media_view",
+        "clicks_metric": "post_clicks",
+        "comments_collection": "complete",
+        "reactions_collection": "complete"
+      },
+      "as_of": "2026-11-10 23:54:22"
+    }
+  ],
+  "new_oauth_consent_tested": false,
+  "browser_checks": "not performed: required browser runtime unavailable",
+  "actions": "official read-only synchronization and XLSX download; no customer sends or public posts"
+}

@@ -1,0 +1,6 @@
+FROM billionmail/core:4.9.1
+COPY core/billionmail-department /opt/billionmail/core/billionmail
+COPY core/manifest/ /opt/billionmail/core/manifest/
+COPY core/public/dist/ /opt/billionmail/core/public/dist/
+COPY core/public/html/ /opt/billionmail/core/public/html/
+COPY core/languages/ /opt/billionmail/core/languages/

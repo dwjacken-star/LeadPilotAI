@@ -1,0 +1,10 @@
+[Unit]
+Description=Check BillionMail IP certificate twice daily
+
+[Timer]
+OnCalendar=*-*-* 02,14:20:00
+RandomizedDelaySec=15m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

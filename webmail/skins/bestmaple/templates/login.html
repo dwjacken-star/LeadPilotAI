@@ -1,0 +1,28 @@
+<roundcube:include file="includes/layout.html" />
+<link rel="stylesheet" href="skins/bestmaple/auth-base.css?v=leadpilot-20261111-login-v4" />
+<link rel="stylesheet" href="skins/bestmaple/login.css?v=leadpilot-20261111-login-v4" />
+<link rel="icon" href="skins/bestmaple/assets/favicon.ico?v=leadpilot-20261111-login-v4" type="image/x-icon" />
+<div id="layout-content" class="selected no-navbar bestmaple-login" role="main">
+	<main class="auth-page">
+		<section class="auth-story" aria-labelledby="story-title">
+			<a class="brand" href="./" aria-label="LeadPilot AI"><img class="brand-wordmark" src="skins/bestmaple/assets/leadpilot-wordmark.png" alt="领客AI · LeadPilot AI" /></a>
+			<div class="story-copy"><span class="eyebrow" data-bm="eyebrow">GOOD CONVERSATIONS. GREAT POSSIBILITIES.</span><h1 id="story-title"><span data-bm="headline">每一封往来，</span><em data-bm="accent">都值得认真回应。</em></h1><p data-bm="description">把客户询盘、产品报价与合作进展，放在一个专注、高效的企业邮箱里。</p></div>
+			<div class="route-art" aria-hidden="true"><img src="skins/bestmaple/assets/trade-routes.svg" alt="" class="route-map" /><div class="letter-card"><span class="letter-icon">✉</span><div><small data-bm="sampleLabel">CUSTOMER CONVERSATIONS</small><strong data-bm="sampleSubject">Re: Thank you for your quotation</strong><span data-bm="sample">把握每一个来自世界的机会。</span></div><i>✓</i></div><div class="route-caption"><span></span><span data-bm="caption">让客户的下一封邮件，及时找到你。</span></div></div>
+			<div class="story-bottom"><span data-bm="step1">01 / 询盘沟通</span><span data-bm="step2">02 / 报价往来</span><span data-bm="step3">03 / 合作跟进</span></div>
+		</section>
+		<section class="auth-access" aria-labelledby="login-heading">
+			<header class="access-top"><span class="portal-name" data-bm="access">BUSINESS MAILBOX</span><select id="leadpilot-login-language" onchange="window.location.assign('?_task=login&amp;_lp_lang='+encodeURIComponent(this.value))" class="language-switch" aria-label="Language"><option value="zh">简体中文</option><option value="en">English</option><option value="ja">日本語</option><option value="de">Deutsch</option><option value="tr">Türkçe</option><option value="vi">Tiếng Việt</option></select></header>
+			<div class="auth-form-card"><span class="access-label"><i></i><span data-bm="access">企业邮箱入口</span></span><h2 id="login-heading" data-bm="welcome">开启今天的沟通</h2><p class="form-intro" data-bm="intro">使用完整的企业邮箱地址和邮箱密码登录。</p>
+				<roundcube:form id="login-form" name="login-form" method="post" class="propform">
+					<roundcube:object name="loginform" form="login-form" size="40" submit=true class="form-control" />
+				</form>
+				<div class="account-note"><span aria-hidden="true">ⓘ</span><p data-bm="note">邮箱账号与工作台账号分别管理。忘记邮箱密码，请联系系统管理员重置。</p></div>
+				<div class="mailbox-entry"><div><strong data-bm="fullAddress">请使用完整邮箱地址</strong><span>name@best-maple.com</span></div><span class="mail-symbol" aria-hidden="true">@</span></div>
+			</div>
+			<footer class="access-footer"><span>LeadPilot AI</span><span data-bm="footer">专注沟通 · 稳步拓展</span></footer>
+		</section>
+	</main>
+</div>
+<noscript><p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p></noscript>
+<script src="skins/bestmaple/login-i18n.js"></script><script src="skins/bestmaple/login.js?v=leadpilot-20261111-login-v4"></script>
+<roundcube:include file="includes/footer.html" />

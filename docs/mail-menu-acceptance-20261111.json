@@ -1,0 +1,12 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261111-mail-menu-v3",
+  "native_model_options": 3,
+  "native_proxy_object_contract_fixed": true,
+  "native_login_language_select": true,
+  "native_chinese_fallback_labels_verified": true,
+  "account_credentials_and_server_config_preserved": true,
+  "ai_execution_requires_explicit_binding": true,
+  "business_binding_changed": false,
+  "customer_email_sent": false,
+  "browser_visual_test": "not performed"
+}

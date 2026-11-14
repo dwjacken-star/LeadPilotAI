@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "existing_data_credentials_configuration_and_other_services_preserved": true,
+    "admin_business_binding_options_exclude_credentials": true,
+    "authenticated_roundcube_workbench_template_renders": true,
+    "native_compose_contexts_have_distinct_ids_and_actual_sender_controls": true,
+    "native_workbench_assets_load_over_https": true,
+    "authenticated_draft_delivery_preferences_are_independent": true,
+    "no_customer_email_or_public_post_sent_by_acceptance": true
+  },
+  "checked_at": "2026-11-11 01:25:43.059782+08",
+  "mailbox_account": "sales@best-maple.com",
+  "native_compose_contexts": 2,
+  "browser_visual_checks": "not performed: required runtime unavailable",
+  "actual_customer_email_sent": false,
+  "public_social_post_created": false,
+  "native_draft_save_with_attachment_ui": "not browser tested",
+  "business_binding_changed": false
+}

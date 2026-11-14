@@ -1,0 +1,5 @@
+conf/* merge=ours
+Dockerfiles/* merge=ours
+ssl-self-signed/* merge=ours
+docker-compose.yml merge=ours
+.githooks/* text eol=lf

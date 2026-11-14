@@ -1,0 +1,85 @@
+/* LeadPilot AI workspace: shared tokens and responsive business surfaces. */
+:root {
+	--color-primary-1: #078b8b;
+	--color-primary-hover-1: #076e75;
+	--color-primary-2: #e7f6f5;
+	--color-menu-active-1: #e7f6f5;
+	--color-bg-2: #f3f6fb;
+	--color-text-1: #172c47;
+	--color-text-2: #52667c;
+	--color-text-3: #7c8ca1;
+	--color-text-5: #153858;
+	--color-border-1: #e3eaf2;
+	--color-table-th-1: #f5f8fc;
+}
+:root[theme-mode='dark'] {
+	--color-primary-1: #42c5b9;
+	--color-primary-hover-1: #71e1d3;
+	--color-primary-2: #173936;
+	--color-menu-active-1: #173936;
+	--color-bg-1: #172336;
+	--color-bg-2: #111b2b;
+	--color-text-1: #e3edf8;
+	--color-text-2: #b2c2d4;
+	--color-text-3: #94a7bc;
+	--color-text-5: #7cdacc;
+	--color-border-1: #2b3d55;
+	--color-table-th-1: #1b2b40;
+	--color-table-td-1: #172336;
+}
+body { font-family: Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.leadpilot-shell {
+	.n-layout-sider { border-right: 1px solid var(--color-border-1); box-shadow: none; }
+	.app-logo { min-height: 104px; justify-content: center; padding: 12px 18px; }
+	.app-logo .brand-wordmark { display:block; width:188px; height:78px; object-fit:contain; }
+	.app-logo.collapse .brand-symbol { width:42px; height:42px; object-fit:contain; }
+	.nav-section { padding: 2px 8px; }
+	.n-menu .n-menu-item { margin-bottom: 5px; }
+	.n-menu-item-content { border-radius: 9px; }
+	.n-layout-header { border-bottom:1px solid var(--color-border-1); box-shadow:none; }
+	.header-location { padding-left:12px; font-size:13px; color:var(--color-text-3); letter-spacing:.3px; }
+	.social-page, .growth-page, .master-page { max-width:1920px; margin:auto; padding:28px 32px; }
+	h1 { letter-spacing:-.6px; color:var(--color-text-1); }
+	.page-heading p, .growth-page header p { line-height:1.8; max-width:920px; }
+	.n-card { border:1px solid var(--color-border-1); box-shadow:0 4px 18px #18385804; }
+	.n-data-table { border:1px solid var(--color-border-1); border-radius:12px; overflow:hidden; }
+	.n-data-table .n-data-table-td { border-bottom-color:var(--color-border-1); }
+	.n-tabs .n-tabs-tab { font-weight:550; }
+	.toolbar { row-gap:12px; }
+	.row-actions, .growth-row-actions { display:flex; flex-wrap:wrap; gap:10px 12px; align-items:center; }
+	.stats>div, .metric-grid>.n-card { border:1px solid var(--color-border-1); border-radius:14px; background:var(--color-bg-1); }
+	.stats>div { padding:20px; }
+	.stats strong { color:var(--color-primary-1); }
+}
+/* Supplied wordmark has a dark foreground; preserve a neutral brand surface. */
+:root[theme-mode='dark'] .leadpilot-shell .app-logo { background:#fff; }
+.auth-provider {
+	.auth-story { background:radial-gradient(ellipse at 15% 15%,#d9f2f3 0,transparent 52%),linear-gradient(150deg,#edf3fb,#eaf3ef); }
+	.brand { letter-spacing:0; }
+	.brand img.brand-wordmark { width:240px; height:100px; object-fit:contain; }
+	.story-copy h1 { font-family:Inter,'Segoe UI','PingFang SC',sans-serif; font-weight:650; letter-spacing:-1.2px; }
+	.story-copy h1 em { color:#078b8b; }
+	.auth-form-card { border-radius:20px; }
+	.auth-form-card h2 { color:#142d4e; }
+	.auth-access { background:linear-gradient(160deg,#fff 70%,#f2f8fb); }
+	.letter-card { border-color:#d5e6ed; box-shadow:0 20px 60px #1736530c; border-radius:16px; }
+}
+@media(max-width:900px){.leadpilot-shell .social-page,.leadpilot-shell .growth-page,.leadpilot-shell .master-page{padding:20px 16px}.leadpilot-shell .header-location{display:none}.leadpilot-shell .page-heading,.leadpilot-shell .growth-page header{align-items:flex-start;flex-wrap:wrap;gap:16px}}
+@media(prefers-reduced-motion:reduce){.leadpilot-shell *{scroll-behavior:auto!important;transition-duration:0s!important}}
+/* Shared LeadPilot AI workspace proportions, colors and interaction surfaces. */
+.workspace-shell{display:flex;flex:1;flex-direction:column;min-width:0;height:100%;overflow:hidden;background:var(--color-bg-2)}
+.workspace-shell>.n-layout-header{position:relative;flex:0 0 56px;height:56px;padding:0 24px}
+.workspace-tabs{display:flex;align-items:center;gap:4px;padding:8px 16px 0;flex:0 0 48px;min-width:0;border-bottom:1px solid var(--color-border-1);background:var(--color-bg-1)}
+.workspace-tab-strip{display:flex;gap:6px;flex:1;overflow:auto;scrollbar-width:none;min-width:0;height:100%;align-items:stretch}
+.workspace-tab-strip::-webkit-scrollbar{display:none}
+.workspace-tab{display:flex;align-items:center;flex-shrink:0;max-width:270px;border:1px solid transparent;border-bottom:0;border-radius:9px 9px 0 0;color:var(--color-text-2)}
+.workspace-tab.active{background:var(--color-primary-2);border-color:var(--color-border-1);color:var(--color-primary-1);box-shadow:inset 0 3px var(--color-primary-1)}
+.workspace-tab button{display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:0;background:transparent;color:inherit;cursor:pointer;padding:10px 12px;font:inherit;font-size:13px}
+.workspace-tab .workspace-tab-close{padding:7px;font-size:19px;margin-right:5px;border-radius:6px}
+.workspace-tab-close:hover,.workspace-icon:hover{background:var(--color-primary-2)}
+.workspace-icon{display:flex;align-items:center;justify-content:center;flex:0 0 30px;width:30px;height:32px;border:0;background:transparent;color:var(--color-text-2);border-radius:7px;cursor:pointer;font-size:20px}
+.workspace-dirty{color:#d88920;font-size:18px}
+.workspace-content{display:flex;flex:1;min-height:0;min-width:0;overflow:hidden;position:relative}
+.workspace-pane{flex:1;min-width:0;overflow:auto;height:100%;overscroll-behavior:contain}
+.workspace-tabs button:focus-visible{outline:2px solid var(--color-primary-1);outline-offset:-2px}
+@media(max-width:760px){.leadpilot-shell>.n-layout-sider{max-width:64px}.workspace-shell>.n-layout-header{padding:0 8px}.workspace-tabs{padding:6px 5px 0}.workspace-tab{max-width:180px}.workspace-tab button{padding:8px}.workspace-pane>.p-24px{padding:16px!important}}

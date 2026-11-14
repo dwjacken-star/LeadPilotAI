@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "en": true,
+    "zh": true,
+    "ja": true,
+    "de": true,
+    "tr": true,
+    "vi": true
+  },
+  "cookie_persistence_verified": true,
+  "server_rendered": true,
+  "no_user_credentials_changed": true,
+  "no_database_migration": true,
+  "backup": "/opt/BillionMail/backup/roundcube-login-20261111-035411",
+  "files": {
+    "webmail/plugins/bestmaple_tracking/login-localization.php": "18570a4ce3e0207966285b9b57f9386e32bfcc6f472a540aafa590b26731b9af",
+    "webmail/skins/bestmaple/login-labels.json": "18bc7839e2ca9dbc3cc58b13ab6e2bf791530f80cc3dab4d567a0f7fb4b50e53",
+    "webmail/skins/bestmaple/login.js": "ab71b879bb59bd4db9ca396f07be020563a5888a6d3d05236525f268a5a27c7e",
+    "webmail/skins/bestmaple/templates/login.html": "a0d33626f492e2d84dc2ed870e94862571446666ef68a1331767ca6b1acd890e",
+    "webmail/plugins/bestmaple_tracking/delivery.php": "475e5f11fb61cbba14eea3c5331c1c802b1e7dff64d21e573eb8048f28986981"
+  }
+}

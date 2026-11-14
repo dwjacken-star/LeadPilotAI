@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Thank You for Subscribing</title>
+    <style>
+
+        :root { color-scheme: light; --ink: #18372d; --muted: #596b64; --green: #176249; --line: #dce7e1; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            margin: 0; min-width: 0; min-height: 100vh; min-height: 100svh;
+            padding: max(32px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+            display: flex; align-items: center; justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Microsoft YaHei", sans-serif;
+            font-size: 18px; line-height: 1.65; color: var(--ink);
+            background: radial-gradient(ellipse at top left, #e0efe6, transparent 65%), #f2f6f3;
+            -webkit-text-size-adjust: 100%;
+        }
+        .container, .unsubscribe-container {
+            width: 100%; max-width: 640px; min-width: 0; margin: auto; padding: 40px 44px 28px;
+            border: 1px solid var(--line); border-top: 5px solid var(--green); border-radius: 24px;
+            background: #fff; box-shadow: 0 20px 60px #17392b12; overflow-wrap: anywhere;
+        }
+        .brand { display: flex; align-items: center; gap: 13px; padding-bottom: 28px; margin-bottom: 30px; border-bottom: 1px solid var(--line); text-align: left; }
+        .brand-mark { flex: 0 0 46px; height: 46px; display: grid; place-items: center; border-radius: 13px; background: var(--green); color: white; font-size: 27px; font-weight: 700; line-height: 1; }
+        .brand-name { display: block; font-size: 19px; line-height: 1.4; font-weight: 700; letter-spacing: .2px; }
+        .brand-caption { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: 1.8px; }
+        .header { display: flex; justify-content: center; margin-bottom: 22px; }
+        .subscription-icon, .success-icon, .confirm-icon { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: #eaf5ee; }
+        .confirm-icon { background: #fff5df; }
+        .header svg { display: block; width: 44px; height: 44px; max-width: 100%; }
+        .header svg { fill: var(--green); }
+        .header svg path[fill="#ffffff"] { fill: var(--green); }
+        .confirm-icon svg path[fill="#ffffff"] { fill: #91601c; }
+        .content { text-align: center; }
+        h1, h2, .title { margin: 0 0 16px; font-size: clamp(28px, 4.5vw, 34px); line-height: 1.25; letter-spacing: -.6px; font-weight: 700; color: var(--ink); }
+        .title, .lead { text-align: left; }
+        p { margin: 0 0 16px; color: var(--muted); font-size: 18px; line-height: 1.7; }
+        .lead { margin-bottom: 28px; }
+        .form-group { margin-bottom: 22px; }
+        label { display: block; margin-bottom: 9px; font-size: 17px; font-weight: 600; line-height: 1.5; }
+        input[type="text"], input[type="email"] {
+            display: block; width: 100%; min-width: 0; min-height: 58px; padding: 14px 16px;
+            border: 1px solid #b7c9bf; border-radius: 12px; background: #fbfcfb;
+            color: var(--ink); font: inherit; font-size: 18px; line-height: 1.5;
+        }
+        input::placeholder { color: #78877f; opacity: 1; }
+        input:focus { outline: 3px solid #b4d6c4; outline-offset: 2px; border-color: var(--green); background: #fff; }
+        button, .button, .btn {
+            display: inline-flex; align-items: center; justify-content: center; min-width: 0; min-height: 58px;
+            padding: 14px 20px; border: 1px solid transparent; border-radius: 12px;
+            background: var(--green); color: #fff; font: inherit; font-size: 18px; font-weight: 600; line-height: 1.45;
+            text-align: center; cursor: pointer; overflow-wrap: anywhere;
+        }
+        .btn, .unsubscribe-container > button { width: 100%; margin-top: 6px; }
+        button:hover { background: #104d38; }
+        button:focus-visible, a:focus-visible, input[type="checkbox"]:focus-visible { outline: 3px solid #7ab99b; outline-offset: 4px; }
+        button:disabled { cursor: wait; opacity: .65; }
+        .button-group { display: flex; gap: 12px; margin-top: 28px; }
+        .button-group > button { flex: 1; }
+        .button-cancel { background: #fff; color: var(--ink); border-color: #b7c9bf; }
+        .button-cancel:hover { background: #f0f5f2; }
+        .footer { margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--line); color: #687b70; text-align: center; font-size: 14px; line-height: 1.6; }
+        .footer a { color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+        .email-info { padding: 16px; margin-top: 24px; background: #f2f6f3; border-radius: 12px; font-size: 16px; text-align: left; }
+        .options { margin: 24px 0; }
+        .options label { display: flex; align-items: center; gap: 12px; min-height: 56px; margin: 0 0 10px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-weight: 500; }
+        input[type="checkbox"] { flex: 0 0 23px; width: 23px; height: 23px; margin: 0; accent-color: var(--green); }
+        .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; display: none; align-items: center; width: min(540px, calc(100% - 32px)); padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: white; box-shadow: 0 12px 80px #18372d33; overflow-wrap: anywhere; }
+        .loading p { margin: 0; }
+        .spinner { flex: 0 0 28px; width: 28px; height: 28px; margin-right: 16px; border: 3px solid #dce7e1; border-top-color: var(--green); border-radius: 50%; animation: spin 1s linear infinite; }
+        .icon { margin-right: 14px; font-size: 26px; }
+        #error-message, .msg { color: #a33329; }
+        .msg { padding: 16px; margin-top: 16px; background: #fff4f1; border-radius: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) {
+            body { padding: max(20px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+            .container, .unsubscribe-container { padding: 28px 22px 24px; border-radius: 20px; }
+            .brand { padding-bottom: 22px; margin-bottom: 26px; }
+            .brand-name { font-size: 18px; }
+            .brand-caption { font-size: 10px; letter-spacing: 1.3px; }
+            .button-group { flex-direction: column; }
+            .button-group > button { width: 100%; flex: auto; }
+            .footer { margin-top: 28px; }
+        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    </style>
+</head>
+<body>
+<div class="container" role="main">
+    <div class="brand" aria-label="BESTMAPLE Mail">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <div><span class="brand-name">BESTMAPLE Mail</span><span class="brand-caption">EMAIL PREFERENCES</span></div>
+    </div>
+    <div class="header">
+        <div class="subscription-icon">
+            <svg t="1751506794476" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18117" width="50" height="50">
+                <path
+                        d="M771.6352 905.1136L650.24 814.1312l30.72-41.0112 83.4048 62.6176 163.584-186.9824 38.5024 33.6896-194.816 222.6688zM102.4 204.8v614.4h409.6v-51.2H153.6V280.9344l358.4 262.8096 358.4-262.8096V512h51.2V204.8z m103.8336 51.2h611.5328L512 480.256z"
+                        fill="#ffffff"
+                        p-id="18118"
+                ></path>
+            </svg>
+        </div>
+    </div>
+    <div class="content">
+        <h2>You’re subscribed</h2>
+        <p>Thank you for subscribing to BESTMAPLE updates. We look forward to staying in touch.</p>
+    </div>
+    <div class="footer">
+        <div class="unsubscribe">
+            <span>Powered by </span>
+            <a href="https://www.best-maple.com/" target="_blank" rel="noopener noreferrer">LeadPilot AI</a>
+        </div>
+    </div>
+</div>
+<script>window.LeadPilotPublicI18n={"en":{"p9275ae6c0258":"Already Subscribed | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"EMAIL PREFERENCES","pdf615f30ffdb":"Already Subscribed","pdb5bdad9b2f1":"You are already on our mailing list. No further action is needed.","p68976b9fcb59":"Powered by","p2e498d856056":"Confirm Your Subscription | BESTMAPLE Mail","p535feaee40d7":"Please Check Your Email","p76e8315fce82":"We sent an email to you. Please click the link in the email to finish signing up.","pe65c01412803":"If you don't get the email, please check your spam folder or try again later.","p3c788d027a22":"Subscribe to Our Newsletter","p925338de78ef":"Stay connected","p3d813fd2f5c3":"Subscribe for product news and business updates from BESTMAPLE.","p09ba557fd106":"Email Address","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"Name (Optional)","pab42293e29e1":"Your name","p378b0c5691b6":"Subscribe Now","p2f3743a0f690":"Thank You for Subscribing","p47b5e99b9787":"You’re subscribed","p47f48fc2f527":"Thank you for subscribing to BESTMAPLE updates. We look forward to staying in touch.","p834cc0ee6089":"Unsubscribe","pb04ba49f8486":"Loading...","p73ae5b52c1be":"Manage your subscription","p5b9eec3cf50b":"Select the mailing lists you would like to unsubscribe from.","p86a599ef4df2":"Select All","p5f5110c4237e":"Confirm unsubscribe","p453257fdcc5f":"Please select at least one","pfca1d81fe3f9":"Unsubscribe Confirmation","p94369ad72e18":"Would you like to stop receiving marketing emails from this mailing list? Confirm below to unsubscribe.","p6cb6c3d3268e":"Yes, Unsubscribe","p77dfd2135f4d":"Cancel","p4c4e6b2d1d9f":"Email:","pc04773b71e46":"Group:","p2cc325898a0a":"Invalid or missing authentication token","p2b6aa5f974e1":"Invalid authentication token","p76701e44e111":"Error processing unsubscribe request:","p208e8243cee2":"Unsubscribe Successful","pb37e4a8da55e":"Successfully Unsubscribed","p634a0d1886d1":"You have been successfully unsubscribed from our mailing list.","p3ff57def7050":"Thank you for being part of our community."},"zh":{"p9275ae6c0258":"已订阅 | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"电子邮件偏好","pdf615f30ffdb":"已订阅","pdb5bdad9b2f1":"您已在我们的邮件列表中。无需进一步操作。","p68976b9fcb59":"技术支持","p2e498d856056":"确认您的订阅 | BESTMAPLE Mail","p535feaee40d7":"请查收您的电子邮件","p76e8315fce82":"我们已向您发送一封电子邮件。请点击邮件中的链接完成注册。","pe65c01412803":"如果您没有收到邮件，请检查垃圾邮件文件夹，或稍后重试。","p3c788d027a22":"订阅我们的新闻通讯","p925338de78ef":"保持联系","p3d813fd2f5c3":"订阅以获取 BESTMAPLE 的产品新闻和业务动态。","p09ba557fd106":"电子邮件地址","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"姓名（可选）","pab42293e29e1":"您的姓名","p378b0c5691b6":"立即订阅","p2f3743a0f690":"感谢订阅","p47b5e99b9787":"您已订阅","p47f48fc2f527":"感谢您订阅 BESTMAPLE 的动态。我们期待与您保持联系。","p834cc0ee6089":"取消订阅","pb04ba49f8486":"加载中...","p73ae5b52c1be":"管理您的订阅","p5b9eec3cf50b":"请选择您要取消订阅的邮件列表。","p86a599ef4df2":"全选","p5f5110c4237e":"确认取消订阅","p453257fdcc5f":"请至少选择一项","pfca1d81fe3f9":"取消订阅确认","p94369ad72e18":"您希望停止接收来自此邮件列表的营销邮件吗？请在下方确认以取消订阅。","p6cb6c3d3268e":"是，取消订阅","p77dfd2135f4d":"取消","p4c4e6b2d1d9f":"邮箱：","pc04773b71e46":"分组：","p2cc325898a0a":"身份验证令牌无效或缺失","p2b6aa5f974e1":"身份验证令牌无效","p76701e44e111":"处理取消订阅请求时出错：","p208e8243cee2":"取消订阅成功","pb37e4a8da55e":"已成功取消订阅","p634a0d1886d1":"您已成功从我们的邮件列表中取消订阅。","p3ff57def7050":"感谢您成为我们社区的一员。"},"ja":{"p9275ae6c0258":"購読済み | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"メール配信設定","pdf615f30ffdb":"購読済み","pdb5bdad9b2f1":"すでにメーリングリストに登録されています。追加の操作は必要ありません。","p68976b9fcb59":"提供","p2e498d856056":"購読の確認 | BESTMAPLE Mail","p535feaee40d7":"メールをご確認ください","p76e8315fce82":"メールを送信しました。登録を完了するには、メール内のリンクをクリックしてください。","pe65c01412803":"メールが届かない場合は、迷惑メールフォルダをご確認いただくか、後でもう一度お試しください。","p3c788d027a22":"ニュースレターを購読する","p925338de78ef":"つながりを保ちましょう","p3d813fd2f5c3":"BESTMAPLE の製品ニュースとビジネスアップデートを受け取りましょう。","p09ba557fd106":"メールアドレス","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"名前（任意）","pab42293e29e1":"お名前","p378b0c5691b6":"今すぐ購読","p2f3743a0f690":"ご購読ありがとうございます","p47b5e99b9787":"購読が完了しました","p47f48fc2f527":"BESTMAPLE のアップデートをご購読いただきありがとうございます。今後ともよろしくお願いいたします。","p834cc0ee6089":"配信停止","pb04ba49f8486":"読み込み中...","p73ae5b52c1be":"配信設定の管理","p5b9eec3cf50b":"配信停止するメーリングリストを選択してください。","p86a599ef4df2":"すべて選択","p5f5110c4237e":"配信停止を確定","p453257fdcc5f":"少なくとも1つ選択してください","pfca1d81fe3f9":"配信停止の確認","p94369ad72e18":"このメーリングリストからのマーケティングメールの受信を停止しますか？配信停止するには以下で確認してください。","p6cb6c3d3268e":"はい、配信停止","p77dfd2135f4d":"キャンセル","p4c4e6b2d1d9f":"メール：","pc04773b71e46":"グループ：","p2cc325898a0a":"認証トークンが無効または見つかりません","p2b6aa5f974e1":"認証トークンが無効です","p76701e44e111":"配信停止リクエストの処理中にエラーが発生しました：","p208e8243cee2":"配信停止完了","pb37e4a8da55e":"配信停止が完了しました","p634a0d1886d1":"メーリングリストからの配信停止が完了しました。","p3ff57def7050":"コミュニティにご参加いただきありがとうございます。"},"de":{"p9275ae6c0258":"Bereits abonniert | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"E-MAIL-EINSTELLUNGEN","pdf615f30ffdb":"Bereits abonniert","pdb5bdad9b2f1":"Sie stehen bereits auf unserer Mailingliste. Es ist keine weitere Aktion erforderlich.","p68976b9fcb59":"Bereitgestellt von","p2e498d856056":"Bestätigen Sie Ihr Abonnement | BESTMAPLE Mail","p535feaee40d7":"Bitte prüfen Sie Ihre E-Mails","p76e8315fce82":"Wir haben Ihnen eine E-Mail gesendet. Bitte klicken Sie auf den Link in der E-Mail, um die Anmeldung abzuschließen.","pe65c01412803":"Wenn Sie die E-Mail nicht erhalten, prüfen Sie bitte Ihren Spam-Ordner oder versuchen Sie es später erneut.","p3c788d027a22":"Abonnieren Sie unseren Newsletter","p925338de78ef":"Bleiben Sie in Verbindung","p3d813fd2f5c3":"Abonnieren Sie Produktneuigkeiten und geschäftliche Updates von BESTMAPLE.","p09ba557fd106":"E-Mail-Adresse","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"Name (optional)","pab42293e29e1":"Ihr Name","p378b0c5691b6":"Jetzt abonnieren","p2f3743a0f690":"Vielen Dank für Ihr Abonnement","p47b5e99b9787":"Sie sind abonniert","p47f48fc2f527":"Vielen Dank für Ihr Abonnement der BESTMAPLE-Updates. Wir freuen uns darauf, mit Ihnen in Kontakt zu bleiben.","p834cc0ee6089":"Abmelden","pb04ba49f8486":"Wird geladen...","p73ae5b52c1be":"Abonnement verwalten","p5b9eec3cf50b":"Wählen Sie die Mailinglisten aus, von denen Sie sich abmelden möchten.","p86a599ef4df2":"Alle auswählen","p5f5110c4237e":"Abmeldung bestätigen","p453257fdcc5f":"Bitte wählen Sie mindestens eine Option aus","pfca1d81fe3f9":"Bestätigung der Abmeldung","p94369ad72e18":"Möchten Sie keine Marketing-E-Mails von dieser Mailingliste mehr erhalten? Bestätigen Sie unten, um sich abzumelden.","p6cb6c3d3268e":"Ja, abmelden","p77dfd2135f4d":"Abbrechen","p4c4e6b2d1d9f":"E-Mail:","pc04773b71e46":"Gruppe:","p2cc325898a0a":"Ungültiges oder fehlendes Authentifizierungstoken","p2b6aa5f974e1":"Ungültiges Authentifizierungstoken","p76701e44e111":"Fehler beim Verarbeiten der Abmeldeanfrage:","p208e8243cee2":"Abmeldung erfolgreich","pb37e4a8da55e":"Erfolgreich abgemeldet","p634a0d1886d1":"Sie wurden erfolgreich von unserer Mailingliste abgemeldet.","p3ff57def7050":"Vielen Dank, dass Sie Teil unserer Community sind."},"tr":{"p9275ae6c0258":"Zaten abone | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"E-POSTA TERCİHLERİ","pdf615f30ffdb":"Zaten abone","pdb5bdad9b2f1":"Zaten posta listemizdesiniz. Başka bir işlem yapmanız gerekmez.","p68976b9fcb59":"Destekleyen","p2e498d856056":"Aboneliğinizi Onaylayın | BESTMAPLE Mail","p535feaee40d7":"Lütfen e-postanızı kontrol edin","p76e8315fce82":"Size bir e-posta gönderdik. Kaydı tamamlamak için lütfen e-postadaki bağlantıya tıklayın.","pe65c01412803":"E-postayı alamazsanız lütfen spam klasörünüzü kontrol edin veya daha sonra tekrar deneyin.","p3c788d027a22":"Bültenimize abone olun","p925338de78ef":"Bağlantıda kalın","p3d813fd2f5c3":"BESTMAPLE'dan ürün haberleri ve iş güncellemeleri almak için abone olun.","p09ba557fd106":"E-posta Adresi","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"Ad (İsteğe bağlı)","pab42293e29e1":"Adınız","p378b0c5691b6":"Şimdi abone ol","p2f3743a0f690":"Abone olduğunuz için teşekkürler","p47b5e99b9787":"Abone oldunuz","p47f48fc2f527":"BESTMAPLE güncellemelerine abone olduğunuz için teşekkür ederiz. İletişimde kalmayı dört gözle bekliyoruz.","p834cc0ee6089":"Abonelikten çık","pb04ba49f8486":"Yükleniyor...","p73ae5b52c1be":"Aboneliğinizi yönetin","p5b9eec3cf50b":"Abonelikten çıkmak istediğiniz e-posta listelerini seçin.","p86a599ef4df2":"Tümünü seç","p5f5110c4237e":"Abonelikten çıkmayı onayla","p453257fdcc5f":"Lütfen en az bir tane seçin","pfca1d81fe3f9":"Abonelikten Çıkma Onayı","p94369ad72e18":"Bu e-posta listesinden pazarlama e-postaları almayı durdurmak istiyor musunuz? Abonelikten çıkmak için aşağıda onaylayın.","p6cb6c3d3268e":"Evet, abonelikten çık","p77dfd2135f4d":"İptal","p4c4e6b2d1d9f":"E-posta:","pc04773b71e46":"Grup:","p2cc325898a0a":"Kimlik doğrulama belirteci geçersiz veya eksik","p2b6aa5f974e1":"Geçersiz kimlik doğrulama belirteci","p76701e44e111":"Abonelikten çıkma isteği işlenirken hata oluştu:","p208e8243cee2":"Abonelikten Çıkma Başarılı","pb37e4a8da55e":"Abonelikten başarıyla çıkıldı","p634a0d1886d1":"E-posta listemizden başarıyla abonelikten çıktınız.","p3ff57def7050":"Topluluğumuzun bir parçası olduğunuz için teşekkür ederiz."},"vi":{"p9275ae6c0258":"Đã đăng ký | BESTMAPLE Mail","pc833acff27cd":"BESTMAPLE Mail","p68ca6006c88c":"TÙY CHỌN EMAIL","pdf615f30ffdb":"Đã đăng ký","pdb5bdad9b2f1":"Bạn đã có trong danh sách gửi thư của chúng tôi. Không cần thực hiện thêm thao tác nào.","p68976b9fcb59":"Được cung cấp bởi","p2e498d856056":"Xác nhận đăng ký của bạn | BESTMAPLE Mail","p535feaee40d7":"Vui lòng kiểm tra email của bạn","p76e8315fce82":"Chúng tôi đã gửi email cho bạn. Vui lòng nhấp vào liên kết trong email để hoàn tất đăng ký.","pe65c01412803":"Nếu bạn không nhận được email, vui lòng kiểm tra thư mục spam hoặc thử lại sau.","p3c788d027a22":"Đăng ký bản tin của chúng tôi","p925338de78ef":"Luôn kết nối","p3d813fd2f5c3":"Đăng ký để nhận tin tức sản phẩm và cập nhật kinh doanh từ BESTMAPLE.","p09ba557fd106":"Địa chỉ email","p6e837e7aa0d1":"you@company.com","p1ea4cf36019a":"Tên (không bắt buộc)","pab42293e29e1":"Tên của bạn","p378b0c5691b6":"Đăng ký ngay","p2f3743a0f690":"Cảm ơn bạn đã đăng ký","p47b5e99b9787":"Bạn đã đăng ký","p47f48fc2f527":"Cảm ơn bạn đã đăng ký nhận cập nhật từ BESTMAPLE. Chúng tôi mong được giữ liên lạc với bạn.","p834cc0ee6089":"Hủy đăng ký","pb04ba49f8486":"Đang tải...","p73ae5b52c1be":"Quản lý đăng ký của bạn","p5b9eec3cf50b":"Chọn các danh sách gửi thư mà bạn muốn hủy đăng ký.","p86a599ef4df2":"Chọn tất cả","p5f5110c4237e":"Xác nhận hủy đăng ký","p453257fdcc5f":"Vui lòng chọn ít nhất một mục","pfca1d81fe3f9":"Xác nhận hủy đăng ký","p94369ad72e18":"Bạn có muốn ngừng nhận email tiếp thị từ danh sách gửi thư này không? Xác nhận bên dưới để hủy đăng ký.","p6cb6c3d3268e":"Có, hủy đăng ký","p77dfd2135f4d":"Hủy","p4c4e6b2d1d9f":"Email:","pc04773b71e46":"Nhóm:","p2cc325898a0a":"Mã xác thực không hợp lệ hoặc bị thiếu","p2b6aa5f974e1":"Mã xác thực không hợp lệ","p76701e44e111":"Lỗi khi xử lý yêu cầu hủy đăng ký:","p208e8243cee2":"Hủy đăng ký thành công","pb37e4a8da55e":"Đã hủy đăng ký thành công","p634a0d1886d1":"Bạn đã hủy đăng ký thành công khỏi danh sách gửi thư của chúng tôi.","p3ff57def7050":"Cảm ơn bạn đã là một phần của cộng đồng chúng tôi."}};
+﻿(function(){'use strict';var packs=window.LeadPilotPublicI18n,language;try{language=localStorage.getItem('bestmaple.login-language')}catch(e){}if(!packs[language])language=String(navigator.language||'en').split('-')[0];if(!packs[language])language='en';var original=new WeakMap();function translate(){var map={};Object.keys(packs.en).forEach(function(k){Object.keys(packs).forEach(function(l){map[packs[l][k]]=packs[language][k]||packs.en[k]})});var walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[],n;while(n=walk.nextNode())if(!n.parentElement.closest('script,style,select,textarea'))nodes.push(n);nodes.forEach(function(n){var raw=original.get(n)||n.textContent;original.set(n,raw);var text=map[raw.trim()];if(text&&n.textContent!==text)n.textContent=text});document.querySelectorAll('[placeholder]').forEach(function(n){var text=map[n.placeholder];if(text)n.placeholder=text});document.documentElement.lang=language;try{localStorage.setItem('bestmaple.login-language',language)}catch(e){}}var select=document.createElement('select');select.setAttribute('aria-label','Language');select.style.cssText='position:relative;display:block;margin:12px auto;max-width:80%;padding:10px;border-radius:8px;font-size:15px;';[['en','English'],['zh','简体中文'],['ja','日本語'],['de','Deutsch'],['tr','Türkçe'],['vi','Tiếng Việt']].forEach(function(v){var o=document.createElement('option');o.value=v[0];o.textContent=v[1];select.appendChild(o)});select.value=language;select.onchange=function(){language=select.value;translate()};document.body.insertBefore(select,document.body.firstChild);translate();var scheduled=false;new MutationObserver(function(){if(!scheduled){scheduled=true;setTimeout(function(){scheduled=false;translate()},0)}}).observe(document.body,{childList:true,subtree:true});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+services:
+  postfix-billionmail:
+    environment:
+      BILLIONMAIL_HOSTNAME: ${MAPLEMAIL_SMTP_HOSTNAME:-${BILLIONMAIL_HOSTNAME}}
+  core-billionmail:
+    volumes:
+      - ./webmail/skins/bestmaple:/opt/billionmail/webmail-data/skins/bestmaple:ro
+      - ./webmail/plugins/bestmaple_tracking:/opt/billionmail/webmail-data/plugins/bestmaple_tracking:ro
+  webmail-billionmail:
+    volumes:
+      - ./webmail/skins/bestmaple:/var/www/html/skins/bestmaple:ro
+      - ./webmail/plugins/bestmaple_tracking:/var/www/html/plugins/bestmaple_tracking:ro
+    environment:
+      - BESTMAPLE_TRACKING_BASE_URL=${PUBLIC_BASE_URL:-}

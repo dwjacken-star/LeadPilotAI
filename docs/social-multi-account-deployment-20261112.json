@@ -1,0 +1,30 @@
+{
+  "image": "leadpilot/leadpilot-ai:20261112-social-multi-v1",
+  "archive_sha256": "4497d20484e16e9d48b49f636e7bd3e29764289a45dbee0fe5c16db4672c8b03",
+  "backend_sha256": "9d5a78a3bf0319c4ca4cd4aeec20119f62c638b99348a8453280b270b1c24743",
+  "index_sha256": "96f1f51eb880379f433238ea8177af9075bb29a3319b672c00b506d06b0e8762",
+  "deployed_at": "2026-11-11T23:59:59.077406+00:00",
+  "server": "47.237.67.184",
+  "url": "https://mail.best-maple.com/bm",
+  "backup": "/opt/BillionMail/backup/20261112-social-multi-235809",
+  "previous_image": "leadpilot/leadpilot-ai:20261111-login-language-v5",
+  "deployment_status": "deployed_verified",
+  "checks": {
+    "data_credentials_config_and_other_containers_preserved": true,
+    "running_binary_matches_release_sha256": true,
+    "new_columns_indexes_and_target_constraint_migrated": true,
+    "public_admin_index_entrypoints_and_social_chunks_match_release": true,
+    "existing_webmail_login_https_healthy": true,
+    "authenticated_social_lists_typed_accounts_manual_reminders_and_image_models": true,
+    "new_oauth_task_endpoints_reject_unowned_or_missing_tasks": true,
+    "unauthenticated_manual_reminders_rejected": true,
+    "no_new_social_publication_receipts": true
+  },
+  "database_recreated": false,
+  "mail_services_recreated": false,
+  "test_customer_emails_sent": false,
+  "test_public_posts_created": false,
+  "live_platform_oauth_tested": false,
+  "live_public_posting_tested": false,
+  "existing_recipient_accepted_delta": 0
+}

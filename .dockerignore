@@ -1,0 +1,12 @@
+.tools
+**/node_modules
+**/dist
+**/.git
+**/logs
+.env
+*-data
+postgresql-socket
+php-sock
+ssl
+ssl-self-signed
+backup
