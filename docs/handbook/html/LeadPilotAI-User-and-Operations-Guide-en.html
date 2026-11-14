@@ -1,0 +1,1032 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LeadPilot AI · Architecture and Operations Handbook</title><style>
+@page {size:A4; margin:17mm 16mm 18mm}
+@page interface {size:A4 landscape; margin:12mm 13mm 16mm}
+*{box-sizing:border-box}html{font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;color:#23384e;background:#fff;font-size:12px;line-height:1.72}body{margin:0}h1{font-size:28px;line-height:1.35;color:#15334c}h2{font-size:19px;color:#087d87;border-bottom:1px solid #d5e6ea;padding-bottom:5px;margin-top:25px;break-after:avoid}h3{font-size:15px;color:#21445c;break-after:avoid}p,li{orphans:3;widows:3}a{color:#047b85;text-decoration:none}strong{color:#173c53}table{border-collapse:collapse;width:100%;font-size:10.5px;line-height:1.55;margin:14px 0;table-layout:auto}thead{display:table-header-group}th,td{border:1px solid #d5e0e9;padding:7px 8px;vertical-align:top;word-break:normal;overflow-wrap:anywhere}th{background:#edf5f8;color:#15354f}tr{break-inside:avoid}code{font-family:Consolas,"Microsoft YaHei",monospace;font-size:.91em;background:#edf3f7;padding:1px 3px;overflow-wrap:anywhere}pre{background:#edf3f7;border-left:3px solid #1395a0;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;break-inside:avoid}pre code{padding:0;background:none}blockquote{border-left:3px solid #1a9ca5;padding:8px 15px;background:#eef8f8;margin:15px 0}.cover{min-height:240mm;display:flex;flex-direction:column;justify-content:center;break-after:page}.cover .brand{font-size:45px;font-weight:800;color:#086c76;margin-bottom:14px}.cover p{font-size:16px}.cover .note{font-size:12px;background:#eef6f9;padding:20px;border-radius:8px}.contents{break-after:page}.contents ul{padding-left:20px}.contents>ul>li{margin-bottom:10px}.chapter{break-before:page}.interface{page:interface;break-before:page;break-after:page;margin:0;width:100%;text-align:center;break-inside:avoid}.interface figcaption{text-align:left;font-size:15px;font-weight:700;line-height:1.5;color:#15354f;margin:0 0 8px}.interface img{display:block;width:auto;height:auto;max-width:100%;max-height:158mm;object-fit:contain;margin:0 auto;border:1px solid #d5e0e9}.interface .image-note{text-align:left;font-size:10px;color:#536d82;margin-top:7px}.screen-only{background:#ecf7f7;padding:12px;border-radius:8px}.chapter-title-note{color:#61798a;font-size:11px}@media screen{body{max-width:1040px;margin:30px auto;padding:30px;box-shadow:0 1px 20px #dfe6ed}.cover{min-height:550px}.interface{margin:28px 0}.interface img{max-height:none;width:100%}.chapter{margin-top:50px}.screen-only{margin-bottom:25px}}@media print{.screen-only{display:none}}
+</style></head><body><div class="screen-only">Printable HTML; companion PDF and Markdown are in the handbook directory.</div><section class="cover"><div class="brand">LeadPilot AI</div><h1>LeadPilot AI · Architecture and Operations Handbook</h1><p>Technical architecture · Functional architecture · User manual · Operations</p><p>Version 1.0 · 2026-11-14 · Source baseline cf57fb3</p><p class="note">This handbook uses the real application frontend with fictional demonstration data. No production connection, customer mail or social publication. SQL and credentials remain private; screenshots are not production acceptance.</p><p><a href="https://github.com/dwjacken-star/LeadPilotAI">github.com/dwjacken-star/LeadPilotAI</a></p></section><nav class="contents"><h1>Contents</h1><ul><li><a href="#chapter-0-section-0">Technical Architecture</a><ul><li><a href="#chapter-0-section-1">1. Product and architectural style</a></li><li><a href="#chapter-0-section-2">2. Technology inventory</a></li><li><a href="#chapter-0-section-3">3. Deployment and network boundaries</a></li><li><a href="#chapter-0-section-4">4. Frontend application structure</a></li><li><a href="#chapter-0-section-5">5. Backend domains and API organization</a></li><li><a href="#chapter-0-section-6">6. Authorization and data protection</a></li><li><a href="#chapter-0-section-7">7. Data architecture</a></li><li><a href="#chapter-0-section-8">8. Durable execution and reliability</a></li><li><a href="#chapter-0-section-9">9. AI registry and external boundaries</a></li><li><a href="#chapter-0-section-10">10. Engineering limitations and risks</a></li></ul></li><li><a href="#chapter-1-section-0">Functional Architecture</a><ul><li><a href="#chapter-1-section-1">1. Business lifecycle</a></li><li><a href="#chapter-1-section-2">2. Domains and navigation</a></li><li><a href="#chapter-1-section-3">3. Responsibilities and approval separation</a></li><li><a href="#chapter-1-section-4">4. Materials-to-email lifecycle</a></li><li><a href="#chapter-1-section-5">5. Growth Master: skills and workflows</a></li><li><a href="#chapter-1-section-6">6. Social lifecycle</a></li><li><a href="#chapter-1-section-7">7. Contacts and automation boundaries</a></li><li><a href="#chapter-1-section-8">8. Acceptance matrix</a></li></ul></li><li><a href="#chapter-2-section-0">Project User Manual</a><ul><li><a href="#chapter-2-section-1">Scope and screenshot provenance</a></li><li><a href="#chapter-2-section-2">1. First-use checklist</a></li><li><a href="#chapter-2-section-3">2. Login, language and workbench</a></li><li><a href="#chapter-2-section-4">3. Organization and access (administrators)</a></li><li><a href="#chapter-2-section-8">4. Domains, mailboxes and mail services</a></li><li><a href="#chapter-2-section-11">5. AI model service and budgets</a></li><li><a href="#chapter-2-section-12">6. Company, products and materials</a></li><li><a href="#chapter-2-section-16">7. Contacts, groups and import</a></li><li><a href="#chapter-2-section-17">8. Templates, campaign drafts and email delivery</a></li><li><a href="#chapter-2-section-22">9. AI prospecting</a></li><li><a href="#chapter-2-section-23">10. Intelligence and Growth Master</a></li><li><a href="#chapter-2-section-27">11. Social accounts, content and scheduling</a></li><li><a href="#chapter-2-section-32">12. CRM, inquiries and replies</a></li><li><a href="#chapter-2-section-33">13. Overview, reports and daily review</a></li><li><a href="#chapter-2-section-34">14. Quick troubleshooting</a></li><li><a href="#chapter-2-section-35">15. Definition of completion</a></li></ul></li><li><a href="#chapter-3-section-0">Deployment, Maintenance and Troubleshooting</a><ul><li><a href="#chapter-3-section-1">1. Published files and private dependencies</a></li><li><a href="#chapter-3-section-2">2. Environment and configuration</a></li><li><a href="#chapter-3-section-3">3. Build and validation</a></li><li><a href="#chapter-3-section-7">4. Compose deployment</a></li><li><a href="#chapter-3-section-8">5. Health checks and release acceptance</a></li><li><a href="#chapter-3-section-9">6. Backup strategy</a></li><li><a href="#chapter-3-section-10">7. Upgrade and rollback</a></li><li><a href="#chapter-3-section-11">8. Troubleshooting paths</a></li><li><a href="#chapter-3-section-12">9. Daily and periodic operations</a></li><li><a href="#chapter-3-section-13">10. Rebuilding documentation</a></li></ul></li></ul></nav><section class="chapter"><h1 id="chapter-0-section-0">Technical Architecture</h1>
+<p><strong>Product: LeadPilot AI | Document version: 1.0 | Analysis date: 2026-11-14</strong><br>
+Source baseline: <code>cf57fb3</code>. This document describes repository code and Compose configuration, not a live production audit or performance certification. Screenshots use an existing local frontend build with fictional data; see the User Manual for provenance.</p>
+<h2 id="chapter-0-section-1">1. Product and architectural style</h2>
+<p>LeadPilot AI extends the BillionMail mail platform with B2B prospecting, content marketing and customer follow-up. The internal Go module remains <code>billionmail-core</code>; some container, directory and protocol identifiers retain BillionMail / MapleMail names while the user-facing brand is LeadPilot AI.</p>
+<p>The backend is a <strong>modular monolith</strong>: HTTP APIs, domain services, timers and durable work queues run in one Go application. Mail protocol components run in separate containers. Growth Master's fourteen skills are registered logical capabilities, not fourteen independently deployed microservices. This repository does not require a separate message broker, managed agent cloud or general-purpose visual DAG engine.</p>
+<figure class="interface"><figcaption>Technical architecture</figcaption><img src="../assets/diagrams/technical-en.svg" alt="Technical architecture"><div class="image-note">Diagram based on source and default orchestration.</div></figure><p>Diagram source: <a href="../assets/diagrams/technical.mmd">Mermaid architecture</a>.</p>
+<h2 id="chapter-0-section-2">2. Technology inventory</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Evidence</th>
+<th>Technology and responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management UI</td>
+<td><code>core/frontend/package.json</code></td>
+<td>Vue 3, TypeScript, Vue Router, Pinia; Naive UI components; Vue I18n</td>
+</tr>
+<tr>
+<td>Frontend tooling</td>
+<td>Scripts / pnpm lockfile</td>
+<td>Rsbuild, Node.js 22, locked pnpm dependencies, Axios, streamed SSE responses, ECharts</td>
+</tr>
+<tr>
+<td>Application</td>
+<td><code>core/go.mod</code></td>
+<td>Module Go 1.22, toolchain 1.23.2, GoFrame v2.9; controllers and domain services</td>
+</tr>
+<tr>
+<td>Database</td>
+<td><code>docker-compose.yml</code></td>
+<td>PostgreSQL 17.4: records, authorization, execution state, leases, quota reservations, audit</td>
+</tr>
+<tr>
+<td>Cache and support</td>
+<td>Compose / Redis service</td>
+<td>Redis 7.4.2: existing cache and mail-component state; durable tasks are not simply an in-memory Redis queue</td>
+</tr>
+<tr>
+<td>Outbound mail</td>
+<td>Postfix / relay services</td>
+<td>SMTP handoff, queue, relay and sender identity; acceptance is not final receipt</td>
+</tr>
+<tr>
+<td>Mail access</td>
+<td>Dovecot / Roundcube</td>
+<td>IMAP/POP3, mailbox authentication and storage; Webmail integrates through Core/PHP-FPM</td>
+</tr>
+<tr>
+<td>Protection</td>
+<td>Rspamd / Fail2ban</td>
+<td>Spam processing, DKIM configuration and existing access protection</td>
+</tr>
+<tr>
+<td>External integrations</td>
+<td><code>aimodels</code>, <code>growth</code>, <code>social</code></td>
+<td>AI providers, Serper search/scrape, Facebook Pages, LinkedIn organizations, optional WhatsApp</td>
+</tr>
+</tbody>
+</table>
+<p>Versions describe code declarations or default Compose values, not necessarily running production images. Provider capabilities, platform approval and API versions require operator verification.</p>
+<h2 id="chapter-0-section-3">3. Deployment and network boundaries</h2>
+<p>Default Compose defines seven application services: PostgreSQL, Redis, Rspamd, Dovecot, Postfix, Roundcube and Core. Core serves the console/APIs, selected public pages and reverse proxies; mail protocols remain separate.</p>
+<ul>
+<li>Use trusted HTTPS for production and restrict administrative entry and source addresses.</li>
+<li>PostgreSQL defaults to host binding <code>127.0.0.1:25432</code>; Redis to <code>127.0.0.1:26379</code>. Do not expose these ports publicly.</li>
+<li>Mail defaults include SMTP 25, Submission 587, SMTPS 465, IMAP 143/993 and POP3 110/995. Open only required services.</li>
+<li><code>SafePath</code> is an additional entrance policy, not a substitute for JWT, account state, RBAC, TLS or a firewall.</li>
+<li>Core mounts the Docker socket and has additional container capabilities. A <code>:ro</code> host mount does <strong>not</strong> make the Docker API read-only; this remains a high-privilege trust boundary.</li>
+<li>The default Core image still references upstream naming. Use project-specific Dockerfiles/Compose overrides for customized code; pulling an upstream Core image does not deploy local changes.</li>
+</ul>
+<h2 id="chapter-0-section-4">4. Frontend application structure</h2>
+<p><code>core/frontend/src</code> contains routes, pages, feature modules, stores, the API client and shared components.</p>
+<ol>
+<li><code>router/modules</code> defines navigation; stable identifiers, not localized titles, order menus.</li>
+<li><code>router/index.ts</code> checks local session state, loads the server Principal and evaluates page access.</li>
+<li><code>features/workspace/api.ts</code> provides department/role context and the permission catalog; buttons are operation-specific.</li>
+<li>The workbench store manages multiple tabs, active-page state and request ownership so stale requests do not contaminate a different page.</li>
+<li><code>api/index.ts</code> adds Bearer authorization and <code>Accept-Language</code>, and handles business envelopes, downloads, cancellation and errors.</li>
+<li>A common response envelope is <code>{code, success, msg, data}</code>. Hidden buttons are a usability measure; <strong>server authorization remains mandatory</strong>.</li>
+</ol>
+<p>Language resources include Chinese, English, Japanese, German, Turkish and Vietnamese. This delivery provides Chinese and English guides, not certification of every translated business term.</p>
+<h2 id="chapter-0-section-5">5. Backend domains and API organization</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Responsibility</th>
+<th>Location / entry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bootstrap and routing</td>
+<td>Initialization, model migration, timers, public pages, API registration</td>
+<td><code>core/internal/cmd/cmd.go</code></td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Principal, role-bound data scope, shared policies, resource grants, legacy boundaries</td>
+<td><code>service/governance</code>, <code>controller/enterprise</code></td>
+</tr>
+<tr>
+<td>Email engine</td>
+<td>Campaigns, schedules, automations, API mail, shared quotas, SMTP handoff</td>
+<td><code>service/batch_mail</code></td>
+</tr>
+<tr>
+<td>Materials / prospecting</td>
+<td>Files, products, extraction, public evidence, contact verification, outreach, inquiries</td>
+<td><code>service/growth</code>; <code>/api/growth/action</code></td>
+</tr>
+<tr>
+<td>Intelligence</td>
+<td>Industry packs, 14 skills, 6 workflows, approvals, budgets and audit</td>
+<td><code>growth/master_*.go</code>; growth action <code>master</code></td>
+</tr>
+<tr>
+<td>Social</td>
+<td>OAuth, account grants, content versions, review, scheduling, delivery and metrics</td>
+<td><code>service/social</code>; <code>/api/social/action</code></td>
+</tr>
+<tr>
+<td>CRM</td>
+<td>Customers, mailbox synchronization, follow-ups, AI drafts, manual replies</td>
+<td><code>service/crm</code>; <code>/api/crm/action</code></td>
+</tr>
+<tr>
+<td>AI registry</td>
+<td>Unified model references, provider configuration, capabilities, encrypted secrets</td>
+<td><code>service/aimodels</code>, <code>service/aicredentials</code></td>
+</tr>
+<tr>
+<td>Mail operations</td>
+<td>Domains/DNS, mailboxes, relays, mail statistics, SSL and containers</td>
+<td>Related <code>domains</code>, <code>mail_boxes</code>, <code>mail_service</code> modules</td>
+</tr>
+</tbody>
+</table>
+<p>Several domains use action-style POST APIs. Do not infer REST endpoints from menu names. Integrations must use actual request contracts and authorization, rather than directly writing database tables or bypassing reviewed legacy boundaries.</p>
+<h2 id="chapter-0-section-6">6. Authorization and data protection</h2>
+<p>The business-access chain is: entrance policy → JWT validation → account/department/role status → operation permission → data scope → resource/mailbox grant → business-state checks.</p>
+<p>Scopes include self, department, descendants, selected departments and all. The scope belongs to the role granting the operation; independently maximizing permissions and scopes across roles can widen access incorrectly. A sending permission is separate from a sender-mailbox grant.</p>
+<p><code>LegacyBoundary</code> restricts ordinary members from legacy administrative APIs whose queries may lack department predicates. Account and role changes affect sessions through token versions and live checks. Background senders re-check authorization rather than relying only on draft creation.</p>
+<p>Files use private storage and authorized downloads. External content, filenames, archive paths, URLs and model output are untrusted. Model-generated email addresses are not source evidence, and generated text does not replace approval or authorize contractual commitments.</p>
+<h2 id="chapter-0-section-7">7. Data architecture</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Major entities</th>
+<th>Relationships</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity / governance</td>
+<td><code>account</code>, <code>role</code>, <code>account_role</code>, <code>bm_departments</code>, <code>bm_resource_grants</code>, <code>bm_send_policies</code>, <code>bm_security_audit</code></td>
+<td>Accounts, roles, departments, operation scope and grants</td>
+</tr>
+<tr>
+<td>Contacts / email</td>
+<td><code>bm_contact_groups</code>, <code>bm_contacts</code>, <code>bm_tags</code>, <code>email_templates</code>, <code>email_tasks</code>, <code>bm_campaign_schedules</code>, <code>bm_automation_rules</code></td>
+<td>Department/owner, audience, template, task and subscription</td>
+</tr>
+<tr>
+<td>Materials / growth</td>
+<td><code>bm_growth_companies/products/assets/versions</code>, <code>bm_growth_plans/runs/leads/messages/inquiries/jobs</code></td>
+<td>Approved company versions → execution → evidence → lead → outreach</td>
+</tr>
+<tr>
+<td>Intelligence</td>
+<td><code>bm_gm_packs/workflows/runs/steps/evidence/prospects/contents/events/usage/audit</code></td>
+<td>Industry and skill snapshots, checkpoints, approvals, usage and audit</td>
+</tr>
+<tr>
+<td>Social</td>
+<td><code>bm_social_accounts/plans/variants/deliveries/interactions/metrics/jobs</code></td>
+<td>Account authorization → reviewed variant → frozen delivery → receipt</td>
+</tr>
+<tr>
+<td>CRM</td>
+<td><code>bm_crm_customers/messages/followups/mailbox_sync</code></td>
+<td>Customer, conversation, follow-up and synchronization cursor</td>
+</tr>
+<tr>
+<td>Mail foundation</td>
+<td><code>domain</code>, <code>mailbox</code>, <code>recipient_info</code>, <code>bm_options</code>, others</td>
+<td>Domains, mailboxes, recipient/subscription and system configuration</td>
+</tr>
+</tbody>
+</table>
+<p>Slash-separated names summarize entity families, not a complete DDL listing. Snapshots, business validation and logical archival also control lifecycle; foreign keys alone do not define deletion behavior.</p>
+<p>Private growth storage defaults to <code>core/data/growth-files</code>, overridable with <code>MAPLEMAIL_GROWTH_DATA</code>. The credential master key <code>.ai-master-key</code> resides in the private storage directory. Restore the database together with this key, files, mail data and configuration; restoring only database rows does not restore secret decryption.</p>
+<h2 id="chapter-0-section-8">8. Durable execution and reliability</h2>
+<figure class="interface"><figcaption>Processing lifecycle</figcaption><img src="../assets/diagrams/workflow-en.svg" alt="Processing lifecycle"><div class="image-note">Diagram based on source and default orchestration.</div></figure><p>Timers start Growth, Social, email workers, imports, schedules and log aggregation. Database records hold state, checkpoints, quota reservations, unique keys and leases. Claiming commonly uses <code>FOR UPDATE SKIP LOCKED</code> with a unique lease marker.</p>
+<p>Limits may apply simultaneously to system, department, mailbox, IP, provider and task. Zero removes only the extra limit at that layer; it does not override higher layers. Transactions and PostgreSQL advisory locks coordinate reservations. Failed attempts can remain conservatively charged.</p>
+<p>Ambiguous HTTP/SMTP outcomes remain <code>unknown</code> and require reconciliation before retry. Pausing/canceling usually stops future work, not messages already in Postfix or posts already published externally. Application SMTP acceptance, mail-log delivery and recipient reading are distinct measurements.</p>
+<h2 id="chapter-0-section-9">9. AI registry and external boundaries</h2>
+<p>The registry centralizes provider name, HTTPS base URL, protocol, model ID, enabled state and declared capabilities: text/chat/vision/image/embedding. Canonical references are <code>ai::&lt;provider&gt;::&lt;model&gt;</code>.</p>
+<ul>
+<li>OpenAI Responses and OpenAI-compatible Chat Completions are different protocols; compatibility needs a real provider test.</li>
+<li>Declared vision/file support is not a guarantee. PDF input, image understanding and image generation are separate capabilities.</li>
+<li>Secrets are not returned in plaintext; interfaces show configured state. Changing a base URL can require renewed credentials to prevent forwarding to the wrong endpoint.</li>
+<li>Serper supports search/scraping; returned evidence does not establish complete internet coverage.</li>
+<li>Facebook/LinkedIn authorization, approval, publishing and metrics depend on platform products and granted permissions. Country/language selection is not advertising geo-targeting.</li>
+<li>WhatsApp is optional and requires the official account, templates, consent and webhook setup; it is not enabled merely because the interface exists.</li>
+</ul>
+<h2 id="chapter-0-section-10">10. Engineering limitations and risks</h2>
+<ol>
+<li><strong>Private SQL dependencies:</strong> publication rules exclude migration/test SQL, while Go source embeds some of these files. A public clone alone cannot build the backend; matching scripts must be supplied privately.</li>
+<li><strong>Runtime secrets:</strong> never publish <code>.env</code>, <code>env_init</code>, private certificates, the AI master key or access tokens.</li>
+<li><strong>Privileged Core:</strong> control Docker socket access, container capabilities and mail-configuration operations tightly.</li>
+<li><strong>Uncertain external outcomes:</strong> unknown states, expired tokens, platform approvals, provider features and mail reputation require operator intervention.</li>
+<li><strong>Validation scope:</strong> full backend tests and frontend build timed out at baseline publication. Documentation captures are not a new full build or production acceptance test.</li>
+<li><strong>HA and scaling:</strong> default deployment is not multi-region HA. Before adding Core replicas, validate singleton timers, shared limits, leases, local Docker dependencies and duplicate-send protection; more replicas alone do not establish high availability.</li>
+</ol>
+<p>See the Operations Guide for deployment, backup, rollback and troubleshooting.</p>
+</section>
+<section class="chapter"><h1 id="chapter-1-section-0">Functional Architecture</h1>
+<p><strong>LeadPilot AI | Version 1.0 | 2026-11-14 | Source baseline <code>cf57fb3</code></strong></p>
+<h2 id="chapter-1-section-1">1. Business lifecycle</h2>
+<p>The platform connects approved business materials → public evidence → candidate discovery → contact verification → content creation → review and controlled delivery → inbound processing → CRM follow-up and measurement. It does not guarantee transactions or automatically establish legal permission to market.</p>
+<figure class="interface"><figcaption>Functional architecture</figcaption><img src="../assets/diagrams/functional-en.svg" alt="Functional architecture"><div class="image-note">Diagram based on source and default orchestration.</div></figure><p>Source: <a href="../assets/diagrams/functional.mmd">Mermaid functional diagram</a>.</p>
+<h2 id="chapter-1-section-2">2. Domains and navigation</h2>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Route / entry</th>
+<th>Inputs and operations</th>
+<th>Outputs and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login / workspace</td>
+<td><code>/login</code>, <code>/workspace</code></td>
+<td>Account, department, roles, workbench tabs</td>
+<td>Server-authorized functionality; administrator/member views can differ</td>
+</tr>
+<tr>
+<td>Overview</td>
+<td><code>/overview</code></td>
+<td>Domain, period, mail logs/statistics</td>
+<td>Delivery, open, click, bounce and queue metrics; distinguish coverage and unknown values</td>
+</tr>
+<tr>
+<td>Organization</td>
+<td>Workspace departments, members, roles, grants and policies</td>
+<td>Department tree, role scope, operation permissions, sender grants</td>
+<td>Data isolation, shared limits and audit; role permission is not mailbox authorization</td>
+</tr>
+<tr>
+<td>Contacts</td>
+<td><code>/contacts</code> or workspace tabs</td>
+<td>Groups, addresses, imports, filters, confirmation/subscription, tags</td>
+<td>Audiences, import progress and review; discovery is not marketing consent</td>
+</tr>
+<tr>
+<td>Templates / email</td>
+<td><code>/template</code>, <code>/market</code> or workspace</td>
+<td>HTML/AI templates, audience, sender pool, subject, policies</td>
+<td>Separate tasks, content snapshots, queue and reports; pause does not recall submitted mail</td>
+</tr>
+<tr>
+<td>Schedules / automation</td>
+<td>Workspace tabs, <code>/automation</code></td>
+<td>Once/daily/weekly/monthly, timezone, subscription-confirmed conditions</td>
+<td>Separate runs; controlled sequential rules, not an arbitrary workflow canvas</td>
+</tr>
+<tr>
+<td>Send API</td>
+<td><code>/send</code></td>
+<td>Authorized integration credentials, audience and templates</td>
+<td>Governed delivery; cannot bypass scope or global limits</td>
+</tr>
+<tr>
+<td>Materials</td>
+<td><code>/materials</code></td>
+<td>Company/brand facts, products, files, mapping, extraction and approval</td>
+<td>Published facts, versions, private files and review rows</td>
+</tr>
+<tr>
+<td>AI prospecting</td>
+<td><code>/outreach</code></td>
+<td>Approved company/products, markets, search, verification, sending policy</td>
+<td>Candidates, leads, messages, inquiries and jobs; addresses must appear in real sources</td>
+</tr>
+<tr>
+<td>Intelligence</td>
+<td><code>/intelligence</code></td>
+<td>Industry packs, skills, six workflows, quality thresholds and budgets</td>
+<td>Evidence, prospect staging, approvals, checkpoints, cost and audit</td>
+</tr>
+<tr>
+<td>Social marketing</td>
+<td><code>/social</code></td>
+<td>Official authorization, platform/market/language variants, review and schedule</td>
+<td>Deliveries, manual reminders, calendar, interactions and metrics; platform constraints apply</td>
+</tr>
+<tr>
+<td>CRM</td>
+<td><code>/crm</code></td>
+<td>Customers, synchronized mail, stages, follow-ups, AI drafts</td>
+<td>Inquiries, replies and follow-up; a draft is not a sent reply</td>
+</tr>
+<tr>
+<td>AI model registry</td>
+<td><code>/settings/ai-model</code>, module AI settings</td>
+<td>Provider, protocol, capabilities, credentials and budgets</td>
+<td>Unified options and encrypted secrets; saving settings does not prove a real call works</td>
+</tr>
+<tr>
+<td>Mail foundation / operations</td>
+<td><code>/domain</code>, <code>/mailbox</code>, <code>/smtp</code>, <code>/logs</code>, <code>/settings</code></td>
+<td>DNS, mailboxes, SSL, relay, queue, containers and configuration</td>
+<td>Mail services and diagnostics; privileged operations need administrator review</td>
+</tr>
+</tbody>
+</table>
+<p>These are source routes, not deployment-specific SafePath entries or published production URLs. Some administrator menus retain legacy pages while ordinary members use scoped workspace views. The User Manual emphasizes the unified workspace lifecycle.</p>
+<h2 id="chapter-1-section-3">3. Responsibilities and approval separation</h2>
+<table>
+<thead>
+<tr>
+<th>Responsibility</th>
+<th>Suggested duties</th>
+<th>Additional checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System administrator</td>
+<td>Accounts, departments, roles, grants, AI/platform setup, infrastructure</td>
+<td>Least privilege, encryption key/backup, global limits</td>
+</tr>
+<tr>
+<td>Materials maintainer</td>
+<td>Business facts, imports, recognition and review</td>
+<td>Human-edit protection, sensitive fields, internal/public separation</td>
+</tr>
+<tr>
+<td>Content reviewer</td>
+<td>Publish approved facts, review mail/social versions</td>
+<td>Sources, locale, trademark/compliance, unsubscribe and commitments</td>
+</tr>
+<tr>
+<td>Marketing operator</td>
+<td>Audience, drafts, plans, content versions and monitoring</td>
+<td>Sender/Page grants, window, budget and customer cooldown</td>
+</tr>
+<tr>
+<td>Sales/support</td>
+<td>CRM, inquiries, follow-ups and reviewed replies</td>
+<td>Correct mailbox/customer, sensitive facts, commitments, duplicate replies</td>
+</tr>
+<tr>
+<td>Auditor/read-only user</td>
+<td>Reports, execution state, evidence and audit</td>
+<td>Read/export permissions and department scope</td>
+</tr>
+</tbody>
+</table>
+<p>These are recommended responsibilities, not fixed built-in role names. Effective access combines operations, role-bound scope, grants and live account/resource state.</p>
+<h2 id="chapter-1-section-4">4. Materials-to-email lifecycle</h2>
+<ol>
+<li>Save internal company facts and publish only reviewed external facts.</li>
+<li>Import products with worksheet, source row and text SKU preserved. Review conflicts before publishing products/materials.</li>
+<li>Choose approved company facts, products, markets, search requirements and address filters.</li>
+<li>Search and scrape public sources; the model must not invent addresses.</li>
+<li>Run DNS/MX, SMTP and catch-all checks. Exclude invalid addresses and retain uncertain ones for review.</li>
+<li>After verification, authorization, subscription/suppression and cooldown checks, generate personalized content and freeze source versions.</li>
+<li>Review manually, or hand off under an explicitly enabled prospecting auto-send policy to the existing mail engine.</li>
+<li>Re-check rights, source versions, unsubscribe, plan state, replies and quotas immediately before SMTP handoff.</li>
+<li>Process genuine/uncertain inquiries through the inquiry workflow and CRM. Do not blindly resend ambiguous submissions.</li>
+</ol>
+<p>Verification is a time-bound probe, not permanent reachability. Platform/SMTP acceptance is not recipient receipt or reading.</p>
+<h2 id="chapter-1-section-5">5. Growth Master: skills and workflows</h2>
+<p>One logical planner coordinates fixed registered skills and immutable run snapshots. Each skill supports enabled state, model, timeout, retries, item limit and output budget.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Skill</th>
+<th>Quality gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S01</td>
+<td>Global News Monitor</td>
+<td>Public sources and coverage</td>
+</tr>
+<tr>
+<td>S02</td>
+<td>Market Trend Analyst</td>
+<td>Existing citations and explicit uncertainty</td>
+</tr>
+<tr>
+<td>S03</td>
+<td>Product Hotspot Detector</td>
+<td>Observations are not sales statistics</td>
+</tr>
+<tr>
+<td>S04</td>
+<td>Purchase Intent Detector</td>
+<td>Dated source evidence</td>
+</tr>
+<tr>
+<td>S05</td>
+<td>B2B Company Finder</td>
+<td>Public website and deduplication</td>
+</tr>
+<tr>
+<td>S06</td>
+<td>Contact Intelligence</td>
+<td>Contact must appear in source</td>
+</tr>
+<tr>
+<td>S07</td>
+<td>Data Cleaner</td>
+<td>Separate verified, invalid, uncertain and filtered</td>
+</tr>
+<tr>
+<td>S08</td>
+<td>Lead Scoring</td>
+<td>Missing facts score zero; record rule version and breakdown</td>
+</tr>
+<tr>
+<td>S09</td>
+<td>Product Matching</td>
+<td>Approved offerings and supported conditions only</td>
+</tr>
+<tr>
+<td>S10</td>
+<td>AI Content Creator</td>
+<td>Review exact target/content before first contact or publication</td>
+</tr>
+<tr>
+<td>S11</td>
+<td>Campaign Orchestrator</td>
+<td>Approval, rights, suppression, budget and resource grants</td>
+</tr>
+<tr>
+<td>S12</td>
+<td>Reply Intelligence</td>
+<td>Classification/drafts; no unauthorized contractual commitments</td>
+</tr>
+<tr>
+<td>S13</td>
+<td>Growth Analytics</td>
+<td>Unavailable measurements remain unknown</td>
+</tr>
+<tr>
+<td>S14</td>
+<td>Data Sync &amp; Audit</td>
+<td>Scoped, deduplicated CRM links and audit</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Skill sequence</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WF01</td>
+<td>S01 → S02 → S03 → S14</td>
+<td>Industry/market observation and hotspots</td>
+</tr>
+<tr>
+<td>WF02</td>
+<td>S04 → S05 → S06 → S07 → S08 → S09 → S14</td>
+<td>Purchase-intent-driven discovery and qualification</td>
+</tr>
+<tr>
+<td>WF03</td>
+<td>S05 → S06 → S07 → S08 → S09 → S14</td>
+<td>Public B2B company/contact discovery</td>
+</tr>
+<tr>
+<td>WF04</td>
+<td>S10 → S11 → S14</td>
+<td>Multilingual content, approval and channel handoff</td>
+</tr>
+<tr>
+<td>WF05</td>
+<td>S12 → S08 → S09 → S14</td>
+<td>Inbound understanding, opportunity scoring and follow-up</td>
+</tr>
+<tr>
+<td>WF06</td>
+<td>S13 → S02 → S14</td>
+<td>Daily effectiveness, cost and improvement analysis</td>
+</tr>
+</tbody>
+</table>
+<p>Industry packs define product/service type, terminology, buyer types, intent/exclusion words, fields, score weights, confidence and forbidden claims. AI keyword expansion needs explicit selection and is not evidence of a purchase.</p>
+<p>Controlled waiting states include <code>waiting_approval</code>, <code>waiting_external</code>, <code>configuration_required</code> and <code>budget_exhausted</code>. Resolve the specific cause before resuming. Creating a pack does not enroll existing production plans automatically.</p>
+<h2 id="chapter-1-section-6">6. Social lifecycle</h2>
+<p>Approved company/task materials → content variants → platform/account/market matching → review → scheduling → live grant/budget checks → external submission → reconciliation → interactions and official metrics.</p>
+<ul>
+<li>Multiple authorized accounts can be selected and matched to market variants. Authorization alone does not enable real publishing.</li>
+<li>API delivery for Facebook Pages/LinkedIn organizations differs from manual delivery for supported personal-account workflows. Manual confirmation is not proof the system published automatically.</li>
+<li>Editing content requires renewed review; schedules freeze text, images, source versions and policies.</li>
+<li>Ambiguous outcomes become <code>unknown</code>; task deletion does not delete existing external posts.</li>
+<li>Local refresh and platform synchronization are different operations. Current implementation includes four-hour automatic synchronization and manual sync.</li>
+<li>Unavailable metrics show <code>—</code>, not zero. Adding per-post reach does not measure unique people.</li>
+<li>Video, live streaming, advertising and unrestricted automatic comment replies are not capabilities promised by this handbook. External data remains subject to current platform policies.</li>
+</ul>
+<h2 id="chapter-1-section-7">7. Contacts and automation boundaries</h2>
+<p>Confirmation, subscription, active status, verification and marketing permission are different properties. Importing confirmed contacts can trigger enabled subscription automation, so review the import status deliberately.</p>
+<p>Automations use ordered conditions such as wait, always send, previous message opened/clicked/not opened. They normally enroll newly confirmed contacts after rule creation. Tracking may be influenced by privacy proxies or security scanners.</p>
+<p>Schedules use timezones and overlap protection. Downtime recovery is not bulk replay of every missed date. Revoked rights/grants, changed department ownership and unsubscribe affect future work.</p>
+<h2 id="chapter-1-section-8">8. Acceptance matrix</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Minimum verification</th>
+<th>What this documentation proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI</td>
+<td>Routes, components, language and visible controls</td>
+<td>Real frontend screenshots with fictional data, not backend integration</td>
+</tr>
+<tr>
+<td>Rights</td>
+<td>Department isolation, role scope, downloads, worker re-checks</td>
+<td>Describes implementation; production checks still required</td>
+</tr>
+<tr>
+<td>Mail</td>
+<td>Controlled mailbox, final receipt, unsubscribe, bounce and unknown</td>
+<td>No real customer mail sent in this documentation task</td>
+</tr>
+<tr>
+<td>AI/search</td>
+<td>Protocol, credential, budget, citations and errors</td>
+<td>No paid provider calls in this task</td>
+</tr>
+<tr>
+<td>Social</td>
+<td>Official authorization, approval, API/manual mode, reconciliation</td>
+<td>No live authorization or publishing in this task</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Private SQL, master key, complete backup and restore drill</td>
+<td>Procedures only; production services were not modified</td>
+</tr>
+</tbody>
+</table>
+<p>See the User Manual and Operations Guide for procedures, interface illustrations and troubleshooting.</p>
+</section>
+<section class="chapter"><h1 id="chapter-2-section-0">Project User Manual</h1>
+<p><strong>LeadPilot AI | English edition | Version 1.0 | 2026-11-14</strong></p>
+<h2 id="chapter-2-section-1">Scope and screenshot provenance</h2>
+<p>Procedures describe source baseline <code>cf57fb3</code>. Screenshots render <strong>real application components</strong> in headless Microsoft Edge using an existing local frontend build and <strong>fictional demonstration data</strong>. They do not connect to production or use actual accounts, customers, tokens or commercial records. Every image is labeled as a demonstration. Metrics, <code>example.com</code> / <code>example.org</code> addresses and companies are not business results.</p>
+<p>These are not hand-drawn interface prototypes, but neither are they production evidence or backend integration tests. Build fingerprint, source baseline, capture inventory and browser-error results are recorded in <code>assets/screenshot-provenance.json</code>. Controls vary with version, language, permissions and configuration.</p>
+<p>Operating rule: <strong>save a draft, review it, then execute; reconcile uncertain external submissions before retrying.</strong> This documentation task sent no customer mail, published no social content and made no paid AI/search calls.</p>
+<h2 id="chapter-2-section-2">1. First-use checklist</h2>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Action</th>
+<th>Completion criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Verify HTTPS, administrative entrance, services and private backups</td>
+<td>No shared default password; database and Redis not public</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Configure departments → role scopes → members</td>
+<td>Ordinary users cannot access unrelated departments or system APIs</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Grant senders and configure shared policies</td>
+<td>Explicit authorization, limits and a controlled test mailbox</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Configure DNS, SSL and SMTP/relay</td>
+<td>Final send/receive verified using owned test mailboxes</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Configure AI providers, capabilities and budgets</td>
+<td>Minimal real provider test; secrets never returned in plaintext</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Create company/product/material records, review and publish</td>
+<td>Supported facts; internal sensitive data excluded</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Import a small contact sample and review status</td>
+<td>Lawful source, confirmation, subscription and filtering understood</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Create a draft or plan with automatic sending disabled</td>
+<td>Evidence, content, targets and budget reviewed</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Approve and test only with controlled targets</td>
+<td>Receipt, unsubscribe, replies and metrics verified</td>
+</tr>
+</tbody>
+</table>
+<p>The public repository intentionally excludes SQL, runtime secrets, private keys and installation packages. Prepare matching private SQL dependencies according to the Operations Guide; cloning GitHub is not application installation.</p>
+<h2 id="chapter-2-section-3">2. Login, language and workbench</h2>
+<ol>
+<li>Obtain the <strong>actual administrative entry</strong> from your administrator. A deployment may require SafePath; do not guess or publish a private entrance.</li>
+<li>Use trusted HTTPS, select language and sign in with your personal account.</li>
+<li>Enter the Department Workspace and confirm account/department context. The top bar supports multiple workbench tabs.</li>
+<li>Open authorized functions. Missing controls should prompt a rights check, not URL/API bypass attempts.</li>
+<li>Sign out on shared computers. Do not capture passwords, verification codes or API tokens in screenshots.</li>
+</ol>
+<figure class="interface"><figcaption>Figure 1: Login, with credentials left blank</figcaption><img src="../assets/screenshots/en-login.png" alt="Figure 1: Login, with credentials left blank"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><p>Tab state is not proof unsaved edits were persisted. Browser reload, page refresh and executing a task are different operations.</p>
+<h2 id="chapter-2-section-4">3. Organization and access (administrators)</h2>
+<h3 id="chapter-2-section-5">3.1 Departments</h3>
+<p>Open <strong>Department Workspace → Department</strong>. Add the name, parent and enabled state, then save. Establish the tree before assigning members so data ownership is clear.</p>
+<figure class="interface"><figcaption>Figure 2: Department administration</figcaption><img src="../assets/screenshots/en-organization.png" alt="Figure 2: Department administration"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-6">3.2 Roles and data scope</h3>
+<p>Open the role-management tab and configure a role name, operation permissions and data scope. Start with the smallest scope; expand only where justified.</p>
+<ul>
+<li>Self: permitted records owned by that user.</li>
+<li>Department / descendants: restricted by department membership/tree.</li>
+<li>Selected departments: explicit selection.</li>
+<li>All: does not automatically make the user a system administrator or grant every mailbox/Page.</li>
+</ul>
+<p>Create, edit, delete, import, export, publish and settings permissions are separate. Read permission alone does not authorize publishing.</p>
+<figure class="interface"><figcaption>Figure 3: Roles and data scope</figcaption><img src="../assets/screenshots/en-permissions.png" alt="Figure 3: Roles and data scope"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-7">3.3 Members, sender grants and policies</h3>
+<ol>
+<li>Assign a new member to a department and roles; set a private initial password.</li>
+<li>Grant the department access to appropriate sender mailboxes. Both operation permission and mailbox authorization must apply.</li>
+<li>Configure system/department/mailbox/IP/provider limits: minute/hour/rolling-day volume, spacing, concurrency, timezone/window and recipient cooldown.</li>
+<li>Verify list, export, private download and sending boundaries with an ordinary account. Test revocation against background work too.</li>
+</ol>
+<p>Disabling a member/department does not remove historical records. Moving members does not migrate all historical ownership; existing tasks may stop because ownership no longer matches.</p>
+<h2 id="chapter-2-section-8">4. Domains, mailboxes and mail services</h2>
+<h3 id="chapter-2-section-9">4.1 Domains</h3>
+<p>Use <strong>Domain</strong> to maintain the mail domain, hostname, mailbox limits and related settings. Follow the system's actual records for MX, A, SPF, DKIM and DMARC. Operations staff must also validate PTR/outbound IP and provider SMTP restrictions.</p>
+<figure class="interface"><figcaption>Figure 4: Domain screen; the example does not establish valid DNS</figcaption><img src="../assets/screenshots/en-domain.png" alt="Figure 4: Domain screen; the example does not establish valid DNS"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><p>Use a single appropriate SPF record, verify signatures and DMARC alignment, and avoid increasing volume before deliverability is validated. TLS private keys remain private and must not be committed.</p>
+<h3 id="chapter-2-section-10">4.2 Mailboxes</h3>
+<p>Use <strong>Mailboxes</strong>, choose the domain and create individual or batch mailboxes with quota, active status and a password.</p>
+<ul>
+<li>The interface no longer pre-fills a fixed password; enter one satisfying its rules for individual/batch creation.</li>
+<li>Empty-password backend requests only fall back when private <code>DEFAULT_NEW_MAILBOX_PASSWORD</code> is configured correctly. Otherwise creation is rejected.</li>
+<li>Leaving password blank during an existing mailbox update preserves its current credential; changing a name should not reset the password.</li>
+<li>A mailbox account is not automatically a console account. Webmail uses mailbox authentication.</li>
+</ul>
+<figure class="interface"><figcaption>Figure 5: Mailbox administration; no password shown</figcaption><img src="../assets/screenshots/en-mailbox.png" alt="Figure 5: Mailbox administration; no password shown"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><p>Test with owned mailboxes: SMTP handoff, final receipt, IMAP/Webmail access and replies. An accepted submission alone does not establish inbox receipt.</p>
+<h2 id="chapter-2-section-11">5. AI model service and budgets</h2>
+<p>Open <strong>Settings → AI model service</strong>. Social/prospecting settings also expose related entry points; runtime choices come from the shared registry.</p>
+<ol>
+<li>Add a provider, choose the protocol actually supported (Responses or Chat Completions) and the correct HTTPS base URL.</li>
+<li>Enter the credential only in the private administration interface, never in chat, documentation, screenshots or GitHub.</li>
+<li>Add/discover model IDs and verify enabled status, text/chat/vision/image/embedding capabilities and output limit.</li>
+<li>Set capability-specific defaults and daily call/Token budgets, then save.</li>
+<li>Run a minimal controlled test through the actual test entry or task to confirm protocol/model/quota. A successful save is not a successful provider call.</li>
+<li>When changing endpoints, renew credentials as required so saved credentials are not sent to the wrong provider.</li>
+</ol>
+<figure class="interface"><figcaption>Figure 6: Unified registry; demo provider disabled and credential blank</figcaption><img src="../assets/screenshots/en-ai-models.png" alt="Figure 6: Unified registry; demo provider disabled and credential blank"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><p>Vision, PDF input, image generation and web search are distinct features. Do not assume a chat-only model accepts PDFs. Provider claims, registry declarations and real behavior all need verification.</p>
+<h2 id="chapter-2-section-12">6. Company, products and materials</h2>
+<p>Open <strong>Materials center</strong> and select a company or create a draft. Record brand, domains and supported product/service facts.</p>
+<figure class="interface"><figcaption>Figure 7: Materials center</figcaption><img src="../assets/screenshots/en-materials.png" alt="Figure 7: Materials center"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-13">6.1 Company facts and approval</h3>
+<p>Review names, business scope, contacts, promises and evidence before publishing. Only approved external facts should enter automated marketing. Shared departments read approved records within grants; internal files do not become public automatically.</p>
+<h3 id="chapter-2-section-14">6.2 Product spreadsheets and images</h3>
+<ol>
+<li>Download the current product/industry template and fill its fields.</li>
+<li>Upload XLSX and inspect all worksheets, original rows, text SKUs/leading zeros and mappings.</li>
+<li>Resolve missing IDs, conflicting values and ambiguous image matches through review.</li>
+<li>Re-imports should not overwrite protected human edits; inspect actual results.</li>
+<li>Associate images, verify primary/other image roles and publish reviewed products.</li>
+</ol>
+<p>Archives must not contain path traversal, private keys, database backups or sensitive internal documents. Company uploads, product import and social task files have different format/size limits; use the current module's rules rather than one assumed global limit.</p>
+<h3 id="chapter-2-section-15">6.3 AI extraction and versions</h3>
+<p>For supported PDFs, Office documents or images, explicitly permit recognition and select an appropriate model. Review extracted facts, citations and uncertainties before merging into a draft. Cost, bank, credential and internal procurement fields must not become external copy. Published versions remain traceable; material changes can invalidate unsent outreach snapshots.</p>
+<h2 id="chapter-2-section-16">7. Contacts, groups and import</h2>
+<p>Business members can use workspace contact groups, contacts and tags. Administrators may also see separate Contacts pages.</p>
+<figure class="interface"><figcaption>Figure 8: Scoped contacts; sample addresses use reserved domains</figcaption><img src="../assets/screenshots/en-contacts.png" alt="Figure 8: Scoped contacts; sample addresses use reserved domains"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><ol>
+<li>Create a clear department-owned group with a description.</li>
+<li>Use the import formats accepted by the current page. Preview fields/addresses, set exclusions, and review duplicates/uncertain results.</li>
+<li>Distinguish address verification, active status, subscription and confirmation. Public discovery does not establish permission to market.</li>
+<li><strong>Importing confirmed contacts can trigger enabled subscription automations.</strong> Disable/review related rules first if uncertain.</li>
+<li>Apply tags and select audience logic such as AND/OR/NOT. Check final audience preview, not just the group's total count.</li>
+<li>Export requires independent permission. Keep customer exports in approved private storage, not the public repository.</li>
+</ol>
+<h2 id="chapter-2-section-17">8. Templates, campaign drafts and email delivery</h2>
+<h3 id="chapter-2-section-18">8.1 Templates</h3>
+<p>Create a template in Template or the workspace template tab. Edit HTML or use AI assistance. Preview layout, links, brand, formatting and unsubscribe. Use merge-variable syntax actually supported by the page; this guide does not invent variable names.</p>
+<h3 id="chapter-2-section-19">8.2 Create a task</h3>
+<p>Open <strong>Department Workspace → Campaigns</strong> and create a new task:</p>
+<ol>
+<li>Name it and choose subject, contact groups, tag logic, template and sender pool.</li>
+<li>Verify display name, reply/CC settings, open/click tracking and unsubscribe.</li>
+<li>Configure interval, concurrency, rolling limits, batching/rest, timezone/window and cooldown. Zero does not bypass higher-level rules.</li>
+<li>Preview audience/content and save a draft. A permitted operator reviews and publishes it.</li>
+<li>Begin with controlled internal recipients and verify final receipt, not only submitted counts.</li>
+</ol>
+<figure class="interface"><figcaption>Figure 9: Email campaigns</figcaption><img src="../assets/screenshots/en-email-campaign.png" alt="Figure 9: Email campaigns"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-20">8.3 Monitoring and uncertain outcomes</h3>
+<ul>
+<li>Pause/cancel stops subsequent handoff; mail already queued in the server can still leave.</li>
+<li>Investigate quota, time-window, permission or cooldown reasons before increasing concurrency.</li>
+<li><code>unknown</code> means submission cannot be confirmed. Check queue/logs before sending again.</li>
+<li>Opens/clicks are observations influenced by privacy proxies/scanners, not reliable contractual receipt evidence.</li>
+</ul>
+<h3 id="chapter-2-section-21">8.4 Schedules and subscription automation</h3>
+<p>Once/daily/weekly/monthly schedules run in the configured timezone and create separate tasks. Review month-end and DST behavior. Recovery does not replay every missed historical date in a burst.</p>
+<p>Subscription automations are ordered steps: wait, always send, previous message opened/clicked/not opened. Edits affect new enrollment while existing runs retain snapshots. Validate using test contacts before enabling real rules.</p>
+<h2 id="chapter-2-section-22">9. AI prospecting</h2>
+<p>Open <strong>AI prospecting</strong> after reviewing and publishing company/product materials.</p>
+<figure class="interface"><figcaption>Figure 10: AI prospecting plans</figcaption><img src="../assets/screenshots/en-outreach.png" alt="Figure 10: AI prospecting plans"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><ol>
+<li>Create a plan; choose company and offerings, country, language, timezone and buyer requirements.</li>
+<li>Set queries/sites, daily lead/send volume, address filters, sender pool, delivery window and cooldown.</li>
+<li>Disable auto-send for the first small discovery run.</li>
+<li>Inspect run/candidate records: URLs, market fit, public contact evidence and verification results.</li>
+<li>Invalid addresses must not enter outreach. Review uncertain/catch-all results; do not treat guessed addresses as valid.</li>
+<li>Check generated text, source versions, recipient language, supported claims and unsubscribe, then approve delivery within rights.</li>
+<li>Review inquiries and inbox rules. Suspected human replies can pause further outreach; genuine inquiries link to CRM and configured forwarding.</li>
+<li>Regenerate only where the interface allows it for unsent, non-unknown content. Do not use regeneration to evade duplicate-send protection.</li>
+</ol>
+<p>Plan changes can pause it by default. Revocation, source changes, unsubscribe, replies and cooldown affect later handoffs. A completed discovery run does not mean mail was sent or a sale occurred.</p>
+<h2 id="chapter-2-section-23">10. Intelligence and Growth Master</h2>
+<p>Open <strong>Intelligence &amp; Leads</strong> and choose a company. It is a controlled industry-pack/14-skill/6-workflow system, not an arbitrary node editor.</p>
+<figure class="interface"><figcaption>Figure 11: Intelligence workflows</figcaption><img src="../assets/screenshots/en-intelligence.png" alt="Figure 11: Intelligence workflows"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-24">10.1 Industry pack</h3>
+<p>Create or clone a pack. Configure product/service type, terms, buyer/intent/exclusion words, sources, schema, scoring, minimum score/confidence and forbidden claims. Clone system templates before customizing. Confirm AI-expanded terms explicitly.</p>
+<h3 id="chapter-2-section-25">10.2 Skills</h3>
+<p>Choose skill-specific models and item/output/timeout/retry limits. Verify search, verification, materials and channel capabilities before granting broad budgets.</p>
+<figure class="interface"><figcaption>Figure 12: Business skill configuration</figcaption><img src="../assets/screenshots/en-skills.png" alt="Figure 12: Business skill configuration"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-26">10.3 Workflow execution</h3>
+<ol>
+<li>Choose WF01 market observation, WF02 purchase intent, WF03 discovery, WF04 content/channels, WF05 inbound handling or WF06 growth analysis.</li>
+<li>Configure markets, materials, senders/Pages, thresholds, cadence and call/Token/search/scrape/send budgets.</li>
+<li>Save and run a small manual test. Inspect runs, checkpoints, evidence, candidate scores and wait/failure reasons.</li>
+<li>Review <strong>exact content, target and frozen source version</strong>. The model cannot approve its own first contact/publication.</li>
+<li>Any controlled auto-reply rules require explicit reviewed rules and allowed facts. Sensitive commercial commitments remain human decisions. Normal CRM AI drafts require explicit sending.</li>
+<li>Resolve configuration, exhausted budget, approval or external-wait causes before resuming.</li>
+<li>Administrator emergency pause blocks future work; it does not recall content already sent externally.</li>
+</ol>
+<h2 id="chapter-2-section-27">11. Social accounts, content and scheduling</h2>
+<p>Open <strong>Social marketing</strong>. Prepare approved company facts and official platform authorization before moving from draft to review and schedule.</p>
+<figure class="interface"><figcaption>Figure 13: Social marketing tasks</figcaption><img src="../assets/screenshots/en-social.png" alt="Figure 13: Social marketing tasks"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-28">11.1 Platform/account setup</h3>
+<ol>
+<li>Administrators configure the official application, callback, approved permissions and publishing switch.</li>
+<li>Use official OAuth and explicitly select Pages/accounts. Do not paste tokens into public documents.</li>
+<li>Verify department, management capabilities, expiration and delivery mode.</li>
+<li>Authorization and live publishing are separate switches; a connection alone does not authorize automation.</li>
+</ol>
+<figure class="interface"><figcaption>Figure 14: Social accounts; the demo account is disconnected</figcaption><img src="../assets/screenshots/en-social-accounts.png" alt="Figure 14: Social accounts; the demo account is disconnected"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><h3 id="chapter-2-section-29">11.2 Variants and review</h3>
+<p>Create a task with company, platform, country, language, account and local time. Select/upload approved sources, generate or write variants, and review links, images, paragraphs, translation and factual claims. Content edits require renewed review. A task can match multiple accounts across market variants.</p>
+<p>Country/language selection is content localization, not advertising geo-targeting. Task-only files and published materials have different lifecycles; archival into Materials center is explicit.</p>
+<h3 id="chapter-2-section-30">11.3 Submission and reconciliation</h3>
+<p>Schedule approved content and verify timezone/DST. API mode hands off to authorized platform APIs. Manual mode requires the operator to actually publish on the platform and then confirm in the interface; that confirmation is not automatic-publication proof.</p>
+<p>For timeout/unknown results, verify actual post ID and ownership before retry. Deleting task/record does not remove an external post. Reconnect expired/revoked authorization instead of fabricating a successful status.</p>
+<h3 id="chapter-2-section-31">11.4 Interactions and measurement</h3>
+<p>Local refresh reads stored state; platform synchronization fetches official measurements. Review update time, coverage and <code>—</code>; missing is not zero. Respect platform rules for member data, comments, AI use and retention. This guide provides no unrestricted auto-comment, advertising or video-publishing procedure.</p>
+<h2 id="chapter-2-section-32">12. CRM, inquiries and replies</h2>
+<p>Open <strong>Customer management</strong> to search authorized customers, stages and follow-up dates.</p>
+<figure class="interface"><figcaption>Figure 15: Customer management</figcaption><img src="../assets/screenshots/en-crm.png" alt="Figure 15: Customer management"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><ol>
+<li>Select an authorized inbox and synchronize INBOX. Initial scope/cursors follow the implementation and do not imply complete historical import.</li>
+<li>Separate inquiries, automatic replies, unsubscribe and uncertain messages; confirm ambiguous classification manually.</li>
+<li>Open the correct customer/thread. Maintain company, stage (new/inquiry/quoted/negotiating/won/lost) and next follow-up.</li>
+<li>Generate an AI draft with the correct company facts, fill missing facts and edit it.</li>
+<li><strong>Check recipient, sender, subject, attachments and commitments, then explicitly send.</strong> Draft generation is not delivery.</li>
+<li>Reconcile unknown forward/reply records with mail logs and conversation history before repeating.</li>
+</ol>
+<h2 id="chapter-2-section-33">13. Overview, reports and daily review</h2>
+<p>Choose domain/period in Overview and correlate task statistics, mail-server logs, bounce, tracking coverage and queue state.</p>
+<figure class="interface"><figcaption>Figure 16: Overview; all numbers are demonstration values</figcaption><img src="../assets/screenshots/en-overview.png" alt="Figure 16: Overview; all numbers are demonstration values"><div class="image-note">Real frontend components; fictional data; not a production capture.</div></figure><p>Daily review should include pending/unknown work, approvals, exhausted budgets, expired grants, bounce anomalies, unsubscribe, customer follow-ups, disk capacity and backups. Exports require permissions; customer details must not be published to GitHub.</p>
+<h2 id="chapter-2-section-34">14. Quick troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Check first</th>
+<th>Avoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing menu/button</td>
+<td>Operation rights, scope, resource grant, account status</td>
+<td>Guessing legacy APIs or bypassing UI</td>
+</tr>
+<tr>
+<td>New mailbox rejected</td>
+<td>Password rules; private fallback for empty API input</td>
+<td>Restoring a hardcoded shared password</td>
+</tr>
+<tr>
+<td>Model unavailable</td>
+<td>Enabled provider, key, protocol, capability, budget</td>
+<td>Treating save as a working provider test</td>
+</tr>
+<tr>
+<td>Lead not sent</td>
+<td>Source/verification freshness, subscription, suppression, cooldown, plan</td>
+<td>Marking uncertain addresses verified by force</td>
+</tr>
+<tr>
+<td>Long pending state</td>
+<td>Shared limits, windows, grants, logs and queue</td>
+<td>Raising concurrency or duplicating tasks blindly</td>
+</tr>
+<tr>
+<td>Social submission blocked</td>
+<td>Approved app, mode, granted rights, reviewed version, token</td>
+<td>Inventing a post ID</td>
+</tr>
+<tr>
+<td>Unknown state</td>
+<td>External receipt and worker/mail logs</td>
+<td>Retrying before reconciliation</td>
+</tr>
+<tr>
+<td>Secrets fail after restore</td>
+<td>Matching database and <code>.ai-master-key</code></td>
+<td>Restoring only DB or overwriting the key</td>
+</tr>
+<tr>
+<td>Public clone cannot compile</td>
+<td>Private SQL, dependencies, frontend output/configuration</td>
+<td>Force-adding secrets or private scripts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-2-section-35">15. Definition of completion</h2>
+<p>Report the level of success: saved, verified, queued, externally accepted, finally delivered, or business-confirmed. Production acceptance still requires isolated rights tests, controlled delivery, unsubscribe, replies, official platform authorization and unknown recovery. Screenshots and this manual do not substitute for those checks.</p>
+</section>
+<section class="chapter"><h1 id="chapter-3-section-0">Deployment, Maintenance and Troubleshooting</h1>
+<p><strong>LeadPilot AI | English Operations Guide | Version 1.0 | 2026-11-14</strong></p>
+<p>These are procedures, not evidence that production deployment, backup or recovery was performed in this task. Examples run from the project root and retain actual Compose service identifiers. Production changes require a verified target, backup, maintenance window and rollback owner.</p>
+<h2 id="chapter-3-section-1">1. Published files and private dependencies</h2>
+<p>GitHub contains source, documentation, fictional-data screenshots and the explicitly requested PDFs. Normal application packages, archives, build output, runtime data, SQL, private keys and credentials remain ignored. The PDFs are authorized documentation deliverables, not application installers.</p>
+<p><strong>A public clone alone cannot build the backend.</strong> Source embeds ignored private SQL at:</p>
+<ul>
+<li><code>core/internal/service/governance/</code>: <code>migration.sql</code>, <code>growth.sql</code>, <code>delivery.sql</code>, <code>statistics.sql</code>, <code>social.sql</code>, <code>master.sql</code>.</li>
+<li><code>core/internal/testsupport/</code>: <code>base.sql</code>.</li>
+</ul>
+<p>Initialization inputs, environment, certificates and existing deployment settings are privately managed. Supply files matching the selected source version at their original paths. Do not disguise SQL under another extension. A source archive is not a complete runnable backup.</p>
+<h2 id="chapter-3-section-2">2. Environment and configuration</h2>
+<p>Start in an isolated Linux/Docker environment with Docker Engine/Compose, Node.js 22, pnpm compatible with the lockfile, and Go 1.23.2. A native Windows Go build does not establish a functioning Linux mail stack.</p>
+<ol>
+<li>Clone and verify the source:</li>
+</ol>
+<pre><code class="language-sh">git clone https://github.com/dwjacken-star/LeadPilotAI.git
+cd LeadPilotAI
+git log -1 --oneline
+</code></pre>
+<ol start="2">
+<li>Supply private SQL/configuration and verify each embedded dependency.</li>
+<li>Copy <code>.env.example</code> to <code>.env</code> and privately fill administrator/database/Redis values. Do not overwrite an existing production environment.</li>
+<li>Configure actual hostname, SafePath, HTTPS, domains and controlled outbound mail.</li>
+<li>Restrict file permissions for environment, private certificates, master key and backups.</li>
+<li>Verify local-only database/Redis bindings and the privileged Docker-socket trust boundary.</li>
+</ol>
+<p>Empty-password mailbox requests use private <code>DEFAULT_NEW_MAILBOX_PASSWORD</code> only when configured. Otherwise they fail. Never restore a hardcoded shared source password.</p>
+<h2 id="chapter-3-section-3">3. Build and validation</h2>
+<h3 id="chapter-3-section-4">3.1 Frontend</h3>
+<pre><code class="language-sh">cd core/frontend
+pnpm install --frozen-lockfile
+pnpm build
+pnpm i18n:check
+pnpm test:workspace
+pnpm test:repair
+cd ../..
+</code></pre>
+<p>Output is <code>core/frontend/dist</code>; the Dockerfile copies it to Core's public resources. <code>build:git</code> contains Git/asset-copy behavior and <code>build:deploy</code> invokes deployment code. For build-only validation use <code>build</code>, not a deployment shortcut.</p>
+<h3 id="chapter-3-section-5">3.2 Backend</h3>
+<p>Provide the private SQL first, then explicitly build the production entry point:</p>
+<pre><code class="language-sh">cd core
+go mod download
+go build -mod=readonly -trimpath -o ../.tools/leadpilot-core main.go
+go test ./internal/service/mail_boxes ./internal/controller/mail_boxes ./internal/controller/settings
+cd ..
+</code></pre>
+<p>Development entry files exist; do not compile multiple main files inadvertently with <code>go build .</code>. Database integration tests create/delete disposable databases when <code>BM_TEST_PG_HOST</code> and related variables are supplied. Use only an <strong>isolated test instance</strong> with appropriate privileges, never production. Skipped tests are not full verification.</p>
+<h3 id="chapter-3-section-6">3.3 Publication safeguards</h3>
+<pre><code class="language-sh">node --test scripts/check-publish.test.cjs
+git ls-files -ci --exclude-standard
+node scripts/check-publish.cjs
+</code></pre>
+<p>The checker examines staged blobs and is not a comprehensive security audit. Simple hardcoded strings, customer privacy and screenshot content still need human review.</p>
+<h2 id="chapter-3-section-7">4. Compose deployment</h2>
+<p>Default Compose references an upstream Core image. Customized code uses the project override:</p>
+<pre><code class="language-sh">docker compose -f docker-compose.yml -f docker-compose.enterprise.yml config --quiet
+docker compose -f docker-compose.yml -f docker-compose.enterprise.yml build core-billionmail
+</code></pre>
+<p>After approval, a complete backup and matching private script verification, deploy/update in the agreed window:</p>
+<pre><code class="language-sh">docker compose -f docker-compose.yml -f docker-compose.enterprise.yml up -d
+</code></pre>
+<p>These commands were not executed by this documentation task. <strong>An upgrade is not a fresh installation:</strong> preserve environment, database, mail storage, Postfix queue, materials, master key, old image and grants. Do not run <code>down -v</code> or replace the customized Core using an upstream update shortcut.</p>
+<p>Avoid simultaneous old/new send schedulers. Switch Core under the change plan and verify migration/leases. Adding replicas alone is not high availability.</p>
+<h2 id="chapter-3-section-8">5. Health checks and release acceptance</h2>
+<p>Read-only examples:</p>
+<pre><code class="language-sh">docker compose ps
+docker compose logs --tail=120 core-billionmail
+docker compose logs --tail=80 pgsql-billionmail
+docker compose logs --tail=80 postfix-billionmail
+docker compose logs --tail=80 dovecot-billionmail
+docker compose logs --tail=80 rspamd-billionmail
+</code></pre>
+<p>Logs can contain internal email addresses, paths or request details. Redact before sharing; do not upload raw logs to GitHub.</p>
+<p>Minimum acceptance:</p>
+<ul>
+<li>Matching Core/frontend version, functional login/language/static resources.</li>
+<li>Successful migrations without resetting historical data or credentials.</li>
+<li>Ordinary-member scope, private downloads and sender grants.</li>
+<li>Controlled final delivery, inbox access and replies using owned mailboxes.</li>
+<li>Unsubscribe, pause/cancel, unknown reconciliation and sending windows.</li>
+<li>Minimal real AI/search capability and budget tests.</li>
+<li>Separate approved-application social acceptance; missing credentials do not justify claims of authorization/publishing success.</li>
+</ul>
+<h2 id="chapter-3-section-9">6. Backup strategy</h2>
+<p>Include PostgreSQL, private environment/configuration, SSL keys/certificates, <code>core-data</code> including materials and <code>.ai-master-key</code>, mailbox data, applicable queues, previous image and version metadata.</p>
+<p><strong>The example below is a database logical backup only, not a complete system backup:</strong></p>
+<pre><code class="language-sh">umask 077
+BACKUP_DIR=&quot;backup/manual-$(date +%Y%m%d-%H%M%S)&quot;
+mkdir -p &quot;$BACKUP_DIR&quot;
+docker compose exec -T pgsql-billionmail sh -c \
+  'exec pg_dump -Fc -U &quot;$POSTGRES_USER&quot; &quot;$POSTGRES_DB&quot;' \
+  &gt; &quot;$BACKUP_DIR/database.dump&quot;
+test -s &quot;$BACKUP_DIR/database.dump&quot;
+docker compose images &gt; &quot;$BACKUP_DIR/images.txt&quot;
+git rev-parse HEAD &gt; &quot;$BACKUP_DIR/source-version.txt&quot;
+</code></pre>
+<p>File/mail/queue backups must use the actual persistent paths and a consistency strategy for writes. Use an approved maintenance window or consistent snapshot; an arbitrary copy of changing directories is not a complete consistent backup.</p>
+<ul>
+<li>Encrypt or restrict backups; database copies and keys must never become public.</li>
+<li>Keep multiple versions and periodically restore in isolation.</li>
+<li>Record the matching master-key version; never generate a new key over the old one during recovery.</li>
+<li>Confirm integrity and real restorability, not just a successful command exit.</li>
+</ul>
+<h2 id="chapter-3-section-10">7. Upgrade and rollback</h2>
+<p>Upgrade sequence: identify version → complete backup → stop old Core from new handoffs → update matching frontend/backend/private SQL → check additive migration → verify scope/data/queue → controlled test delivery → resume business.</p>
+<p>Pause external tasks before rollback and record ambiguous submissions. Restore application and matching data/configuration using a rehearsed plan. Rolling back only the application while retaining new department accounts may expose old code without modern access boundaries; control accounts/API rights first. Do not automatically drop databases or perform destructive restore without explicit approval.</p>
+<p>Stopping/rolling back does not recall queued mail or external posts. Reconcile unknown records separately to avoid duplicate sending after recovery.</p>
+<h2 id="chapter-3-section-11">8. Troubleshooting paths</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Diagnostic order</th>
+<th>Principle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Startup failure</td>
+<td>Private SQL/config → DB connection → migration → Docker socket → logs</td>
+<td>Keep evidence; do not bypass failed migration</td>
+</tr>
+<tr>
+<td>Login/access</td>
+<td>HTTPS/SafePath → account → token → department/roles → legacy boundary</td>
+<td>Do not grant everything to make an error disappear</td>
+</tr>
+<tr>
+<td>Blank frontend</td>
+<td>Entry/chunk consistency → browser error → API envelope → cache/version</td>
+<td>Preserve reproducible evidence; do not call it a login success</td>
+</tr>
+<tr>
+<td>Mail stalled</td>
+<td>State/grants → higher limits → window → SMTP/queue → bounce → network policy</td>
+<td>Separate accepted and delivered</td>
+</tr>
+<tr>
+<td>AI/search failure</td>
+<td>Protocol/model → endpoint → private secret → budget → parsing/evidence</td>
+<td>No fabricated response or unlimited retry</td>
+</tr>
+<tr>
+<td>Social blocked</td>
+<td>Approved app → account mode → grant/token → reviewed content → 429/unknown</td>
+<td>Apply platform backoff; reconcile unknown</td>
+</tr>
+<tr>
+<td>Decryption after restore</td>
+<td>Matching DB/master key, storage path and permissions</td>
+<td>Do not overwrite or disclose the key</td>
+</tr>
+<tr>
+<td>Disk pressure</td>
+<td>Data/log/queue/upload use and retention</td>
+<td>Do not delete real mailboxes/queues as an emergency shortcut</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-3-section-12">9. Daily and periodic operations</h2>
+<ul>
+<li>Daily: service/disk state, unknown/pending approvals, mail queue/bounce, budgets, expired grants and backup.</li>
+<li>Weekly: departmental rights, unsubscribe/suppression, model settings, platform coverage and recurring errors.</li>
+<li>Monthly/as required: restore drill, master-key pairing, certificate renewal, dependency security and platform permission/retention review.</li>
+<li>Every release: record version, scope, approval, backup, rollback, migration and controlled acceptance results.</li>
+</ul>
+<h2 id="chapter-3-section-13">10. Rebuilding documentation</h2>
+<p>With Playwright Core, a supported browser, frontend dependencies and a local frontend build available:</p>
+<pre><code class="language-sh">node scripts/docs/generate-diagrams.cjs
+node scripts/docs/capture-ui.mjs
+node scripts/docs/build-handbook.cjs
+python scripts/docs/validate-handbook.py
+</code></pre>
+<p><code>PLAYWRIGHT_MODULE</code> selects the Playwright Core module file; <code>DOC_BROWSER</code> selects a local Chromium/Edge executable. Default tool paths describe the generation environment; configure them explicitly on another computer and never commit browser/dependency directories.</p>
+<p>Captures intercept fictional APIs and restrict requests to local resources; they do not access production. Markdown and diagram sources remain independently readable without PDF tooling.</p>
+<p>Validate links, images, PDFs and sensitive information before publishing. Verify screenshots contain no real customers, staff, tokens, private keys, private email content or financial records.</p>
+</section></body></html>

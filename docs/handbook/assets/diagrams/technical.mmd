@@ -1,0 +1,9 @@
+flowchart TB
+  UI[Vue management console] --> CORE[Go / GoFrame modular monolith]
+  CORE --> DB[(PostgreSQL: records, durable work, quotas, audit)]
+  CORE --> REDIS[(Redis: cache and mail-component state)]
+  CORE --> EXTERNAL[AI providers / Serper / Social / optional WhatsApp]
+  CORE --> MAIL[Postfix / Dovecot / Rspamd]
+  WEBMAIL[Roundcube / mail clients] --> MAIL
+  CORE --> FILES[Private files / environment / encryption master key]
+  CORE --> DOCKER[Privileged local Docker API]

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Execution Lifecycle and Reliable Handoff"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#5d7591"/></marker></defs><rect width="100%" height="100%" rx="16" fill="#f4f7fb"/><style>text{font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif} .title{font-size:28px;font-weight:700;fill:#152b45}.label{font-size:21px;font-weight:700;fill:#14314c}.detail{font-size:17px;fill:#4b637a}</style><text x="32" y="48" class="title">Execution Lifecycle and Reliable Handoff</text>
+<path d="M385 167 L465 167" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M815 167 L895 167" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1070 225 L1070 340" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 405 L815 405" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M465 405 L385 405" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="53" y="143" class="label">1. Approved sources/configuration</text>
+<text x="53" y="173" class="detail">Company/product versions · targets · grants</text>
+<rect x="465" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="143" class="label">2. Discover / verify / score</text>
+<text x="483" y="173" class="detail">Public evidence · no guessed addresses</text>
+<rect x="895" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="913" y="143" class="label">3. Content / human gates</text>
+<text x="913" y="173" class="detail">Review exact content, target and version</text>
+<rect x="895" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="913" y="373" class="label">4. Governed queue / handoff</text>
+<text x="913" y="403" class="detail">Quotas · windows · suppression · rights</text>
+<text x="913" y="429" class="detail">SMTP / social / optional channels</text>
+<rect x="465" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="373" class="label">5. Receipts / ambiguous outcomes</text>
+<text x="483" y="403" class="detail">Separate accepted, delivered, unknown</text>
+<text x="483" y="429" class="detail">Reconcile unknown; no blind retry</text>
+<rect x="35" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="53" y="373" class="label">6. CRM / follow-up / audit</text>
+<text x="53" y="403" class="detail">Inquiries · threads · metrics · cost</text>
+<text x="53" y="429" class="detail">Preserve source and history snapshots</text>
+<rect x="160" y="555" width="950" height="90" rx="12" fill="#e6f4f4" stroke="#cedbe8" stroke-width="1.5"/><text x="178" y="588" class="label">Persistent controls across the lifecycle</text>
+<text x="178" y="618" class="detail">PostgreSQL transactions · idempotency keys · leases · checkpoints · versions · audit</text>
+</svg>

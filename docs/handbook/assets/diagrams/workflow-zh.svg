@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="业务执行与可靠性交接"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#5d7591"/></marker></defs><rect width="100%" height="100%" rx="16" fill="#f4f7fb"/><style>text{font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif} .title{font-size:28px;font-weight:700;fill:#152b45}.label{font-size:21px;font-weight:700;fill:#14314c}.detail{font-size:17px;fill:#4b637a}</style><text x="32" y="48" class="title">业务执行与可靠性交接</text>
+<path d="M385 167 L465 167" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M815 167 L895 167" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1070 225 L1070 340" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 405 L815 405" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M465 405 L385 405" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="53" y="143" class="label">1. 已批准资料与配置</text>
+<text x="53" y="173" class="detail">公司/产品版本 · 目标 · 授权</text>
+<rect x="465" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="143" class="label">2. 发现、验证与评分</text>
+<text x="483" y="173" class="detail">真实公开证据 · 不猜邮箱</text>
+<rect x="895" y="110" width="350" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="913" y="143" class="label">3. 内容与人工门槛</text>
+<text x="913" y="173" class="detail">具体内容、目标和版本核查</text>
+<rect x="895" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="913" y="373" class="label">4. 受控队列与外部交接</text>
+<text x="913" y="403" class="detail">额度 · 时段 · 退订 · 权限复核</text>
+<text x="913" y="429" class="detail">SMTP / 社媒 / 可选渠道</text>
+<rect x="465" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="373" class="label">5. 回执与不确定结果</text>
+<text x="483" y="403" class="detail">accepted、delivered、unknown 分开</text>
+<text x="483" y="429" class="detail">未知先核查，禁止盲目重试</text>
+<rect x="35" y="340" width="350" height="130" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="53" y="373" class="label">6. CRM、跟进与审计</text>
+<text x="53" y="403" class="detail">询盘 · 会话 · 效果 · 成本</text>
+<text x="53" y="429" class="detail">历史快照与来源保留</text>
+<rect x="160" y="555" width="950" height="90" rx="12" fill="#e6f4f4" stroke="#cedbe8" stroke-width="1.5"/><text x="178" y="588" class="label">持久化保护贯穿整个过程</text>
+<text x="178" y="618" class="detail">PostgreSQL 事务 · 幂等键 · 租约 · 检查点 · 版本 · 审计</text>
+</svg>

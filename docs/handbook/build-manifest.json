@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "date": "2026-11-14",
+  "source_baseline": "cf57fb3",
+  "production_access": false,
+  "outputs": [
+    {
+      "locale": "zh-CN",
+      "html": "docs/handbook/html/LeadPilotAI-User-and-Operations-Guide-zh-CN.html",
+      "pdf": "docs/handbook/pdf/LeadPilotAI-User-and-Operations-Guide-zh-CN.pdf",
+      "bytes": 2397474,
+      "images": 19
+    },
+    {
+      "locale": "en",
+      "html": "docs/handbook/html/LeadPilotAI-User-and-Operations-Guide-en.html",
+      "pdf": "docs/handbook/pdf/LeadPilotAI-User-and-Operations-Guide-en.pdf",
+      "bytes": 1974816,
+      "images": 19
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Functional Architecture · Discover—Review—Engage—Follow up"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#5d7591"/></marker></defs><rect width="100%" height="100%" rx="16" fill="#f4f7fb"/><style>text{font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif} .title{font-size:28px;font-weight:700;fill:#152b45}.label{font-size:21px;font-weight:700;fill:#14314c}.detail{font-size:17px;fill:#4b637a}</style><text x="32" y="48" class="title">Functional Architecture · Discover—Review—Engage—Follow up</text>
+<path d="M485 240 L485 275 L225 275 L225 300" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M790 240 L790 275 L640 275 L640 300" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1100 240 L1100 300" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M225 445 L225 560 L250 560" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M640 445 L640 510" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1050 445 L1050 560 L1015 560" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="30" y="100" width="285" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="133" class="label">Governance</text>
+<text x="48" y="163" class="detail">Departments · roles · scope</text>
+<text x="48" y="189" class="detail">Sender grants · shared policies</text>
+<text x="48" y="215" class="detail">Audit · live permission checks</text>
+<rect x="340" y="100" width="285" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="358" y="133" class="label">Approved business materials</text>
+<text x="358" y="163" class="detail">Company · offerings · files</text>
+<text x="358" y="189" class="detail">Import · extraction · human review</text>
+<text x="358" y="215" class="detail">Publication · private originals · versions</text>
+<rect x="650" y="100" width="285" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="668" y="133" class="label">Public evidence / leads</text>
+<text x="668" y="163" class="detail">Search · scrape · source evidence</text>
+<text x="668" y="189" class="detail">Verification · filters · scoring</text>
+<text x="668" y="215" class="detail">Uncertain results remain reviewable</text>
+<rect x="960" y="100" width="285" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="978" y="133" class="label">AI model registry</text>
+<text x="978" y="163" class="detail">Providers · protocols · capabilities</text>
+<text x="978" y="189" class="detail">Encrypted secrets · budgets · usage</text>
+<text x="978" y="215" class="detail">Actual capability requires testing</text>
+<rect x="30" y="300" width="390" height="145" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="333" class="label">Email marketing / prospecting</text>
+<text x="48" y="363" class="detail">Contacts · templates · drafts · plans</text>
+<text x="48" y="389" class="detail">Snapshots · review · suppression</text>
+<text x="48" y="415" class="detail">Governed SMTP handoff and metrics</text>
+<rect x="445" y="300" width="390" height="145" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="463" y="333" class="label">Growth Master intelligence</text>
+<text x="463" y="363" class="detail">Industry packs · 14 skills · 6 workflows</text>
+<text x="463" y="389" class="detail">Evidence · prospects · content · checkpoints</text>
+<text x="463" y="415" class="detail">Human gates · budgets · audit</text>
+<rect x="860" y="300" width="385" height="145" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="878" y="333" class="label">Social marketing</text>
+<text x="878" y="363" class="detail">Official grants · accounts/variants</text>
+<text x="878" y="389" class="detail">Review · API/manual mode · schedule</text>
+<text x="878" y="415" class="detail">Reconciliation · interactions · metrics</text>
+<rect x="250" y="510" width="765" height="145" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="268" y="543" class="label">CRM and continuous improvement</text>
+<text x="268" y="573" class="detail">Inquiry triage · threads · AI drafts · reviewed replies</text>
+<text x="268" y="599" class="detail">Customer stages · follow-up · effectiveness · cost/audit</text>
+<text x="268" y="625" class="detail">Unknown metrics and demo captures are not business results</text>
+</svg>

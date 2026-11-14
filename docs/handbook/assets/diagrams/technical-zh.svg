@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="技术架构 · LeadPilot AI"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#5d7591"/></marker></defs><rect width="100%" height="100%" rx="16" fill="#f4f7fb"/><style>text{font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif} .title{font-size:28px;font-weight:700;fill:#152b45}.label{font-size:21px;font-weight:700;fill:#14314c}.detail{font-size:17px;fill:#4b637a}</style><text x="32" y="48" class="title">技术架构 · LeadPilot AI</text>
+<path d="M305 160 L355 160" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 155 L965 155" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 205 L930 205 L930 310 L965 310" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M625 245 L625 290" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M30 315 L15 315 L15 550 L30 550" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M465 550 L420 550" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M680 475 L680 430" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1040 475 L1040 390 L850 390" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="30" y="100" width="275" height="120" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="133" class="label">用户界面</text>
+<text x="48" y="163" class="detail">Vue 3 / TypeScript / Pinia</text>
+<text x="48" y="189" class="detail">管理台 · 多语言工作区</text>
+<rect x="30" y="260" width="275" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="293" class="label">Webmail 与邮箱客户端</text>
+<text x="48" y="323" class="detail">Roundcube · IMAP / SMTP</text>
+<text x="48" y="349" class="detail">独立邮箱认证</text>
+<rect x="355" y="100" width="540" height="145" rx="12" fill="#e6f4f4" stroke="#cedbe8" stroke-width="1.5"/><text x="373" y="133" class="label">Core：Go / GoFrame 模块化单体</text>
+<text x="373" y="163" class="detail">API · JWT/RBAC · 部门与资源边界</text>
+<text x="373" y="189" class="detail">邮件 · CRM · 资料 · AI · 社媒 · 情报</text>
+<text x="373" y="215" class="detail">定时器 · 租约 · 预算 · 检查点</text>
+<rect x="965" y="100" width="285" height="120" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="983" y="133" class="label">PostgreSQL 17.4</text>
+<text x="983" y="163" class="detail">业务数据 · 队列 · 额度</text>
+<text x="983" y="189" class="detail">快照 · 审计 · 租约</text>
+<rect x="965" y="260" width="285" height="105" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="983" y="293" class="label">Redis 7.4.2</text>
+<text x="983" y="323" class="detail">缓存与现有邮件组件状态</text>
+<rect x="355" y="290" width="540" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="373" y="323" class="label">外部服务（需配置与授权）</text>
+<text x="373" y="353" class="detail">AI providers · Serper search/scrape</text>
+<text x="373" y="379" class="detail">Facebook Pages · LinkedIn organizations</text>
+<text x="373" y="405" class="detail">可选 WhatsApp · 不默认开通</text>
+<rect x="30" y="475" width="390" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="508" class="label">邮件协议服务</text>
+<text x="48" y="538" class="detail">Postfix · Dovecot · Rspamd</text>
+<text x="48" y="564" class="detail">SMTP 交接、队列、收件与反垃圾</text>
+<text x="48" y="590" class="detail">accepted ≠ 最终收到</text>
+<rect x="465" y="475" width="435" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="508" class="label">持久化与私有配置</text>
+<text x="483" y="538" class="detail">core-data · vmail-data · queue data</text>
+<text x="483" y="564" class="detail">.env · SSL 私钥 · .ai-master-key</text>
+<text x="483" y="590" class="detail">数据库与主密钥必须配套恢复</text>
+<rect x="945" y="475" width="305" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="963" y="508" class="label">运维与信任边界</text>
+<text x="963" y="538" class="detail">Docker Compose · Fail2ban</text>
+<text x="963" y="564" class="detail">Core 的 Docker socket 为高权限</text>
+<text x="963" y="590" class="detail">SQL 通过私有渠道配套</text>
+</svg>

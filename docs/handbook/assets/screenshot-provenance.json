@@ -1,0 +1,296 @@
+{
+  "source_commit": "cf57fb3c5a4e0859f23d794b21a828d5db0abf94",
+  "frontend_index_sha256": "86984b5019fa84fb899a786a90f88777ca2ef4a3c15ec0148d1ab48685ce8621",
+  "frontend_build": "existing local build; not freshly rebuilt for this documentation",
+  "mode": "real application frontend with intercepted fictional API data",
+  "production_access": false,
+  "external_requests_allowed": false,
+  "blocked_external_requests": 0,
+  "captures": [
+    {
+      "locale": "zh",
+      "slug": "overview",
+      "route": "/overview",
+      "filename": "zh-overview.png",
+      "viewport": "1440x980",
+      "characters": 351
+    },
+    {
+      "locale": "zh",
+      "slug": "organization",
+      "route": "/workspace",
+      "filename": "zh-organization.png",
+      "viewport": "1440x980",
+      "characters": 324
+    },
+    {
+      "locale": "zh",
+      "slug": "permissions",
+      "route": "/workspace",
+      "filename": "zh-permissions.png",
+      "viewport": "1440x980",
+      "characters": 443
+    },
+    {
+      "locale": "zh",
+      "slug": "contacts",
+      "route": "/workspace",
+      "filename": "zh-contacts.png",
+      "viewport": "1440x980",
+      "characters": 338
+    },
+    {
+      "locale": "zh",
+      "slug": "email-campaign",
+      "route": "/workspace",
+      "filename": "zh-email-campaign.png",
+      "viewport": "1440x980",
+      "characters": 421
+    },
+    {
+      "locale": "zh",
+      "slug": "materials",
+      "route": "/materials",
+      "filename": "zh-materials.png",
+      "viewport": "1440x980",
+      "characters": 336
+    },
+    {
+      "locale": "zh",
+      "slug": "outreach",
+      "route": "/outreach",
+      "filename": "zh-outreach.png",
+      "viewport": "1440x980",
+      "characters": 413
+    },
+    {
+      "locale": "zh",
+      "slug": "intelligence",
+      "route": "/intelligence",
+      "filename": "zh-intelligence.png",
+      "viewport": "1440x980",
+      "characters": 487
+    },
+    {
+      "locale": "zh",
+      "slug": "skills",
+      "route": "/intelligence",
+      "filename": "zh-skills.png",
+      "viewport": "1440x980",
+      "characters": 1247
+    },
+    {
+      "locale": "zh",
+      "slug": "social",
+      "route": "/social",
+      "filename": "zh-social.png",
+      "viewport": "1440x980",
+      "characters": 538
+    },
+    {
+      "locale": "zh",
+      "slug": "social-accounts",
+      "route": "/social",
+      "filename": "zh-social-accounts.png",
+      "viewport": "1440x980",
+      "characters": 650
+    },
+    {
+      "locale": "zh",
+      "slug": "crm",
+      "route": "/crm",
+      "filename": "zh-crm.png",
+      "viewport": "1440x980",
+      "characters": 423
+    },
+    {
+      "locale": "zh",
+      "slug": "domain",
+      "route": "/domain",
+      "filename": "zh-domain.png",
+      "viewport": "1440x980",
+      "characters": 319
+    },
+    {
+      "locale": "zh",
+      "slug": "mailbox",
+      "route": "/mailbox",
+      "filename": "zh-mailbox.png",
+      "viewport": "1440x980",
+      "characters": 353
+    },
+    {
+      "locale": "zh",
+      "slug": "ai-models",
+      "route": "/settings/ai-model",
+      "filename": "zh-ai-models.png",
+      "viewport": "1440x980",
+      "characters": 528
+    },
+    {
+      "locale": "zh",
+      "slug": "login",
+      "route": "/login",
+      "filename": "zh-login.png",
+      "viewport": "1440x980"
+    },
+    {
+      "locale": "en",
+      "slug": "overview",
+      "route": "/overview",
+      "filename": "en-overview.png",
+      "viewport": "1440x980",
+      "characters": 863
+    },
+    {
+      "locale": "en",
+      "slug": "organization",
+      "route": "/workspace",
+      "filename": "en-organization.png",
+      "viewport": "1440x980",
+      "characters": 856
+    },
+    {
+      "locale": "en",
+      "slug": "permissions",
+      "route": "/workspace",
+      "filename": "en-permissions.png",
+      "viewport": "1440x980",
+      "characters": 1125
+    },
+    {
+      "locale": "en",
+      "slug": "contacts",
+      "route": "/workspace",
+      "filename": "en-contacts.png",
+      "viewport": "1440x980",
+      "characters": 967
+    },
+    {
+      "locale": "en",
+      "slug": "email-campaign",
+      "route": "/workspace",
+      "filename": "en-email-campaign.png",
+      "viewport": "1440x980",
+      "characters": 1048
+    },
+    {
+      "locale": "en",
+      "slug": "materials",
+      "route": "/materials",
+      "filename": "en-materials.png",
+      "viewport": "1440x980",
+      "characters": 818
+    },
+    {
+      "locale": "en",
+      "slug": "outreach",
+      "route": "/outreach",
+      "filename": "en-outreach.png",
+      "viewport": "1440x980",
+      "characters": 1020
+    },
+    {
+      "locale": "en",
+      "slug": "intelligence",
+      "route": "/intelligence",
+      "filename": "en-intelligence.png",
+      "viewport": "1440x980",
+      "characters": 1285
+    },
+    {
+      "locale": "en",
+      "slug": "skills",
+      "route": "/intelligence",
+      "filename": "en-skills.png",
+      "viewport": "1440x980",
+      "characters": 2737
+    },
+    {
+      "locale": "en",
+      "slug": "social",
+      "route": "/social",
+      "filename": "en-social.png",
+      "viewport": "1440x980",
+      "characters": 1332
+    },
+    {
+      "locale": "en",
+      "slug": "social-accounts",
+      "route": "/social",
+      "filename": "en-social-accounts.png",
+      "viewport": "1440x980",
+      "characters": 1525
+    },
+    {
+      "locale": "en",
+      "slug": "crm",
+      "route": "/crm",
+      "filename": "en-crm.png",
+      "viewport": "1440x980",
+      "characters": 979
+    },
+    {
+      "locale": "en",
+      "slug": "domain",
+      "route": "/domain",
+      "filename": "en-domain.png",
+      "viewport": "1440x980",
+      "characters": 680
+    },
+    {
+      "locale": "en",
+      "slug": "mailbox",
+      "route": "/mailbox",
+      "filename": "en-mailbox.png",
+      "viewport": "1440x980",
+      "characters": 742
+    },
+    {
+      "locale": "en",
+      "slug": "ai-models",
+      "route": "/settings/ai-model",
+      "filename": "en-ai-models.png",
+      "viewport": "1440x980",
+      "characters": 1315
+    },
+    {
+      "locale": "en",
+      "slug": "login",
+      "route": "/login",
+      "filename": "en-login.png",
+      "viewport": "1440x980"
+    }
+  ],
+  "errors": [],
+  "api_shapes": [
+    "/api/crm/action:list",
+    "/api/crm/action:mailboxes",
+    "/api/domains/all",
+    "/api/domains/list",
+    "/api/enterprise/action:list",
+    "/api/enterprise/action:me",
+    "/api/growth/action:companies",
+    "/api/growth/action:delivery_identity",
+    "/api/growth/action:list:plans",
+    "/api/growth/action:list:products",
+    "/api/growth/action:master:catalog",
+    "/api/growth/action:master:list",
+    "/api/growth/action:master:options",
+    "/api/growth/action:master:overview",
+    "/api/growth/action:master:skills",
+    "/api/growth/action:model_registry",
+    "/api/growth/action:settings",
+    "/api/growth/action:stats",
+    "/api/languages/get",
+    "/api/mailbox/list",
+    "/api/overview",
+    "/api/overview/domains",
+    "/api/social/action:availability",
+    "/api/social/action:companies",
+    "/api/social/action:filter_accounts",
+    "/api/social/action:list:accounts",
+    "/api/social/action:list:plans",
+    "/api/social/action:manual_reminders"
+  ]
+}

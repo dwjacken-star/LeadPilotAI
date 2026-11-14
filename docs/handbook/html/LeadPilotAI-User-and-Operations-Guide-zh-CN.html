@@ -1,0 +1,1032 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>领客AI · 架构与操作指南</title><style>
+@page {size:A4; margin:17mm 16mm 18mm}
+@page interface {size:A4 landscape; margin:12mm 13mm 16mm}
+*{box-sizing:border-box}html{font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;color:#23384e;background:#fff;font-size:12px;line-height:1.72}body{margin:0}h1{font-size:28px;line-height:1.35;color:#15334c}h2{font-size:19px;color:#087d87;border-bottom:1px solid #d5e6ea;padding-bottom:5px;margin-top:25px;break-after:avoid}h3{font-size:15px;color:#21445c;break-after:avoid}p,li{orphans:3;widows:3}a{color:#047b85;text-decoration:none}strong{color:#173c53}table{border-collapse:collapse;width:100%;font-size:10.5px;line-height:1.55;margin:14px 0;table-layout:auto}thead{display:table-header-group}th,td{border:1px solid #d5e0e9;padding:7px 8px;vertical-align:top;word-break:normal;overflow-wrap:anywhere}th{background:#edf5f8;color:#15354f}tr{break-inside:avoid}code{font-family:Consolas,"Microsoft YaHei",monospace;font-size:.91em;background:#edf3f7;padding:1px 3px;overflow-wrap:anywhere}pre{background:#edf3f7;border-left:3px solid #1395a0;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;break-inside:avoid}pre code{padding:0;background:none}blockquote{border-left:3px solid #1a9ca5;padding:8px 15px;background:#eef8f8;margin:15px 0}.cover{min-height:240mm;display:flex;flex-direction:column;justify-content:center;break-after:page}.cover .brand{font-size:45px;font-weight:800;color:#086c76;margin-bottom:14px}.cover p{font-size:16px}.cover .note{font-size:12px;background:#eef6f9;padding:20px;border-radius:8px}.contents{break-after:page}.contents ul{padding-left:20px}.contents>ul>li{margin-bottom:10px}.chapter{break-before:page}.interface{page:interface;break-before:page;break-after:page;margin:0;width:100%;text-align:center;break-inside:avoid}.interface figcaption{text-align:left;font-size:15px;font-weight:700;line-height:1.5;color:#15354f;margin:0 0 8px}.interface img{display:block;width:auto;height:auto;max-width:100%;max-height:158mm;object-fit:contain;margin:0 auto;border:1px solid #d5e0e9}.interface .image-note{text-align:left;font-size:10px;color:#536d82;margin-top:7px}.screen-only{background:#ecf7f7;padding:12px;border-radius:8px}.chapter-title-note{color:#61798a;font-size:11px}@media screen{body{max-width:1040px;margin:30px auto;padding:30px;box-shadow:0 1px 20px #dfe6ed}.cover{min-height:550px}.interface{margin:28px 0}.interface img{max-height:none;width:100%}.chapter{margin-top:50px}.screen-only{margin-bottom:25px}}@media print{.screen-only{display:none}}
+</style></head><body><div class="screen-only">可打印 HTML；对应 PDF 和 Markdown 位于同一文档目录。</div><section class="cover"><div class="brand">LeadPilot AI</div><h1>领客AI · 架构与操作指南</h1><p>技术架构 · 功能架构 · 用户操作 · 部署运维</p><p>版本 1.0 · 2026-11-14 · 源码基线 cf57fb3</p><p class="note">本文件使用真实应用前端与虚构演示数据。未连接生产、未向客户发信、未发布社媒。SQL 和凭据通过私有流程配套；截图不代表生产验收。</p><p><a href="https://github.com/dwjacken-star/LeadPilotAI">github.com/dwjacken-star/LeadPilotAI</a></p></section><nav class="contents"><h1>目录</h1><ul><li><a href="#chapter-0-section-0">技术架构说明</a><ul><li><a href="#chapter-0-section-1">1. 系统定位与架构风格</a></li><li><a href="#chapter-0-section-2">2. 技术栈与职责</a></li><li><a href="#chapter-0-section-3">3. 部署与网络边界</a></li><li><a href="#chapter-0-section-4">4. 前端应用架构</a></li><li><a href="#chapter-0-section-5">5. 后端模块与接口组织</a></li><li><a href="#chapter-0-section-6">6. 身份、部门与数据安全</a></li><li><a href="#chapter-0-section-7">7. 数据架构与存储</a></li><li><a href="#chapter-0-section-8">8. 异步执行与可靠性</a></li><li><a href="#chapter-0-section-9">9. AI 注册中心与外部平台边界</a></li><li><a href="#chapter-0-section-10">10. 工程边界与风险清单</a></li></ul></li><li><a href="#chapter-1-section-0">功能架构说明</a><ul><li><a href="#chapter-1-section-1">1. 业务闭环</a></li><li><a href="#chapter-1-section-2">2. 功能域与导航</a></li><li><a href="#chapter-1-section-3">3. 角色职责与审批分工</a></li><li><a href="#chapter-1-section-4">4. 资料到邮件的业务链</a></li><li><a href="#chapter-1-section-5">5. Growth Master：技能与工作流</a></li><li><a href="#chapter-1-section-6">6. 社媒营销链</a></li><li><a href="#chapter-1-section-7">7. 联系人与自动化状态边界</a></li><li><a href="#chapter-1-section-8">8. 功能验收矩阵</a></li></ul></li><li><a href="#chapter-2-section-0">项目操作手册</a><ul><li><a href="#chapter-2-section-1">阅读说明与截图边界</a></li><li><a href="#chapter-2-section-2">1. 首次使用检查表</a></li><li><a href="#chapter-2-section-3">2. 登录、语言和工作区</a></li><li><a href="#chapter-2-section-4">3. 部门、成员与角色（管理员）</a></li><li><a href="#chapter-2-section-8">4. 域名、邮箱和收发基础</a></li><li><a href="#chapter-2-section-11">5. AI 模型服务和预算</a></li><li><a href="#chapter-2-section-12">6. 公司、产品和资料中心</a></li><li><a href="#chapter-2-section-16">7. 联系人、分组和导入</a></li><li><a href="#chapter-2-section-17">8. 邮件模板、草稿和发送</a></li><li><a href="#chapter-2-section-22">9. AI 智能拓客</a></li><li><a href="#chapter-2-section-23">10. 智能情报获客与 Growth Master</a></li><li><a href="#chapter-2-section-27">11. 社媒账号、内容和排期</a></li><li><a href="#chapter-2-section-32">12. CRM、询盘和回复</a></li><li><a href="#chapter-2-section-33">13. 统计、报表和日常检查</a></li><li><a href="#chapter-2-section-34">14. 常见问题速查</a></li><li><a href="#chapter-2-section-35">15. 操作完成标准</a></li></ul></li><li><a href="#chapter-3-section-0">项目部署、维护与故障处理指南</a><ul><li><a href="#chapter-3-section-1">1. 发布文件与私有依赖</a></li><li><a href="#chapter-3-section-2">2. 环境与配置准备</a></li><li><a href="#chapter-3-section-3">3. 本地构建与验证</a></li><li><a href="#chapter-3-section-7">4. Compose 部署</a></li><li><a href="#chapter-3-section-8">5. 上线检查与健康诊断</a></li><li><a href="#chapter-3-section-9">6. 备份策略</a></li><li><a href="#chapter-3-section-10">7. 升级与回滚</a></li><li><a href="#chapter-3-section-11">8. 故障处理路径</a></li><li><a href="#chapter-3-section-12">9. 日常、周期与变更管理</a></li><li><a href="#chapter-3-section-13">10. 文档再生成与发布</a></li></ul></li></ul></nav><section class="chapter"><h1 id="chapter-0-section-0">技术架构说明</h1>
+<p><strong>系统：领客AI · LeadPilot AI｜文档版本：1.0｜分析日期：2026-11-14</strong><br>
+分析基线：<code>cf57fb3</code>。本说明基于仓库源码和 Compose 配置，不等同于生产环境巡检或性能验收。界面截图使用本地已有前端构建与虚构数据，详见《操作手册》的截图说明。</p>
+<h2 id="chapter-0-section-1">1. 系统定位与架构风格</h2>
+<p>系统是在 BillionMail 邮件服务基础上扩展的 B2B 获客、内容营销和客户跟进平台。内部 Go 模块名仍为 <code>billionmail-core</code>，部分容器、目录与协议名称保留 BillionMail / MapleMail，外部品牌为 LeadPilot AI。</p>
+<p>后端是<strong>模块化单体</strong>：HTTP API、业务服务、定时器、持久化工作队列在同一 Go 应用内运行；邮件协议组件以独立容器运行。Growth Master 的 14 项业务技能是应用内注册的逻辑能力，不是 14 个独立微服务。本仓库没有独立消息中间件、独立 Agent 云服务或通用可视化 DAG 引擎的部署依赖。</p>
+<figure class="interface"><figcaption>技术架构图</figcaption><img src="../assets/diagrams/technical-zh.svg" alt="技术架构图"><div class="image-note">架构图基于源码与默认编排分析。</div></figure><p>图源：<a href="../assets/diagrams/technical.mmd">Mermaid 技术架构</a>。</p>
+<h2 id="chapter-0-section-2">2. 技术栈与职责</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>源码/配置依据</th>
+<th>技术与职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>管理界面</td>
+<td><code>core/frontend/package.json</code></td>
+<td>Vue 3、TypeScript、Vue Router、Pinia；Naive UI 组件；Vue I18n 多语言</td>
+</tr>
+<tr>
+<td>前端构建</td>
+<td>前端 scripts / pnpm 锁文件</td>
+<td>Rsbuild、Node.js 22；pnpm 锁定依赖；Axios 请求、SSE 流式响应、ECharts 图表</td>
+</tr>
+<tr>
+<td>应用服务</td>
+<td><code>core/go.mod</code></td>
+<td>Go 模块声明 1.22，工具链 1.23.2；GoFrame v2.9；业务控制器和服务</td>
+</tr>
+<tr>
+<td>关系数据库</td>
+<td><code>docker-compose.yml</code></td>
+<td>PostgreSQL 17.4：业务数据、权限、执行记录、任务租约、额度预留、审计</td>
+</tr>
+<tr>
+<td>缓存/配置辅助</td>
+<td>Compose / Redis 服务</td>
+<td>Redis 7.4.2：现有缓存与邮件组件相关状态；不可把所有任务状态理解为仅保存在 Redis</td>
+</tr>
+<tr>
+<td>出站邮件</td>
+<td>Postfix / 中继服务</td>
+<td>SMTP 接收与转交、邮件队列、中继、发送身份；应用接收结果不等于最终收件</td>
+</tr>
+<tr>
+<td>收件与邮箱</td>
+<td>Dovecot / Roundcube</td>
+<td>IMAP/POP3、邮箱认证与存储；Roundcube Webmail 经 Core/PHP-FPM 对接</td>
+</tr>
+<tr>
+<td>反垃圾与防护</td>
+<td>Rspamd / Fail2ban</td>
+<td>垃圾邮件分析、DKIM 配置及现有访问防护</td>
+</tr>
+<tr>
+<td>外部集成</td>
+<td><code>aimodels</code> / <code>growth</code> / <code>social</code></td>
+<td>AI 服务、Serper 搜索/抓取、Facebook Pages、LinkedIn 组织主页、可选 WhatsApp</td>
+</tr>
+</tbody>
+</table>
+<p>版本为代码声明或 Compose 默认值，不保证目标服务器正在运行相同镜像。AI 服务商的模型能力、审批和接口版本需要运营人员实际验证。</p>
+<h2 id="chapter-0-section-3">3. 部署与网络边界</h2>
+<p>默认 Compose 定义七项应用服务：PostgreSQL、Redis、Rspamd、Dovecot、Postfix、Roundcube 和 Core。Core 承担管理台/API、部分公开页面与反向代理；邮件协议由相应组件处理。</p>
+<ul>
+<li>管理台使用 HTTP/HTTPS；生产应使用受信任 HTTPS，并限制管理员入口和来源。</li>
+<li>PostgreSQL 默认宿主机绑定 <code>127.0.0.1:25432</code>；Redis 默认 <code>127.0.0.1:26379</code>。不要直接公开数据库和缓存端口。</li>
+<li>默认邮件端口包括 SMTP 25、Submission 587、SMTPS 465、IMAP 143/993、POP3 110/995；仅按实际业务需求开放。</li>
+<li><code>SafePath</code> 是管理入口附加访问控制，不代替 JWT、账号状态、RBAC、TLS 或防火墙。</li>
+<li>Core 挂载 Docker socket 并具有额外容器能力。即使宿主机挂载标为 <code>:ro</code>，也<strong>不代表 Docker API 只能执行只读操作</strong>；应视为高权限信任边界。</li>
+<li>Compose 中 Core 的默认镜像仍含上游镜像名称。部署定制代码应使用项目自定义 Dockerfile/编排覆盖，不应只拉取上游 Core 镜像。</li>
+</ul>
+<h2 id="chapter-0-section-4">4. 前端应用架构</h2>
+<p>前端位于 <code>core/frontend/src</code>，包含路由、页面、业务 features、状态 store、API 客户端和组件库。</p>
+<ol>
+<li><code>router/modules</code> 定义菜单与页面；菜单按稳定标识排序，多语言标题不作为可靠权限键。</li>
+<li><code>router/index.ts</code> 检查本地登录状态，读取服务端 Principal，再按服务端账号权限决定页面访问。</li>
+<li><code>features/workspace/api.ts</code> 维护部门、角色与权限目录；页面按钮按操作权限展示。</li>
+<li><code>store/modules/workbench</code> 管理多标签工作区、活动页和请求归属；关闭/切换页面时避免旧请求污染新页面。</li>
+<li><code>api/index.ts</code> 为请求加入 Bearer Token 和 <code>Accept-Language</code>，统一处理业务返回、下载、错误和取消。</li>
+<li>API 常见信封为 <code>{code, success, msg, data}</code>。前端隐藏按钮只是用户体验，<strong>服务端仍必须逐项授权</strong>。</li>
+</ol>
+<p>语言资源包含中文、英文、日文、德文、土耳其文和越南文；本次正式交付中英文指南，不代表所有语言均完成业务术语人工审校。</p>
+<h2 id="chapter-0-section-5">5. 后端模块与接口组织</h2>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>主要职责</th>
+<th>入口/源码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统启动与路由</td>
+<td>数据初始化、模型配置迁移、定时器、公开页面及 API 注册</td>
+<td><code>core/internal/cmd/cmd.go</code></td>
+</tr>
+<tr>
+<td>部门与治理</td>
+<td>Principal、角色数据范围、共享策略、授权、旧接口边界</td>
+<td><code>service/governance</code>、<code>controller/enterprise</code></td>
+</tr>
+<tr>
+<td>邮件营销引擎</td>
+<td>任务、计划、自动化、API 邮件、共享限速、SMTP 交接</td>
+<td><code>service/batch_mail</code></td>
+</tr>
+<tr>
+<td>资料与 AI 拓客</td>
+<td>文件、产品、识别、公开网站证据、线索验证、开发信、询盘</td>
+<td><code>service/growth</code>；<code>/api/growth/action</code></td>
+</tr>
+<tr>
+<td>智能情报</td>
+<td>行业包、14 项技能、6 条工作流、审批、预算、审计</td>
+<td><code>growth/master_*.go</code>；growth action <code>master</code></td>
+</tr>
+<tr>
+<td>社媒营销</td>
+<td>OAuth、账号授权、内容版本、人工审核、排期、投递及统计</td>
+<td><code>service/social</code>；<code>/api/social/action</code></td>
+</tr>
+<tr>
+<td>客户管理</td>
+<td>客户、邮件同步、跟进、AI 回复草稿和人工发送</td>
+<td><code>service/crm</code>；<code>/api/crm/action</code></td>
+</tr>
+<tr>
+<td>模型注册中心</td>
+<td>统一模型引用、服务商配置、能力筛选、凭据加密</td>
+<td><code>service/aimodels</code>、<code>service/aicredentials</code></td>
+</tr>
+<tr>
+<td>运维组件</td>
+<td>域名/DNS、邮箱、中继、邮件统计、SSL、容器服务</td>
+<td>对应 <code>domains</code>、<code>mail_boxes</code>、<code>mail_service</code> 等</td>
+</tr>
+</tbody>
+</table>
+<p>许多业务采用 action 型 POST 接口，不应凭菜单名推测 REST URL。自动化集成应按对应请求类型、授权与源码接口实现，避免直接写数据库或调用未审查旧接口。</p>
+<h2 id="chapter-0-section-6">6. 身份、部门与数据安全</h2>
+<p>业务访问链路为：入口策略 → JWT 校验 → 账号/部门/角色状态 → 操作权限 → 数据范围 → 资源或邮箱授权 → 业务状态检查。</p>
+<p>数据范围包括本人、本部门、本部门及下级、指定部门和全部。操作权限和授予该权限的角色范围绑定，不能简单把全部角色权限和范围分别求最大值。邮箱授权与角色权限分离：具备发送权限仍需拥有相应邮箱的授权。</p>
+<p>旧管理接口通过 <code>LegacyBoundary</code> 限制普通成员访问，防止旧查询缺少部门条件。账号和角色变化通过 Token 版本等机制影响已有会话；后台发送时也要重新检查授权，不只在创建草稿时校验。</p>
+<p>上传文件使用私有路径及授权下载，外部内容、文件名、ZIP 路径、网页地址和 AI 输出均需视为不可信输入。AI 生成邮箱不能代替公开证据；AI 生成内容不能自动代替审批或合同承诺。</p>
+<h2 id="chapter-0-section-7">7. 数据架构与存储</h2>
+<table>
+<thead>
+<tr>
+<th>数据域</th>
+<th>主要表/实体</th>
+<th>关键关联</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>身份与治理</td>
+<td><code>account</code>、<code>role</code>、<code>account_role</code>、<code>bm_departments</code>、<code>bm_resource_grants</code>、<code>bm_send_policies</code>、<code>bm_security_audit</code></td>
+<td>账号、角色、部门、操作权限与资源授权</td>
+</tr>
+<tr>
+<td>联系人与营销</td>
+<td><code>bm_contact_groups</code>、<code>bm_contacts</code>、<code>bm_tags</code>、<code>email_templates</code>、<code>email_tasks</code>、<code>bm_campaign_schedules</code>、<code>bm_automation_rules</code></td>
+<td>部门/负责人、受众、模板、任务、订阅状态</td>
+</tr>
+<tr>
+<td>资料与拓客</td>
+<td><code>bm_growth_companies/products/assets/versions</code>、<code>bm_growth_plans/runs/leads/messages/inquiries/jobs</code></td>
+<td>公司资料版本 → 执行 → 证据 → 线索 → 开发信</td>
+</tr>
+<tr>
+<td>智能情报</td>
+<td><code>bm_gm_packs/workflows/runs/steps/evidence/prospects/contents/events/usage/audit</code></td>
+<td>行业配置和技能快照、运行检查点、审批、成本与审计</td>
+</tr>
+<tr>
+<td>社媒</td>
+<td><code>bm_social_accounts/plans/variants/deliveries/interactions/metrics/jobs</code></td>
+<td>账号授权 → 内容版本 → 冻结投递 → 外部回执</td>
+</tr>
+<tr>
+<td>CRM</td>
+<td><code>bm_crm_customers/messages/followups/mailbox_sync</code></td>
+<td>客户、邮件会话、跟进、邮箱同步游标</td>
+</tr>
+<tr>
+<td>邮件基础</td>
+<td><code>domain</code>、<code>mailbox</code>、<code>recipient_info</code>、<code>bm_options</code> 等</td>
+<td>域名、邮箱、订阅/收件人与系统配置</td>
+</tr>
+</tbody>
+</table>
+<p>表名前缀组合是数据域摘要，不是完整数据库 DDL。实体之间还存在业务校验、快照和逻辑归档，不能仅以外键推断删除行为。</p>
+<p>私有增长资料目录默认为 <code>core/data/growth-files</code>，可用 <code>MAPLEMAIL_GROWTH_DATA</code> 覆盖；模型凭据主密钥 <code>.ai-master-key</code> 存放在对应私有目录。数据库备份必须与该主密钥、资料目录、邮件数据和配置配套，不能只恢复数据库后宣称可正常解密。</p>
+<h2 id="chapter-0-section-8">8. 异步执行与可靠性</h2>
+<figure class="interface"><figcaption>处理链路</figcaption><img src="../assets/diagrams/workflow-zh.svg" alt="处理链路"><div class="image-note">架构图基于源码与默认编排分析。</div></figure><p>定时器启动 Growth、Social、邮件任务、导入任务、计划、邮件日志聚合等循环。数据库保存工作状态、检查点、额度、唯一键和租约；典型领取使用 <code>FOR UPDATE SKIP LOCKED</code>，配合唯一租约标记。</p>
+<p>发送限制可同时作用于系统、部门、邮箱、IP、服务商和任务。某层设为 0 只取消该层附加限制，不绕过上层限制。额度预留使用事务及 PostgreSQL advisory lock 等机制；失败尝试可能仍计入保守预留，不应假设失败自动退款。</p>
+<p>对 HTTP/SMTP 提交结果不明确的情况保留 <code>unknown</code>，人工核查后才能决定重试。暂停/取消通常只影响后续执行，不撤回已进入 Postfix 或已经在社交平台发布的内容。应用 SMTP accepted、Postfix delivered 和最终客户阅读是不同观测层级。</p>
+<h2 id="chapter-0-section-9">9. AI 注册中心与外部平台边界</h2>
+<p>模型注册中心集中管理服务商、HTTPS 基础地址、协议、模型 ID、启用状态和能力（text/chat/vision/image/embedding）。标准模型引用形式为 <code>ai::&lt;provider&gt;::&lt;model&gt;</code>。</p>
+<ul>
+<li>OpenAI Responses 和 OpenAI 兼容 Chat Completions 是不同协议；能力兼容须以实际接口测试为准。</li>
+<li>模型声明支持图片或文件并不保证服务商实际支持；PDF、图片识别与图片生成需分别验证。</li>
+<li>凭据不回显，业务配置只展示已保存状态；更换服务地址可能要求重新提供凭据以避免转发到错误端点。</li>
+<li>Serper 提供搜索/抓取相关能力；搜索结果和采集覆盖不能解释为全网覆盖。</li>
+<li>Facebook/LinkedIn 的正式授权、审批、发布和统计依赖外部平台；国家/语言设置不意味着付费广告地域定向。</li>
+<li>WhatsApp 属于可选配置能力，需对应官方账号、模板、许可与 Webhook 设置；默认不应视为已开通。</li>
+</ul>
+<h2 id="chapter-0-section-10">10. 工程边界与风险清单</h2>
+<ol>
+<li><strong>SQL 未发布</strong>：根据仓库发布策略，迁移和测试 SQL 被忽略，而部分 Go 文件通过 <code>go:embed</code> 引用它们。仅克隆公开仓库不能直接完成后端构建；需私有配套脚本。</li>
+<li><strong>运行密钥</strong>：禁止将 <code>.env</code>、<code>env_init</code>、证书私钥、资料主密钥和访问令牌上传 GitHub。</li>
+<li><strong>高权限 Core</strong>：Docker socket、容器能力和邮件配置修改路径应受专门控制。</li>
+<li><strong>外部结果不确定</strong>：unknown、令牌过期、平台审批、模型能力和邮件信誉均需操作人员处理。</li>
+<li><strong>构建验证范围</strong>：基线源码发布时，完整后端测试和前端构建超时；本次文档截图不构成新的完整构建或生产验收。</li>
+<li><strong>容灾与扩容</strong>：本仓库默认不是多地域 HA 配置。扩展 Core 实例前需验证单例定时器、共享限额、租约、Docker 本机依赖和重复发送防护；不可仅增加副本后宣称高可用。</li>
+</ol>
+<p>后续部署、备份、回滚及排障见《运维指南》。</p>
+</section>
+<section class="chapter"><h1 id="chapter-1-section-0">功能架构说明</h1>
+<p><strong>领客AI · LeadPilot AI｜版本 1.0｜2026-11-14｜源码基线 <code>cf57fb3</code></strong></p>
+<h2 id="chapter-1-section-1">1. 业务闭环</h2>
+<p>系统将“准备可信业务资料 → 获取公开证据 → 发现候选客户 → 验证联系人 → 生成内容 → 审批与合规投递 → 处理回信 → CRM 跟进与效果分析”连接在同一管理台内。它不是承诺自动成交或自动获得合法营销许可的系统。</p>
+<figure class="interface"><figcaption>功能架构</figcaption><img src="../assets/diagrams/functional-zh.svg" alt="功能架构"><div class="image-note">架构图基于源码与默认编排分析。</div></figure><p>图源：<a href="../assets/diagrams/functional.mmd">Mermaid 功能架构</a>。</p>
+<h2 id="chapter-1-section-2">2. 功能域与导航</h2>
+<table>
+<thead>
+<tr>
+<th>功能域</th>
+<th>页面/入口</th>
+<th>输入与核心操作</th>
+<th>输出及边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>登录与工作区</td>
+<td><code>/login</code>、<code>/workspace</code></td>
+<td>账号、部门、角色、工作区标签、权限</td>
+<td>服务端授权范围内的功能；管理员和普通成员界面可能不同</td>
+</tr>
+<tr>
+<td>数据概览</td>
+<td><code>/overview</code></td>
+<td>域名、时间范围、邮件日志/统计</td>
+<td>投递、打开、点击、退信、队列等；覆盖范围与未知值需分开解释</td>
+</tr>
+<tr>
+<td>部门与权限</td>
+<td>工作台的部门、成员、角色、邮箱授权、发送策略</td>
+<td>部门树、角色范围、操作权限、邮箱授权</td>
+<td>数据隔离、共享限制、审计；邮箱授权不等于角色权限</td>
+</tr>
+<tr>
+<td>联系人与标签</td>
+<td><code>/contacts</code> 或工作台对应标签</td>
+<td>分组、邮箱、导入文件、筛选关键词、确认/订阅状态、标签</td>
+<td>可用受众、导入进度和复核结果；发现地址不代表营销许可</td>
+</tr>
+<tr>
+<td>模板与邮件营销</td>
+<td><code>/template</code>、<code>/market</code> 或工作台</td>
+<td>HTML/AI 模板、受众、发件箱池、主题、策略、审核</td>
+<td>独立任务、冻结内容、队列和统计；暂停不撤回已提交邮件</td>
+</tr>
+<tr>
+<td>计划与自动化</td>
+<td>工作台计划/自动化、<code>/automation</code></td>
+<td>一次/每日/每周/每月、时区、订阅确认与顺序条件</td>
+<td>每次独立运行；自动化是受控顺序规则，不是任意节点画布</td>
+</tr>
+<tr>
+<td>发信 API</td>
+<td><code>/send</code></td>
+<td>API 权限、业务受众与模板、合法凭证</td>
+<td>接入统一发送控制；不能绕过部门范围和全局限额</td>
+</tr>
+<tr>
+<td>资料中心</td>
+<td><code>/materials</code></td>
+<td>公司/品牌事实、产品、文件、导入映射、识别和发布</td>
+<td>已发布对外资料、版本快照、私有原文件、待复核行</td>
+</tr>
+<tr>
+<td>AI 智能拓客</td>
+<td><code>/outreach</code></td>
+<td>公司/已发布产品、市场、搜索要求、验证、发送策略</td>
+<td>候选、线索、开发信、询盘与后台任务；只使用来源中真实出现的邮箱</td>
+</tr>
+<tr>
+<td>智能情报获客</td>
+<td><code>/intelligence</code></td>
+<td>行业包、技能、六类工作流、质量阈值、预算</td>
+<td>证据、候选池、内容审批、执行检查点、成本与审计</td>
+</tr>
+<tr>
+<td>社媒营销</td>
+<td><code>/social</code></td>
+<td>官方账号授权、平台/市场/语言、多版本内容、人工审核和排期</td>
+<td>发布记录、人工发布提醒、日历、互动及统计；受平台权限约束</td>
+</tr>
+<tr>
+<td>CRM 客户管理</td>
+<td><code>/crm</code></td>
+<td>客户、邮箱同步、会话、阶段、跟进记录、AI 草稿</td>
+<td>询盘、回复与跟进；AI 草稿不自动等于已发送回复</td>
+</tr>
+<tr>
+<td>模型注册中心</td>
+<td><code>/settings/ai-model</code>，相关模块中的 AI 设置入口</td>
+<td>服务商、协议、模型能力、密钥、预算</td>
+<td>统一模型选项与加密凭据；保存配置不证明联网调用成功</td>
+</tr>
+<tr>
+<td>邮件基础与运维</td>
+<td><code>/domain</code>、<code>/mailbox</code>、<code>/smtp</code>、<code>/logs</code>、<code>/settings</code></td>
+<td>域名/DNS、邮箱、SSL、中继、队列、容器和系统配置</td>
+<td>收发基础设施与问题诊断；高权限操作需管理员审核</td>
+</tr>
+</tbody>
+</table>
+<p>导航地址描述源码中的路由，不包含部署专属 SafePath，也不是公开生产入口。部分业务菜单对管理员保留旧页面，对普通成员展示部门化工作台；操作手册以工作台的统一业务流程为主。</p>
+<h2 id="chapter-1-section-3">3. 角色职责与审批分工</h2>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>推荐职责</th>
+<th>必须额外校验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统管理员</td>
+<td>部门、账号、角色、邮箱授权、AI/平台配置、基础运维</td>
+<td>最小授权、主密钥与备份、全局发送限制</td>
+</tr>
+<tr>
+<td>资料维护人员</td>
+<td>公司和产品事实、导入、文件识别与复核</td>
+<td>人工修改保护、敏感字段、公开/内部区分</td>
+</tr>
+<tr>
+<td>内容审核人员</td>
+<td>资料发布、邮件/社媒内容审核、事实与来源核查</td>
+<td>版本、国家语言、商标/合规、退订和对外承诺</td>
+</tr>
+<tr>
+<td>营销操作员</td>
+<td>受众、草稿、计划、内容版本与执行监控</td>
+<td>邮箱/主页授权、发送窗口、预算、客户冷却</td>
+</tr>
+<tr>
+<td>销售/客服</td>
+<td>CRM、询盘、跟进、回复草稿与人工发送</td>
+<td>正确客户/邮箱、敏感信息、承诺与重复回复</td>
+</tr>
+<tr>
+<td>审计/只读人员</td>
+<td>统计、执行结果、来源证据及操作审计</td>
+<td>只读权限、部门范围、导出权限</td>
+</tr>
+</tbody>
+</table>
+<p>推荐分工是配置原则，不是系统内固定角色名称。实际能力由操作权限、角色数据范围、资源授权和实时状态共同决定。</p>
+<h2 id="chapter-1-section-4">4. 资料到邮件的业务链</h2>
+<ol>
+<li>公司资料保存内部草稿；复核事实后单独发布。</li>
+<li>产品导入保留工作表、原行号、文本 SKU 和待复核冲突；人工确认后发布产品/素材。</li>
+<li>拓客计划选择已发布资料、目标市场、搜索与邮箱过滤条件。</li>
+<li>搜索/抓取保存公开来源；模型不负责凭空推测邮箱。</li>
+<li>服务端执行 DNS/MX、SMTP/Catch-all 等验证；无效地址排除，无法确认地址保留复核。</li>
+<li>满足验证、权限、订阅/抑制与冷却条件后生成个性化开发信，冻结来源版本。</li>
+<li>操作员审核，或在已明确启用的拓客自动发送策略下进入现有邮件引擎。</li>
+<li>SMTP 前再次检查权限、资料版本、退订、计划状态、回信和共享限额。</li>
+<li>真实/待确认询盘进入处理流程，关联 CRM 与跟进；不明确结果不盲目重发。</li>
+</ol>
+<p>“验证通过”是当次探测结果，不是永久可达保证；“平台/SMTP 已接受”不是客户已收到或已阅读。</p>
+<h2 id="chapter-1-section-5">5. Growth Master：技能与工作流</h2>
+<p>Growth Master 用单一逻辑规划器协调固定注册的技能，并保存执行快照。每个技能可配置启用状态、模型、超时、重试、条数和输出预算。</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>技能</th>
+<th>关键质量门槛</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S01</td>
+<td>全球新闻监测</td>
+<td>公开来源与采集覆盖</td>
+</tr>
+<tr>
+<td>S02</td>
+<td>市场趋势分析</td>
+<td>引用必须对应实际证据，保留不确定性</td>
+</tr>
+<tr>
+<td>S03</td>
+<td>产品热点识别</td>
+<td>观察信号不冒充销售统计</td>
+</tr>
+<tr>
+<td>S04</td>
+<td>采购意向识别</td>
+<td>日期与证据来源</td>
+</tr>
+<tr>
+<td>S05</td>
+<td>B2B 公司发现</td>
+<td>公开网站与去重</td>
+</tr>
+<tr>
+<td>S06</td>
+<td>联系人情报</td>
+<td>联系方式必须出现在来源中</td>
+</tr>
+<tr>
+<td>S07</td>
+<td>数据清洗</td>
+<td>有效、无效、无法确认、过滤分开处理</td>
+</tr>
+<tr>
+<td>S08</td>
+<td>线索评分</td>
+<td>缺失事实计零，记录规则版本和评分分项</td>
+</tr>
+<tr>
+<td>S09</td>
+<td>产品/服务匹配</td>
+<td>只引用批准的业务对象及可证实条件</td>
+</tr>
+<tr>
+<td>S10</td>
+<td>AI 内容生成</td>
+<td>首次触达或发布前核查具体内容和目标</td>
+</tr>
+<tr>
+<td>S11</td>
+<td>营销编排</td>
+<td>审批、权限、退订/抑制、预算和授权共同满足</td>
+</tr>
+<tr>
+<td>S12</td>
+<td>回信理解</td>
+<td>分类和草稿；禁止未经授权的合同承诺</td>
+</tr>
+<tr>
+<td>S13</td>
+<td>增长分析</td>
+<td>缺失指标保留未知，不伪造数据</td>
+</tr>
+<tr>
+<td>S14</td>
+<td>数据同步与审计</td>
+<td>部门范围、去重、CRM 关联与审计</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>工作流</th>
+<th>技能序列</th>
+<th>业务目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WF01</td>
+<td>S01 → S02 → S03 → S14</td>
+<td>行业/市场观察与热点整理</td>
+</tr>
+<tr>
+<td>WF02</td>
+<td>S04 → S05 → S06 → S07 → S08 → S09 → S14</td>
+<td>采购意向驱动的候选发现与筛选</td>
+</tr>
+<tr>
+<td>WF03</td>
+<td>S05 → S06 → S07 → S08 → S09 → S14</td>
+<td>常规公开 B2B 客户发现</td>
+</tr>
+<tr>
+<td>WF04</td>
+<td>S10 → S11 → S14</td>
+<td>多语言内容、审核与渠道交接</td>
+</tr>
+<tr>
+<td>WF05</td>
+<td>S12 → S08 → S09 → S14</td>
+<td>来信理解、机会评分和跟进</td>
+</tr>
+<tr>
+<td>WF06</td>
+<td>S13 → S02 → S14</td>
+<td>日常效果、成本及改进分析</td>
+</tr>
+</tbody>
+</table>
+<p>行业包定义产品/服务类型、术语、买家类型、意向词、排除词、字段、评分权重、置信度和禁止声明。AI 扩词需要勾选确认，不能当作真实采购证据。</p>
+<p>工作流包含 <code>waiting_approval</code>、<code>waiting_external</code>、<code>configuration_required</code>、<code>budget_exhausted</code> 等受控等待场景；修复原因后按操作入口恢复，不把等待统一解释为失败。已有生产计划不会因为创建行业包自动加入新工作流。</p>
+<h2 id="chapter-1-section-6">6. 社媒营销链</h2>
+<p>公司/任务材料 → 内容版本 → 平台/账号/市场匹配 → 人工审核 → 排期 → 账号授权及预算复核 → 外部提交 → 结果回查 → 互动与官方统计。</p>
+<ul>
+<li>可选择多个授权账号，保留账号与市场版本匹配；授权完成不自动启用真实发布。</li>
+<li>Facebook Page、LinkedIn 组织主页 API 发布与个人账号人工发布模式要区分。人工确认不是系统自动发布证据。</li>
+<li>修改内容后需重新审核；排期冻结正文、图片、版本和策略。</li>
+<li>结果不明确进入 <code>unknown</code>；删除任务不删除平台已有帖子。</li>
+<li>页面刷新本地状态与向平台同步统计是不同操作；现有实现包含四小时自动同步和手动同步。</li>
+<li>未提供的指标为 <code>—</code>，不能当成零；帖子触达人数之和不代表独立用户数。</li>
+<li>视频、直播、广告投放、任意平台自动评论回复不是本手册承诺的能力。第三方数据使用须遵守启用时的平台政策。</li>
+</ul>
+<h2 id="chapter-1-section-7">7. 联系人与自动化状态边界</h2>
+<p>联系人确认、订阅、启用、验证和营销许可是不同属性。导入为已确认联系人可能触发启用的订阅自动化，导入前必须核查。</p>
+<p>自动化支持等待、始终发送、上一封已打开、已点击或未打开等顺序条件，且通常只纳入规则建立后新确认联系人。跟踪信号可能受邮件代理或安全扫描影响。</p>
+<p>计划按时区运行并防止重叠；停机后的补运行不是集中补发所有历史日期。权限撤销、负责人部门变化、邮箱授权撤销和退订会影响后续任务。</p>
+<h2 id="chapter-1-section-8">8. 功能验收矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>验收域</th>
+<th>至少应验证</th>
+<th>本次文档交付是否代表已完成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI</td>
+<td>路由、组件、多语言、可见入口</td>
+<td>截图使用真实前端组件和虚构数据；不代表后端联调</td>
+</tr>
+<tr>
+<td>权限</td>
+<td>部门隔离、角色范围、文件下载、后台再校验</td>
+<td>仅说明实现；生产仍需实际权限测试</td>
+</tr>
+<tr>
+<td>邮件</td>
+<td>内部测试邮箱、最终投递、退订、退信、unknown</td>
+<td>未向真实客户发送</td>
+</tr>
+<tr>
+<td>AI/搜索</td>
+<td>正确协议、密钥、预算、引用和失败处理</td>
+<td>未在本次文档任务中调用付费服务</td>
+</tr>
+<tr>
+<td>社媒</td>
+<td>官方授权、审批、发布/人工模式、回查与统计</td>
+<td>未真实授权或发帖</td>
+</tr>
+<tr>
+<td>运维</td>
+<td>私有 SQL、主密钥、完整备份、恢复演练</td>
+<td>文档提供流程，未修改生产服务</td>
+</tr>
+</tbody>
+</table>
+<p>详细操作步骤、截图和常见错误见《操作手册》与《运维指南》。</p>
+</section>
+<section class="chapter"><h1 id="chapter-2-section-0">项目操作手册</h1>
+<p><strong>领客AI · LeadPilot AI｜中文用户指南｜版本 1.0｜2026-11-14</strong></p>
+<h2 id="chapter-2-section-1">阅读说明与截图边界</h2>
+<p>本手册以源码基线 <code>cf57fb3</code> 的业务实现为依据。截图由真实前端组件在 Microsoft Edge 无头浏览器中渲染，使用本地已有前端构建和<strong>虚构演示数据</strong>；未连接生产后端，也未使用真实账号、客户、令牌或商业数据。全部截图带演示标识。截图所示计数、域名 <code>example.com</code>、邮箱 <code>example.org</code> 和公司均不是业务实绩。</p>
+<p>这不是手绘界面原型，但也不是生产实况或后端联调证明。前端构建指纹、源码基线、截图列表与浏览器错误记录见 <code>assets/screenshot-provenance.json</code>。页面、按钮和可用选项取决于部署版本、语言、权限和配置。</p>
+<p>操作规则：<strong>先保存草稿、再审核、最后执行；外部提交结果不明确时先核查，不直接重试。</strong> 本次文档生成未向客户发信、未发布社媒、未调用付费 AI 或搜索服务。</p>
+<h2 id="chapter-2-section-2">1. 首次使用检查表</h2>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>操作</th>
+<th>完成标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>管理员确认 HTTPS、管理入口、基础服务和私有备份</td>
+<td>不使用共享默认密码，数据库与 Redis 不公开</td>
+</tr>
+<tr>
+<td>2</td>
+<td>配置部门 → 角色/范围 → 成员</td>
+<td>普通成员不能访问无关部门和系统管理接口</td>
+</tr>
+<tr>
+<td>3</td>
+<td>授权发件邮箱与配置发送策略</td>
+<td>有限速、有授权、有受控测试邮箱</td>
+</tr>
+<tr>
+<td>4</td>
+<td>配置域名、DNS、SSL 与 SMTP/中继</td>
+<td>用自有测试邮箱完成最终收发验证</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置 AI 服务商、模型能力和预算</td>
+<td>实际接口测试通过，密钥不回显</td>
+</tr>
+<tr>
+<td>6</td>
+<td>建立公司、产品和资料，复核后发布</td>
+<td>对外内容事实准确，内部敏感资料排除</td>
+</tr>
+<tr>
+<td>7</td>
+<td>小范围导入联系人并检查订阅/确认状态</td>
+<td>合法来源、过滤与复核明确</td>
+</tr>
+<tr>
+<td>8</td>
+<td>创建不自动发送的试用计划或草稿</td>
+<td>先核查证据、内容、预算和目标</td>
+</tr>
+<tr>
+<td>9</td>
+<td>审核后仅向受控目标试发</td>
+<td>核对最终收件、退订、回信和统计</td>
+</tr>
+</tbody>
+</table>
+<p>公开仓库按要求不含 SQL、运行凭据、私钥或安装包。部署前必须按《运维指南》准备匹配的私有数据库脚本，不能将 GitHub 克隆成功当作应用已安装。</p>
+<h2 id="chapter-2-section-3">2. 登录、语言和工作区</h2>
+<ol>
+<li>向管理员取得<strong>实际配置的管理入口</strong>。部署可能启用了 SafePath，不要猜测入口地址或将私有入口贴入公开文档。</li>
+<li>打开受信任 HTTPS 页面，选择语言，填写个人账号和密码后登录。</li>
+<li>进入部门工作台。系统显示当前账号和部门，顶部可管理多个工作区标签。</li>
+<li>按角色进入允许的功能。看不到按钮或菜单时先检查授权，不要改 URL 试图越权。</li>
+<li>离开共享电脑前退出登录；密码、验证码、API Token 不应保存在截图中。</li>
+</ol>
+<figure class="interface"><figcaption>图 1：登录界面；账号与密码留空</figcaption><img src="../assets/screenshots/zh-login.png" alt="图 1：登录界面；账号与密码留空"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><p>工作区切换会保持部分页面状态，但未保存编辑不应视为已写入数据库。浏览器刷新、页面刷新和任务执行是不同操作。</p>
+<h2 id="chapter-2-section-4">3. 部门、成员与角色（管理员）</h2>
+<h3 id="chapter-2-section-5">3.1 建立组织</h3>
+<p>进入 <strong>部门工作台 → 部门</strong>：新增名称，选择父部门，设置启用状态，保存。先建立部门树，再创建成员，避免历史数据归属不清。</p>
+<figure class="interface"><figcaption>图 2：部门管理</figcaption><img src="../assets/screenshots/zh-organization.png" alt="图 2：部门管理"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-6">3.2 配置角色和数据范围</h3>
+<p>进入工作台的角色管理标签，设置角色名、操作权限和数据范围。推荐先选最小范围，确认业务确需后再扩权。</p>
+<ul>
+<li>本人：仅允许范围内本人记录。</li>
+<li>本部门 / 本部门及下级：按部门树限制。</li>
+<li>指定部门：显式选择授权部门。</li>
+<li>全部：不等于系统管理员，也不自动拥有全部邮箱/主页权限。</li>
+</ul>
+<p>创建、编辑、删除、导入、导出、发布和设置属于不同操作，不能只勾选“查看”后期待可以发布。</p>
+<figure class="interface"><figcaption>图 3：角色与数据范围</figcaption><img src="../assets/screenshots/zh-permissions.png" alt="图 3：角色与数据范围"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-7">3.3 成员、邮箱授权和发送策略</h3>
+<ol>
+<li>新建成员时选择部门和角色，设置个人初始密码；不要在公开手册记录真实密码。</li>
+<li>在邮箱授权中为部门配置允许使用的发件邮箱。角色发送权限与邮箱授权必须同时满足。</li>
+<li>在发送策略中配置系统、部门、邮箱、IP或服务商限制：分钟/小时/24 小时额度、间隔、并发、时区窗口和客户冷却。</li>
+<li>使用普通成员账号核对列表、导出、文件下载和发送范围。撤销授权后也要检查后台任务停止条件。</li>
+</ol>
+<p>停用成员或部门不等于删除历史记录。员工调部门不会自动迁移全部历史业务数据，旧任务可能因归属不匹配停止。</p>
+<h2 id="chapter-2-section-8">4. 域名、邮箱和收发基础</h2>
+<h3 id="chapter-2-section-9">4.1 域名</h3>
+<p>进入 <strong>域名</strong>，维护业务域名、主机名、邮箱额度和相关设置。按系统生成的记录核对 MX、A、SPF、DKIM、DMARC，并由运维人员确认 PTR/出口 IP 和服务商出站 SMTP 政策。</p>
+<figure class="interface"><figcaption>图 4：域名界面；示例域名不代表实际 DNS 配置成功</figcaption><img src="../assets/screenshots/zh-domain.png" alt="图 4：域名界面；示例域名不代表实际 DNS 配置成功"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><p>生产建议仅一个有效 SPF 记录，正确签名并验证 DMARC 对齐。不要在尚未验证投递的情况下盲目提高限制。SSL 私钥属于私有配置，不上传 GitHub。</p>
+<h3 id="chapter-2-section-10">4.2 邮箱</h3>
+<p>进入 <strong>邮箱</strong>，选择域名，新增单个或批量邮箱，设置容量、状态和密码。</p>
+<ul>
+<li>前端不再预填固定密码；新增单个或批量邮箱时需要输入符合界面规则的密码。</li>
+<li>后端空密码请求只有在私有环境配置了有效 <code>DEFAULT_NEW_MAILBOX_PASSWORD</code> 时才可回退；未配置会拒绝创建。</li>
+<li>修改既有邮箱时留空密码表示保留现有密码，不应为了更新名称重置邮箱凭据。</li>
+<li>独立邮箱账号不自动等于管理台账号；Webmail 使用邮箱认证。</li>
+</ul>
+<figure class="interface"><figcaption>图 5：邮箱管理；不展示任何邮箱密码</figcaption><img src="../assets/screenshots/zh-mailbox.png" alt="图 5：邮箱管理；不展示任何邮箱密码"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><p>首次测试使用自己控制的邮箱，验证 SMTP 提交、最终到达、IMAP/Webmail 收件和回复。应用显示 accepted 不等于目标邮箱已经收件。</p>
+<h2 id="chapter-2-section-11">5. AI 模型服务和预算</h2>
+<p>进入 <strong>设置 → AI 模型服务</strong>；社媒/拓客模块也提供相关设置入口，实际模型选择由统一注册中心管理。</p>
+<ol>
+<li>新增服务商，选择实际支持的协议（Responses 或 Chat Completions），填写正确 HTTPS 基础地址。</li>
+<li>在私有管理界面填写密钥；不在手册、聊天、GitHub 或截图中公开。</li>
+<li>添加/发现模型，核对模型 ID、启用状态、文字/对话/视觉/图片生成/Embedding 能力和输出上限。</li>
+<li>按能力选择默认模型，设置每日调用与 Token 预算，保存。</li>
+<li>使用系统提供的测试入口或受控任务做一次最小验证，确认协议、模型和额度；保存成功不是联网测试成功。</li>
+<li>更换端点时按界面要求重新提供密钥，防止把原凭据发送给错误服务。</li>
+</ol>
+<figure class="interface"><figcaption>图 6：统一模型注册中心；示例服务停用且密钥为空</figcaption><img src="../assets/screenshots/zh-ai-models.png" alt="图 6：统一模型注册中心；示例服务停用且密钥为空"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><p>视觉、PDF 输入、图片生成和联网搜索是不同能力。不要将仅支持对话的模型用于直接 PDF 识别。供应商声明、系统选项和真实调用能力需分别核对。</p>
+<h2 id="chapter-2-section-12">6. 公司、产品和资料中心</h2>
+<p>进入 <strong>资料中心</strong>，先选择公司，或创建公司草稿。录入品牌、域名、产品/服务和可证实的业务事实。</p>
+<figure class="interface"><figcaption>图 7：资料中心</figcaption><img src="../assets/screenshots/zh-materials.png" alt="图 7：资料中心"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-13">6.1 公司事实和发布</h3>
+<p>保存草稿后检查名称、业务范围、联系方式、服务承诺和证据。只有经过审核、明确发布的对外资料才应供自动营销使用。共享部门只能按授权读取已发布资料，内部文件不可自动变成公开内容。</p>
+<h3 id="chapter-2-section-14">6.2 产品表格与图片</h3>
+<ol>
+<li>下载当前版本的产品/行业模板，按字段填写。</li>
+<li>上传 XLSX 并检查全部工作表、原行号、SKU 前导零和列映射。</li>
+<li>对缺失编号、字段冲突、图片归属歧义等待复核行进行人工确认。</li>
+<li>已有人工作过的字段不应被再次导入自动覆盖；核对实际更新结果。</li>
+<li>上传/关联产品图片，确认主图与相关图片角色，复核后发布产品。</li>
+</ol>
+<p>ZIP 内的路径不能穿越目录，也不能放入私钥、数据库备份或敏感业务资料。公司资料、产品导入和社媒任务上传的格式/大小限制不同，以当前界面和后端配置为准，不混用一个统一上限。</p>
+<h3 id="chapter-2-section-15">6.3 AI 识别和版本</h3>
+<p>上传 PDF、Office 文件或图片后，按需要允许 AI 识别并选择模型。先看抽取事实、证据位置和不确定项，再人工合并到草稿。成本、银行、凭据、内部采购等字段不得进入对外内容。发布后保留版本；资料变更可能使未发送开发信的旧快照失效。</p>
+<h2 id="chapter-2-section-16">7. 联系人、分组和导入</h2>
+<p>普通业务人员可在工作台的联系人组、联系人和标签中操作；管理员也可能看到独立“联系人”页面。</p>
+<figure class="interface"><figcaption>图 8：部门化联系人界面；示例邮箱为保留域名</figcaption><img src="../assets/screenshots/zh-contacts.png" alt="图 8：部门化联系人界面；示例邮箱为保留域名"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><ol>
+<li>建立清晰的部门联系人组，填写说明。</li>
+<li>使用该页面当前接受的导入格式；先预览字段与地址，填写过滤词，确认去重与待复核情况。</li>
+<li>区分地址验证、启用、订阅和确认状态。导入发现的公开邮箱不自动具备商业营销许可。</li>
+<li><strong>导入为已确认联系人可能触发已启用的订阅自动化</strong>；不确定时先关闭相关自动化并检查状态。</li>
+<li>给联系人添加标签。营销受众可按 AND/OR/NOT 等逻辑筛选；发布前核对最终预览，而非仅核对分组总数。</li>
+<li>导出需要独立权限；导出文件按内部数据处理规则保存，不放入公共仓库。</li>
+</ol>
+<h2 id="chapter-2-section-17">8. 邮件模板、草稿和发送</h2>
+<h3 id="chapter-2-section-18">8.1 模板准备</h3>
+<p>在模板菜单或工作台模板标签新增模板，编辑 HTML 或使用 AI 辅助。预览布局、链接、品牌、纯文本/富文本效果和退订信息。合并变量按该页面模板语法使用，不直接从本手册猜测变量名。</p>
+<h3 id="chapter-2-section-19">8.2 创建任务</h3>
+<p>进入 <strong>部门工作台 → 营销任务</strong>，点击新建：</p>
+<ol>
+<li>填写名称和主题；选择联系人组、标签条件、模板和发件邮箱池。</li>
+<li>核对发件人显示名、回复/抄送设置、打开/点击跟踪和退订。</li>
+<li>设置间隔、并发、滚动额度、批次数量、休息、时区窗口和客户冷却；0 不绕过上层限制。</li>
+<li>预览受众与内容，保存草稿；由有权限人员审核后发布。</li>
+<li>首次只用内部受控目标试发，核对最终收件而不只看提交计数。</li>
+</ol>
+<figure class="interface"><figcaption>图 9：邮件营销任务</figcaption><img src="../assets/screenshots/zh-email-campaign.png" alt="图 9：邮件营销任务"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-20">8.3 执行、暂停和结果</h3>
+<ul>
+<li>暂停/取消只停止后续交接，已在邮件服务器队列中的邮件可能继续发送。</li>
+<li>额度、时间窗、权限或客户冷却阻塞时，先查看具体原因，不提高并发掩盖问题。</li>
+<li><code>unknown</code> 表示无法确认是否提交，管理员应先核对邮件队列和日志，不直接再次发送。</li>
+<li>打开和点击是观测信号，受隐私代理和扫描器影响；不能作为可靠合同签收证据。</li>
+</ul>
+<h3 id="chapter-2-section-21">8.4 计划与订阅自动化</h3>
+<p>一次/每日/每周/每月计划按指定时区运行，每次生成独立任务。月底日期和夏令时需要核对；停机后不会集中补发所有历史周期。</p>
+<p>订阅自动化是有序步骤：等待、始终发送、前一封已打开、已点击或未打开。规则修改影响新的加入实例；已有实例保留快照。先使用测试联系人验证，再启用真实业务规则。</p>
+<h2 id="chapter-2-section-22">9. AI 智能拓客</h2>
+<p>进入 <strong>AI 智能拓客</strong>，先维护并发布公司/产品资料。</p>
+<figure class="interface"><figcaption>图 10：AI 智能拓客计划</figcaption><img src="../assets/screenshots/zh-outreach.png" alt="图 10：AI 智能拓客计划"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><ol>
+<li>新建计划，选公司和产品/服务；选择国家、语言、时区和目标客户要求。</li>
+<li>配置搜索词、网站数量、每日新增/发信额度、邮箱过滤、发件箱池、发送窗口与冷却。</li>
+<li>第一次关闭自动发送，先运行小批量发现任务。</li>
+<li>查看运行记录与候选公司：检查来源 URL、市场匹配、公开联系证据和验证结果。</li>
+<li>无效地址不得进入开发信；无法确认、Catch-all 等结果进入人工复核，不把模型猜测地址当作可用邮箱。</li>
+<li>核对生成开发信、来源版本、目标语言、事实和退订，再按权限确认发送。</li>
+<li>查看询盘及收件规则；疑似人工回信可暂停后续开发。真实询盘关联 CRM，需要时按已配置规则转发。</li>
+<li>仅对尚未进入发送/未知状态的内容按界面规则重新生成；不要用重新生成绕过重复发送保护。</li>
+</ol>
+<p>计划变更可能默认暂停。授权撤销、资料更新、退订、客户回信和冷却会影响后续交接。完成发现任务不意味着已经发送或成交。</p>
+<h2 id="chapter-2-section-23">10. 智能情报获客与 Growth Master</h2>
+<p>进入 <strong>智能情报获客</strong>，选择公司。该模块是行业包、14 项技能和 6 类固定工作流的受控执行台，不是任意节点编排器。</p>
+<figure class="interface"><figcaption>图 11：智能情报工作流</figcaption><img src="../assets/screenshots/zh-intelligence.png" alt="图 11：智能情报工作流"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-24">10.1 行业包</h3>
+<p>新建或复制行业包，配置产品/服务类型、术语、买家、意向词、排除词、来源、字段、评分权重、最低分/置信度和禁止声明。系统模板复制后编辑；AI 扩词需要人工勾选确认。</p>
+<h3 id="chapter-2-section-25">10.2 业务技能</h3>
+<p>在业务技能标签为所需技能选择模型和条数、输出、超时/重试限制。先检查搜索、验证、资料和渠道能力，不要给所有技能无条件打开最大预算。</p>
+<figure class="interface"><figcaption>图 12：业务技能配置</figcaption><img src="../assets/screenshots/zh-skills.png" alt="图 12：业务技能配置"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-26">10.3 工作流执行</h3>
+<ol>
+<li>按目的选择 WF01 行业观察、WF02 采购意向、WF03 客户发现、WF04 内容与渠道、WF05 来信处理或 WF06 增长分析。</li>
+<li>选择市场、资料、发件箱/主页、质量门槛、周期和调用/Token/搜索/抓取/发送预算。</li>
+<li>保存后先手动运行小批量；查看执行记录、检查点、证据、候选评分与失败/等待原因。</li>
+<li>内容审批时核对<strong>具体内容、具体目标和冻结版本</strong>。首次触达与公开发布不能由模型自行批准。</li>
+<li>若启用受控自动回复规则，必须明确审批规则与允许事实；敏感商业承诺仍由人工处理。普通 CRM AI 回复草稿默认需要人工发送。</li>
+<li>遇到待配置、预算耗尽、等待审核或外部结果，解决对应原因再恢复。</li>
+<li>管理员紧急暂停用于阻止后续工作，不承诺撤销已外发内容。</li>
+</ol>
+<h2 id="chapter-2-section-27">11. 社媒账号、内容和排期</h2>
+<p>进入 <strong>社媒营销</strong>。先准备已发布公司资料及官方平台账号授权，再将任务从草稿推进到审核与排期。</p>
+<figure class="interface"><figcaption>图 13：社媒营销任务</figcaption><img src="../assets/screenshots/zh-social.png" alt="图 13：社媒营销任务"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-28">11.1 平台与账号</h3>
+<ol>
+<li>管理员配置官方应用、回调地址、实际获批权限与平台发布开关。</li>
+<li>使用官方 OAuth 流程授权，显式选择需要连接的主页/账号；不要把别人提供的 Token 粘进公开文档。</li>
+<li>确认所属部门、主页管理能力、授权有效期和发布模式。</li>
+<li>授权开关与真实发布开关分开；连接完成不代表已允许自动发帖。</li>
+</ol>
+<figure class="interface"><figcaption>图 14：社媒账号；演示账号未连接</figcaption><img src="../assets/screenshots/zh-social-accounts.png" alt="图 14：社媒账号；演示账号未连接"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><h3 id="chapter-2-section-29">11.2 内容版本与人工审核</h3>
+<p>新建任务，选择公司、平台、国家、语言、账号和当地时间。上传或选择已批准资料，生成/手写各版本正文，预览链接、图片、段落、语言和来源事实。修改版本后重新审核；一个任务的不同市场可以对应多个授权账号。</p>
+<p>国家/语言用于本地化，不等于平台广告地域定向。任务专用文件与资料中心发布文件是不同生命周期；归档到资料中心应显式操作。</p>
+<h3 id="chapter-2-section-30">11.3 发布与未知结果</h3>
+<p>批准后排期，核对时区和夏令时。API 模式由工作进程向获准平台提交；人工模式由操作员到平台实际发布后按界面确认，不能把“人工确认”当作系统自动发布凭证。</p>
+<p>结果超时或未知时先核对平台帖子 ID 和归属，不盲目重试。删除任务或发布记录不等于删除平台帖子。平台已撤权或令牌过期时重新授权，不修改记录假装成功。</p>
+<h3 id="chapter-2-section-31">11.4 互动与效果</h3>
+<p>本地刷新仅读取已保存状态；平台同步才请求新的官方指标。查看采集时间、覆盖数量和 <code>—</code>，不要将缺失指标作为零。遵守平台对成员数据、评论、AI 使用及保留期的要求。当前指南不提供自动评论回复、广告或视频发布步骤。</p>
+<h2 id="chapter-2-section-32">12. CRM、询盘和回复</h2>
+<p>进入 <strong>客户管理</strong>，按部门范围搜索客户、阶段与下一次跟进。</p>
+<figure class="interface"><figcaption>图 15：客户管理</figcaption><img src="../assets/screenshots/zh-crm.png" alt="图 15：客户管理"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><ol>
+<li>选择授权收件邮箱并同步 INBOX；首次起始范围与增量游标受现有实现限制，不等于完整历史邮件导入。</li>
+<li>对询盘、自动回复、退订和不明确消息分别处理；不确定内容先人工确认。</li>
+<li>打开正确客户与邮件线程，维护公司、阶段（新客户/询盘/报价/谈判/赢单/丢单等）和下一次跟进。</li>
+<li>需要 AI 回复时选择正确公司资料，生成草稿，补齐缺失事实并人工编辑。</li>
+<li><strong>核对收件人、发件邮箱、主题、附件和商业承诺后，显式发送。</strong> 草稿生成不是发送动作。</li>
+<li>对转发/回复结果为 unknown 的记录先查看邮件日志与客户会话，避免重复提交。</li>
+</ol>
+<h2 id="chapter-2-section-33">13. 统计、报表和日常检查</h2>
+<p>进入概览，选择域名与时间，结合邮件服务器日志、任务统计、退信、打开/点击覆盖和队列观察。</p>
+<figure class="interface"><figcaption>图 16：统计概览；所有计数均为演示值</figcaption><img src="../assets/screenshots/zh-overview.png" alt="图 16：统计概览；所有计数均为演示值"><div class="image-note">真实前端组件；虚构数据；非生产环境截图。</div></figure><p>推荐每日检查：未完成任务、unknown、待审批、预算耗尽、授权过期、退信异常、退订处理、客户跟进、磁盘空间及备份。报表导出需要权限，不能把客户明细发布到公共 GitHub。</p>
+<h2 id="chapter-2-section-34">14. 常见问题速查</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>先检查</th>
+<th>不应采取的操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>菜单/按钮不见</td>
+<td>角色操作权限、数据范围、资源授权、账号状态</td>
+<td>猜旧接口或绕过前端</td>
+</tr>
+<tr>
+<td>新邮箱创建失败</td>
+<td>密码规则；空 API 请求的私有默认密码配置</td>
+<td>恢复硬编码共享密码</td>
+</tr>
+<tr>
+<td>AI 模型不可选</td>
+<td>服务启用、密钥、协议、模型能力和预算</td>
+<td>把保存成功当作可调用</td>
+</tr>
+<tr>
+<td>线索不发信</td>
+<td>来源、验证有效期、订阅/抑制、冷却、计划状态</td>
+<td>强制将未知地址标为有效</td>
+</tr>
+<tr>
+<td>邮件 pending 很久</td>
+<td>共享额度、窗口、授权、发送日志和队列</td>
+<td>盲目增并发或重复新建任务</td>
+</tr>
+<tr>
+<td>社媒无法发布</td>
+<td>应用审批、账号模式、实际权限、审核版本、令牌</td>
+<td>填写虚假帖子 ID</td>
+</tr>
+<tr>
+<td>状态 unknown</td>
+<td>外部平台/SMTP 回执与后台日志</td>
+<td>未核查就重试</td>
+</tr>
+<tr>
+<td>AI 密钥恢复后失效</td>
+<td>数据库与 <code>.ai-master-key</code> 是否配套</td>
+<td>仅恢复数据库并覆盖主密钥</td>
+</tr>
+<tr>
+<td>GitHub 克隆后无法编译</td>
+<td>私有 SQL、依赖、前端产物与配置是否齐全</td>
+<td>将私钥/数据库脚本强行提交</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-2-section-35">15. 操作完成标准</h2>
+<p>任何“成功”应说明层级：保存成功、验证通过、入队成功、外部接受、最终投递或业务确认。正式验收至少覆盖权限隔离、受控目标投递、退订、回信、平台授权及 unknown 恢复。截图与本手册不能替代这些验收。</p>
+</section>
+<section class="chapter"><h1 id="chapter-3-section-0">项目部署、维护与故障处理指南</h1>
+<p><strong>领客AI · LeadPilot AI｜中文运维指南｜版本 1.0｜2026-11-14</strong></p>
+<p>本指南提供操作步骤，不表示本次已执行生产部署、备份或恢复。示例在项目根目录执行，服务名保留源码中的实际 Compose 名称。修改生产前必须确认目标、备份、停机窗口和回滚负责人。</p>
+<h2 id="chapter-3-section-1">1. 发布文件与私有依赖</h2>
+<p>GitHub 包含应用源码、文档、演示截图和本次明确交付的 PDF。普通安装包、压缩包、编译产物、运行数据、SQL、私钥和凭据保持忽略。PDF 是本次用户授权的文档交付物，不是应用安装包。</p>
+<p><strong>仅克隆不能完成后端构建。</strong> 下面的 Go 源码通过 <code>go:embed</code> 引用被忽略的私有 SQL：</p>
+<ul>
+<li><code>core/internal/service/governance/</code>：<code>migration.sql</code>、<code>growth.sql</code>、<code>delivery.sql</code>、<code>statistics.sql</code>、<code>social.sql</code>、<code>master.sql</code>。</li>
+<li><code>core/internal/testsupport/</code>：<code>base.sql</code>。</li>
+</ul>
+<p>另外，初始化脚本、环境、证书和目标实例已有运行配置应由管理员私有管理。取得与版本配套的文件后放回原路径，不将 SQL 改名隐藏提交。文档与源码归档不能替代完整可运行备份。</p>
+<h2 id="chapter-3-section-2">2. 环境与配置准备</h2>
+<p>建议先在隔离 Linux/Docker 环境安装：Docker Engine/Compose、Node.js 22、与锁文件匹配的 pnpm，以及 Go 1.23.2。Windows 原生 Go 构建不等于完整 Linux 邮件服务可运行。</p>
+<ol>
+<li>克隆自己的仓库并确认版本：</li>
+</ol>
+<pre><code class="language-sh">git clone https://github.com/dwjacken-star/LeadPilotAI.git
+cd LeadPilotAI
+git log -1 --oneline
+</code></pre>
+<ol start="2">
+<li>按私有流程补齐数据库脚本和必要配置，检查每个 <code>go:embed</code> 引用。</li>
+<li>将 <code>.env.example</code> 复制为 <code>.env</code>，在私有环境中填写数据库/Redis/管理员配置；生产已有 <code>.env</code> 不覆盖。</li>
+<li>设置主机名、SafePath、HTTPS、真实域名和受控邮件出口；不要沿用示例域名。</li>
+<li>给 <code>.env</code>、私钥、资料主密钥和备份设置限制访问的文件权限。</li>
+<li>检查数据库/Redis 端口只绑定本地，且 Core 的 Docker socket 权限符合信任模型。</li>
+</ol>
+<p>新增邮箱的空密码后端回退由私有 <code>DEFAULT_NEW_MAILBOX_PASSWORD</code> 控制，未配置时拒绝空密码创建。不要在源码重新加入默认密码。</p>
+<h2 id="chapter-3-section-3">3. 本地构建与验证</h2>
+<h3 id="chapter-3-section-4">3.1 前端</h3>
+<pre><code class="language-sh">cd core/frontend
+pnpm install --frozen-lockfile
+pnpm build
+pnpm i18n:check
+pnpm test:workspace
+pnpm test:repair
+cd ../..
+</code></pre>
+<p>前端产物在 <code>core/frontend/dist</code>，部署时由 Dockerfile 复制到 Core 公共资源目录。<code>build:git</code> 含 Git 拉取和复制行为，<code>build:deploy</code> 含部署脚本；仅验证构建时使用普通 <code>build</code>，不要误触部署快捷入口。</p>
+<h3 id="chapter-3-section-5">3.2 后端</h3>
+<p>先补齐私有 SQL，再在 <code>core</code> 中明确构建正式入口：</p>
+<pre><code class="language-sh">cd core
+go mod download
+go build -mod=readonly -trimpath -o ../.tools/leadpilot-core main.go
+go test ./internal/service/mail_boxes ./internal/controller/mail_boxes ./internal/controller/settings
+cd ..
+</code></pre>
+<p>仓库存在开发入口，不应未经核查使用 <code>go build .</code> 把多个 main 一起编译。集成测试在设置 <code>BM_TEST_PG_HOST</code> 等变量后会创建/清理测试库；只允许指向具有创建/删除权限的<strong>隔离测试实例</strong>，不指向生产。未配置时部分测试会跳过，跳过不代表完整验证通过。</p>
+<h3 id="chapter-3-section-6">3.3 文档保护检查</h3>
+<pre><code class="language-sh">node --test scripts/check-publish.test.cjs
+git ls-files -ci --exclude-standard
+node scripts/check-publish.cjs
+</code></pre>
+<p>发布检查以暂存区为准，不是全面安全审计。代码内的简单字符串密码、业务隐私或图片信息仍需人工审查。</p>
+<h2 id="chapter-3-section-7">4. Compose 部署</h2>
+<p>默认编排引用上游 Core 镜像。部署定制代码应使用定制覆盖：</p>
+<pre><code class="language-sh">docker compose -f docker-compose.yml -f docker-compose.enterprise.yml config --quiet
+docker compose -f docker-compose.yml -f docker-compose.enterprise.yml build core-billionmail
+</code></pre>
+<p>在已批准的变更窗口、完成备份并确认脚本版本后启动/更新：</p>
+<pre><code class="language-sh">docker compose -f docker-compose.yml -f docker-compose.enterprise.yml up -d
+</code></pre>
+<p>这些是部署示例，不是本次已执行的命令。<strong>不要把生产升级误当作全新安装</strong>：保留现有 <code>.env</code>、数据库、邮箱数据、Postfix 队列、资料目录、主密钥、镜像及服务授权。不要执行 <code>down -v</code> 清空持久化卷，也不要用上游更新脚本替换定制 Core。</p>
+<p>升级时应避免新旧邮件调度器同时运行；按审核计划切换 Core，验证迁移和任务租约。单纯启动多个实例不等于高可用。</p>
+<h2 id="chapter-3-section-8">5. 上线检查与健康诊断</h2>
+<p>只读检查示例：</p>
+<pre><code class="language-sh">docker compose ps
+docker compose logs --tail=120 core-billionmail
+docker compose logs --tail=80 pgsql-billionmail
+docker compose logs --tail=80 postfix-billionmail
+docker compose logs --tail=80 dovecot-billionmail
+docker compose logs --tail=80 rspamd-billionmail
+</code></pre>
+<p>日志可能包含内部邮箱、文件路径或请求信息；提供给外部前先脱敏，不直接放入 GitHub。</p>
+<p>上线验收至少确认：</p>
+<ul>
+<li>Core 与前端版本配套，管理登录、语言和静态文件正常。</li>
+<li>数据库迁移无错误，历史记录与凭据没有被重置。</li>
+<li>普通成员权限、部门列表、私有下载与邮箱授权正确。</li>
+<li>用自己的测试邮箱验证提交、最终投递、收件和回复。</li>
+<li>退订、暂停、取消、未知状态核查和发送窗口有效。</li>
+<li>AI/搜索能力与预算经过真实但最小范围测试。</li>
+<li>社媒真实操作另行使用获批应用验收；无凭据时不能宣称完成授权/发布。</li>
+</ul>
+<h2 id="chapter-3-section-9">6. 备份策略</h2>
+<p>备份必须覆盖：PostgreSQL、<code>.env</code> 和配置、SSL 私钥/证书、<code>core-data</code>（含资料与 <code>.ai-master-key</code>）、邮箱数据、相关队列、原应用镜像和版本信息。</p>
+<p><strong>示例仅展示数据库逻辑备份；它不是完整系统备份：</strong></p>
+<pre><code class="language-sh">umask 077
+BACKUP_DIR=&quot;backup/manual-$(date +%Y%m%d-%H%M%S)&quot;
+mkdir -p &quot;$BACKUP_DIR&quot;
+docker compose exec -T pgsql-billionmail sh -c \
+  'exec pg_dump -Fc -U &quot;$POSTGRES_USER&quot; &quot;$POSTGRES_DB&quot;' \
+  &gt; &quot;$BACKUP_DIR/database.dump&quot;
+test -s &quot;$BACKUP_DIR/database.dump&quot;
+docker compose images &gt; &quot;$BACKUP_DIR/images.txt&quot;
+git rev-parse HEAD &gt; &quot;$BACKUP_DIR/source-version.txt&quot;
+</code></pre>
+<p>文件/邮箱/队列的备份需按实例实际持久化路径执行，并考虑正在写入数据的一致性。采用受控维护窗口或一致性快照；不要把运行中目录的随意拷贝当作完整一致备份。</p>
+<ul>
+<li>加密或严格控制备份访问；私钥与数据库副本不能发布。</li>
+<li>保留多版本备份并在隔离环境定期恢复演练。</li>
+<li>记录主密钥版本及配套数据；不要恢复时自动生成新密钥覆盖旧密钥。</li>
+<li>备份成功至少需检查文件完整性和实际可恢复性，不只看命令退出码。</li>
+</ul>
+<h2 id="chapter-3-section-10">7. 升级与回滚</h2>
+<p>升级流程：确认目标版本 → 完整备份 → 停止旧 Core 交接新任务 → 更新匹配前后端和私有 SQL → 检查追加迁移 → 验证权限/数据/队列 → 受控试发 → 恢复业务。</p>
+<p>回滚先暂停外发任务，记录不确定的提交。恢复上一版本应用与匹配的数据/配置需使用已演练方案；若只回退旧应用而保留新部门账号，旧代码可能缺少新的访问边界，必须先控制相关账号与 API 权限。不可未经批准自动清库或执行破坏式数据库恢复。</p>
+<p>停止任务不撤回已提交邮件/帖子，回滚也不会自动撤销外部动作。unknown 记录要单独核查，以防恢复后重复发送。</p>
+<h2 id="chapter-3-section-11">8. 故障处理路径</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>检查顺序</th>
+<th>处理原则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启动失败</td>
+<td>私有 SQL/配置 → 数据库连接 → 迁移错误 → Docker socket → 日志</td>
+<td>保存错误证据，不绕过失败迁移启动</td>
+</tr>
+<tr>
+<td>登录/权限问题</td>
+<td>HTTPS/SafePath → 账号状态 → Token → 部门/角色 → LegacyBoundary</td>
+<td>不通过解除全部权限解决</td>
+</tr>
+<tr>
+<td>前端白屏</td>
+<td>入口与异步资源是否配套 → 浏览器错误 → API 信封 → 缓存/版本</td>
+<td>保留可复现请求；不当作登录成功</td>
+</tr>
+<tr>
+<td>邮件停滞</td>
+<td>状态/授权 → 上层额度 → 窗口 → SMTP/队列 → 退信 → 外网限制</td>
+<td>accepted 与 delivered 分开核对</td>
+</tr>
+<tr>
+<td>AI/搜索失败</td>
+<td>协议/模型 → 端点 → 私有密钥 → 额度 → 解析/来源</td>
+<td>不伪造返回或无限重试</td>
+</tr>
+<tr>
+<td>社媒失败</td>
+<td>应用审批 → 账号模式 → 授权/Token → 内容审核 → 429/unknown</td>
+<td>遵循平台退避；未知先核查</td>
+</tr>
+<tr>
+<td>恢复后解密失败</td>
+<td>数据库与原 <code>.ai-master-key</code>、资料路径、访问权限</td>
+<td>不覆盖主密钥，不公开密钥</td>
+</tr>
+<tr>
+<td>磁盘异常</td>
+<td>数据/日志/队列/上传目录与保留策略</td>
+<td>先分析占用，不能删除真实邮箱或队列救急</td>
+</tr>
+</tbody>
+</table>
+<h2 id="chapter-3-section-12">9. 日常、周期与变更管理</h2>
+<ul>
+<li>每日：服务状态、磁盘、unknown、待审批、队列、退信、预算、过期授权与备份。</li>
+<li>每周：部门授权与角色、退订/抑制、模型配置、平台指标覆盖和错误趋势。</li>
+<li>每月/按政策：恢复演练、主密钥配套检查、证书续期、依赖安全更新、平台权限/保留政策复核。</li>
+<li>每次升级：记录版本、范围、审批、备份、回滚、迁移和受控验收结果。</li>
+</ul>
+<h2 id="chapter-3-section-13">10. 文档再生成与发布</h2>
+<p>在已安装 Playwright Core、浏览器、前端依赖和已有构建时执行：</p>
+<pre><code class="language-sh">node scripts/docs/generate-diagrams.cjs
+node scripts/docs/capture-ui.mjs
+node scripts/docs/build-handbook.cjs
+python scripts/docs/validate-handbook.py
+</code></pre>
+<p><code>PLAYWRIGHT_MODULE</code> 可以指定 Playwright Core 的模块文件；<code>DOC_BROWSER</code> 指定本机 Chromium/Edge 可执行文件。默认工具路径是当前文档生成环境的本地路径，新机器应显式设置，不提交依赖目录或浏览器二进制。</p>
+<p>截图脚本只允许本地界面资源并拦截虚构 API 返回；文档不调用生产。Markdown 和图源可独立阅读，即使没有 PDF 生成工具也可使用。</p>
+<p>发布前运行链接/图片/PDF验证和敏感信息检查；确认图中无真实人员、客户、Token、私钥、邮件正文或财务数据，再提交并推送。</p>
+</section></body></html>

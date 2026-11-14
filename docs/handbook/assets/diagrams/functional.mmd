@@ -1,0 +1,13 @@
+flowchart LR
+  GOV[Departments, roles, resource grants] --> MATERIALS[Reviewed materials and versions]
+  MATERIALS --> DISCOVERY[Public evidence and verified contacts]
+  MODELS[AI registry and budgets] --> DISCOVERY
+  DISCOVERY --> REVIEW[Content and human review]
+  REVIEW --> EMAIL[Governed email]
+  REVIEW --> SOCIAL[Authorized social / manual publishing]
+  REVIEW --> MASTER[Growth Master workflows]
+  EMAIL --> CRM[Inquiries, CRM and follow-up]
+  SOCIAL --> METRICS[Official metrics and coverage]
+  MASTER --> CRM
+  CRM --> AUDIT[Analytics, costs and audit]
+  METRICS --> AUDIT

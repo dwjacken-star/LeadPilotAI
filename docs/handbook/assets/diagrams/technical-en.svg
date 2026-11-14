@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Technical Architecture · LeadPilot AI"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#5d7591"/></marker></defs><rect width="100%" height="100%" rx="16" fill="#f4f7fb"/><style>text{font-family:Arial,"Microsoft YaHei","Noto Sans CJK SC",sans-serif} .title{font-size:28px;font-weight:700;fill:#152b45}.label{font-size:21px;font-weight:700;fill:#14314c}.detail{font-size:17px;fill:#4b637a}</style><text x="32" y="48" class="title">Technical Architecture · LeadPilot AI</text>
+<path d="M305 160 L355 160" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 155 L965 155" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M895 205 L930 205 L930 310 L965 310" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M625 245 L625 290" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M30 315 L15 315 L15 550 L30 550" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M465 550 L420 550" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M680 475 L680 430" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M1040 475 L1040 390 L850 390" fill="none" stroke="#5d7591" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="30" y="100" width="275" height="120" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="133" class="label">User interfaces</text>
+<text x="48" y="163" class="detail">Vue 3 / TypeScript / Pinia</text>
+<text x="48" y="189" class="detail">Console · Localized workbench</text>
+<rect x="30" y="260" width="275" height="115" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="293" class="label">Webmail / mail clients</text>
+<text x="48" y="323" class="detail">Roundcube · IMAP / SMTP</text>
+<text x="48" y="349" class="detail">Separate mailbox authentication</text>
+<rect x="355" y="100" width="540" height="145" rx="12" fill="#e6f4f4" stroke="#cedbe8" stroke-width="1.5"/><text x="373" y="133" class="label">Core: Go / GoFrame modular monolith</text>
+<text x="373" y="163" class="detail">APIs · JWT/RBAC · scope and grants</text>
+<text x="373" y="189" class="detail">Mail · CRM · materials · AI · social · intelligence</text>
+<text x="373" y="215" class="detail">Timers · leases · budgets · checkpoints</text>
+<rect x="965" y="100" width="285" height="120" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="983" y="133" class="label">PostgreSQL 17.4</text>
+<text x="983" y="163" class="detail">Records · queues · quotas</text>
+<text x="983" y="189" class="detail">Snapshots · audit · leases</text>
+<rect x="965" y="260" width="285" height="105" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="983" y="293" class="label">Redis 7.4.2</text>
+<text x="983" y="323" class="detail">Cache and mail-component state</text>
+<rect x="355" y="290" width="540" height="140" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="373" y="323" class="label">External services (configured/authorized)</text>
+<text x="373" y="353" class="detail">AI providers · Serper search/scrape</text>
+<text x="373" y="379" class="detail">Facebook Pages · LinkedIn organizations</text>
+<text x="373" y="405" class="detail">Optional WhatsApp · not enabled by default</text>
+<rect x="30" y="475" width="390" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="48" y="508" class="label">Mail protocol services</text>
+<text x="48" y="538" class="detail">Postfix · Dovecot · Rspamd</text>
+<text x="48" y="564" class="detail">SMTP handoff, queue, inbox, spam checks</text>
+<text x="48" y="590" class="detail">Accepted ≠ final receipt</text>
+<rect x="465" y="475" width="435" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="483" y="508" class="label">Persistence / private configuration</text>
+<text x="483" y="538" class="detail">core-data · vmail-data · queue data</text>
+<text x="483" y="564" class="detail">.env · SSL private keys · .ai-master-key</text>
+<text x="483" y="590" class="detail">Restore database and key together</text>
+<rect x="945" y="475" width="305" height="150" rx="12" fill="#ffffff" stroke="#cedbe8" stroke-width="1.5"/><text x="963" y="508" class="label">Operations / trust boundary</text>
+<text x="963" y="538" class="detail">Docker Compose · Fail2ban</text>
+<text x="963" y="564" class="detail">Privileged Docker socket in Core</text>
+<text x="963" y="590" class="detail">Private SQL dependencies</text>
+</svg>

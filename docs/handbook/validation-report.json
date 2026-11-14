@@ -1,0 +1,26 @@
+{
+  "source_baseline": "cf57fb3",
+  "capture_count": 32,
+  "markdown_files_checked": 12,
+  "pdfs": [
+    {
+      "locale": "zh-CN",
+      "pdf": "docs/handbook/pdf/LeadPilotAI-User-and-Operations-Guide-zh-CN.pdf",
+      "pages": 54,
+      "landscape_pages": 19,
+      "image_instances": 16,
+      "bytes": 2397474,
+      "sha256": "29dcd8dc52ca7d4e9f1887ae636b126441e516cd8e1c6e21c26b00d58d9b7c8e"
+    },
+    {
+      "locale": "en",
+      "pdf": "docs/handbook/pdf/LeadPilotAI-User-and-Operations-Guide-en.pdf",
+      "pages": 56,
+      "landscape_pages": 19,
+      "image_instances": 16,
+      "bytes": 1974816,
+      "sha256": "dcdc327d2b32de79d56887773790d0bbbc2aae8ad443d03a9d13211c2af1f290"
+    }
+  ],
+  "errors": []
+}
