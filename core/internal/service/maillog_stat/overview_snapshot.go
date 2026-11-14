@@ -121,7 +121,28 @@ func (o *Overview) OverviewContext(ctx context.Context, campaignID int64, domain
 func (o *Overview) overviewContext(ctx context.Context, campaignID int64, domain string, startTime, endTime int64, scope string, queueAccess bool) (map[string]interface{}, error) {
 	startTime, endTime = o.filterAndPrepareTimeSection(startTime, endTime)
 	query, args := o.snapshotQueryScoped(campaignID, domain, startTime, endTime, scope)
-	rows, err := g.DB().GetAll(ctx, query, args...)
+	var rows gdb.Result
+	err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		// These index-probe aggregates can receive very high planner estimates.
+		// JIT compilation then dominates a short dashboard read. Scope the
+		// setting to this transaction; do not alter the server/global setting.
+		previous, e := tx.GetValue("SHOW jit")
+		if e != nil {
+			return e
+		}
+		if _, e = tx.Exec("SET LOCAL jit=off"); e != nil {
+			return e
+		}
+		rows, e = tx.GetAll(query, args...)
+		if e != nil {
+			return e
+		}
+		// Also preserve an enclosing caller transaction's setting.
+		if previous.String() == "on" {
+			_, e = tx.Exec("SET LOCAL jit=on")
+		}
+		return e
+	})
 	if err != nil {
 		return nil, err
 	}

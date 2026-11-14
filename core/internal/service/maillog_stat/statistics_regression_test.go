@@ -9,8 +9,30 @@ import (
 
 	"billionmail-core/internal/service/public"
 	"billionmail-core/internal/testsupport"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
 )
+
+func TestOverviewPreservesCallerJITSetting(t *testing.T) {
+	testsupport.Database(t)
+	public.SetCache("postfix_deferred_queue_count", 0, 300)
+	err := g.DB().Transaction(context.Background(), func(ctx context.Context, tx gdb.TX) error {
+		if _, e := tx.Exec("SET LOCAL jit=on"); e != nil {
+			return e
+		}
+		if _, e := NewOverview().OverviewContext(ctx, 0, "", time.Now().Unix()-60, time.Now().Unix()+1); e != nil {
+			return e
+		}
+		setting, e := tx.GetValue("SHOW jit")
+		if e == nil && setting.String() != "on" {
+			t.Fatal("overview changed the caller transaction JIT setting")
+		}
+		return e
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
 
 // Requires the disposable PostgreSQL fixture; never points at production.
 func TestOverviewClickReceiptNormalizesMessageIDAndPreservesHistoricalCoverage(t *testing.T) {

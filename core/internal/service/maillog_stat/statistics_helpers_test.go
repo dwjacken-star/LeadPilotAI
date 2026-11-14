@@ -19,10 +19,10 @@ func TestLatestMailRecordRetainsTerminalState(t *testing.T) {
 	var records []testMailLog
 	indexes := map[string]int{}
 	for _, record := range []testMailLog{
-		{"queue-a", 1000, "deferred"},
+		{"queue-a", 1000, "bounced"}, // reverse scan sees the latest line first
 		{"queue-b", 1000, "sent"},
-		{"queue-a", 1000, "bounced"}, // same second, later log line
-		{"queue-b", 900, "deferred"}, // out-of-order older line
+		{"queue-a", 1000, "deferred"}, // same second, older line must not overwrite it
+		{"queue-b", 900, "deferred"},  // out-of-order older line
 		{"queue-c", 2000, "deferred"},
 		{"queue-c", 3000, "sent"},
 	} {

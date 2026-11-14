@@ -21,6 +21,12 @@ import (
 	"time"
 )
 
+// ResolveMailboxPassword applies the same private password policy to controller
+// pre-validation and service writes. No shared password is embedded in source.
+func ResolveMailboxPassword(password string) (string, error) {
+	return resolveMailboxPassword(password)
+}
+
 // resolveMailboxPassword never falls back to a password embedded in source.
 // An explicitly empty process variable disables the local .env fallback.
 func resolveMailboxPassword(password string) (string, error) {

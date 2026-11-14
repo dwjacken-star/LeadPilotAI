@@ -5,10 +5,9 @@ import "fmt"
 // A queue id can cover several recipients. Attribute an event only to the
 // corresponding delivery and fall back to Message-ID for early/late log arrival.
 func eventJoin(table, alias string) string {
-	return fmt.Sprintf(`LATERAL(SELECT ev.id FROM %s ev
- WHERE lower(ev.recipient)=lower(sm.recipient) AND
- (ev.postfix_message_id=sm.postfix_message_id OR EXISTS(
- SELECT 1 FROM mailstat_message_ids mid WHERE mid.postfix_message_id=sm.postfix_message_id AND btrim(mid.message_id,'<>')<>'' AND ev.message_id IN(mid.message_id,btrim(mid.message_id,'<>'),'<'||btrim(mid.message_id,'<>')||'>'))) LIMIT 1) AS %s`, table, alias)
+	// Consumers only count id presence. Reuse the two indexable probes rather
+	// than scanning event rows with an OR-correlated mapping subquery.
+	return fmt.Sprintf(`LATERAL(SELECT 1 AS id WHERE %s) AS %s`, eventExists(table), alias)
 }
 
 func trackingCoverage(kind string) string {

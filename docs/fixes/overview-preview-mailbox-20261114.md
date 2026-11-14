@@ -6,7 +6,7 @@
 
 ### 概览
 
-- 邮件日志批处理按 Postfix 队列 ID 去重时保留第一条，而不是最新状态；同批次后续 `bounced` 可能被先前 `deferred` 覆盖。同秒的状态更新也因严格 `>` 被忽略。
+- 日志实际按倒序扫描，同一时间戳应保留首先读取的较新行；数据库冲突更新原先使用严格 `>`，跨轮扫描时同秒发生的 `deferred` → `bounced` 更新会被忽略。新增集成测试覆盖倒序和同秒重放，防止状态退回旧值。
 - 日志游标在写入完成前推进，数据库写入失败可能造成后续不再处理该段日志。
 - 营销链接追踪仅识别双引号小写 `href`，遗漏单引号、大小写和未加引号的链接；HTML 实体应在编码追踪目标前解码，资源链接和退订不能被重写。
 - 部分旧/先到达的回执 Message-ID 带尖括号，日志映射不带，导致关联失败。真实回执也不能因为后来修改任务/模板开关而被当作没有可计量样本。
@@ -24,11 +24,12 @@
 
 ## 2. 修复策略
 
-- 按日志时间保留最新状态，同时间戳由后到达日志行更新；写入成功后才推进游标。
+- 按日志时间保留最新状态，倒序扫描时相同时间戳保留先读取的行；写入成功后才推进游标。数据库允许同秒的最终状态更新。
 - 保持现有队列键统计表结构，不变更数据库 schema，不删除或重发邮件。多收件人队列的历史表设计仍是一条队列记录，不宣称已改成逐收件人数据库模型。
 - 仅追踪 HTTP/HTTPS 的锚点链接，支持常用 HTML 属性写法，保留资源/退订/已追踪链接。
 - Message-ID 关联兼容尖括号，真实回执作为历史可观察性的证据；缺少测量显示 `—`，真实 0 仍显示 0。
 - 读取延迟队列失败时显示 `—` 与检查提示，查询有超时、成功结果短期缓存；不向普通成员暴露全局队列。
+- 统计查询在局部事务中关闭 JIT 并恢复调用方设置，避免复杂相关探测触发高开销 JIT 编译；不修改生产 PostgreSQL 的全局配置。
 - 模板预览使用 CSS 长度、视口和脚本禁用策略，保留作者样式；支持桌面/移动宽度，弹窗不超出视口，不修改保存内容。
 - 每次打开下拉框重新读取第一页，清除旧搜索，保留已选值；分页成功后才推进，并丢弃过期或跨上下文响应。服务端现有启用状态和部门授权过滤保持不变。
 
@@ -54,7 +55,9 @@ GO111MODULE=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off go test -buildvcs=fals
   latest_record.go deferred_queue.go tracked_links.go statistics_helpers_test.go
 ```
 
-另有使用隔离 PostgreSQL 的日志持久化和统计关联测试。当前机器 Docker 未运行，完整后端模块测试未完成；不能把纯函数或 UI 验证视为生产数据库联调。
+最初验证时本地 Docker 未运行；阿里云部署准备期间已启动本地隔离环境，完成统计、概览控制器、部门权限、邮箱服务与系统设置的 PostgreSQL 回归，以及 Linux 正式入口构建。新增测试也覆盖 JIT 设置不泄漏到调用方事务。前端生产构建通过，保留现有非阻断性 lint 警告。隔离验证仍不等于生产最终投递验收。
+
+部署构建还修正了统计文件的未使用导入，以及邮箱导入预校验对旧默认密码常量的引用。导入与服务层统一使用私有密码策略，不恢复硬编码密码。
 
 ## 4. 上线与历史数据注意
 
@@ -67,10 +70,10 @@ GO111MODULE=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off go test -buildvcs=fals
 
 ## English summary
 
-Confirmed code defects included first-record batch deduplication, strict timestamp updates, premature log cursor advancement, incomplete anchor tracking, legacy Message-ID matching, queue failures reported as zero, iframe CSS-length handling and stale remote options.
+Confirmed code defects included strict timestamp updates across log scans, premature log cursor advancement, incomplete anchor tracking, legacy Message-ID matching, queue failures reported as zero, iframe CSS-length handling and stale remote options. The log scanner reads backwards; ties must retain the first (newer) line, as covered by disposable-database integration tests.
 
 The fix preserves the existing queue-keyed schema and authorization boundaries. It does not claim per-recipient storage migration, alter production data, reset mailbox credentials, replay external actions or fabricate metrics.
 
 The dropdown reloads on every opening, preserves selection, resets searches, retries pagination correctly and ignores late responses from another context. Preview supports responsive desktop/mobile widths with preserved styles and blocked scripts. Queue unavailability is displayed separately from a measured empty queue.
 
-Frontend/component/browser regressions and standalone Go helper tests are available. Disposable PostgreSQL integration cases were added, but production validation/deployment is not implied. Historical missing events require controlled log reconciliation; untracked links in already-sent mail cannot retrospectively generate click events.
+Frontend/component/browser regressions, disposable PostgreSQL integration suites and the Linux production build passed during deployment preparation. The statistics transaction disables JIT locally and preserves an enclosing transaction's setting; server-global configuration is unchanged. Mailbox import now uses the same private password policy as service writes. Production validation/deployment is not implied by these isolated checks. Historical missing events require controlled log reconciliation; untracked links in already-sent mail cannot retrospectively generate click events.

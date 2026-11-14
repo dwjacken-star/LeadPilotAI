@@ -23,7 +23,7 @@ func TestResolveMailboxPassword(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Setenv("DEFAULT_NEW_MAILBOX_PASSWORD", tc.configured)
-			got, err := resolveMailboxPassword(tc.supplied)
+			got, err := ResolveMailboxPassword(tc.supplied)
 			if (err != nil) != tc.wantErr || got != tc.want {
 				t.Fatal("unexpected mailbox password resolution result")
 			}

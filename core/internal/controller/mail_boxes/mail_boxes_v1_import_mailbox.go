@@ -153,7 +153,12 @@ func (c *ControllerV1) ImportMailbox(ctx context.Context, req *v1.ImportMailboxR
 		}
 
 		if mailboxes[i].Password == "" && mailboxes[i].PasswordEncode == "" {
-			mailboxes[i].Password = mail_boxes.DefaultNewMailboxPassword
+			password, passwordErr := mail_boxes.ResolveMailboxPassword("")
+			if passwordErr != nil {
+				res.SetError(fmt.Errorf("Row %d: %w", i+2, passwordErr))
+				return res, nil
+			}
+			mailboxes[i].Password = password
 		}
 
 		if mailboxes[i].IsAdmin == 0 {
