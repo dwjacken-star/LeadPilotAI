@@ -7,6 +7,7 @@ import (
 	"billionmail-core/internal/service/growth"
 	"context"
 	"errors"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"net/mail"
@@ -15,52 +16,94 @@ import (
 )
 
 // Linking is explicit. A mailbox password never becomes an administrator token.
-func Bindings(ctx context.Context, p *governance.Principal, mailbox, keyword string, page int) (g.Map, error) {
-	if !p.Super {
+func Bindings(ctx context.Context, p *governance.Principal, mailbox, keyword string, page int, selectedAccount ...int64) (g.Map, error) {
+	if p == nil || !p.Super {
 		return nil, errors.New("Administrator access required")
 	}
+	mailbox = strings.ToLower(strings.TrimSpace(mailbox))
 	if page < 1 {
 		page = 1
 	}
-	rows, e := g.DB().Model("account").Ctx(ctx).Where("status", 1).WhereLike("username", "%"+keyword+"%").Fields("account_id,username").Order("account_id").Page(page, 20).All()
+	parents := `NOT EXISTS(WITH RECURSIVE parents AS(SELECT id,parent_id,active FROM bm_departments WHERE id=d.id UNION ALL SELECT p.id,p.parent_id,p.active FROM bm_departments p JOIN parents c ON p.id=c.parent_id) SELECT 1 FROM parents WHERE NOT active)`
+	eligible := `a.status=1 AND COALESCE(d.active,false) AND ` + parents
+	fields := `a.username,a.dept_id,d.name AS dept_name,COALESCE((` + eligible + `),false) AS eligible,
+ EXISTS(SELECT 1 FROM role r JOIN account_role ar USING(role_id) WHERE ar.account_id=a.account_id AND r.status=1 AND r.role_name='admin') AS super,
+ EXISTS(SELECT 1 FROM bm_resource_grants g WHERE g.dept_id=a.dept_id AND g.sender=$1 AND g.active) AS has_sender_grant`
+	rows, e := g.DB().GetAll(ctx, `SELECT a.account_id,`+fields+` FROM account a JOIN bm_departments d ON d.id=a.dept_id WHERE `+eligible+` AND a.username ILIKE $2 ORDER BY a.account_id LIMIT 20 OFFSET $3`, mailbox, "%"+keyword+"%", (page-1)*20)
 	if e != nil {
 		return nil, e
 	}
-	count, e := g.DB().Model("account").Ctx(ctx).Where("status", 1).WhereLike("username", "%"+keyword+"%").Count()
+	count, e := g.DB().GetValue(ctx, `SELECT count(*) FROM account a JOIN bm_departments d ON d.id=a.dept_id WHERE `+eligible+` AND a.username ILIKE $1`, "%"+keyword+"%")
 	if e != nil {
 		return nil, e
 	}
-	binding, e := g.DB().Model("bm_webmail_bindings b").Ctx(ctx).LeftJoin("account a", "a.account_id=b.account_id").Where("b.mailbox", mailbox).Fields("b.mailbox,b.account_id,a.username").One()
-	return g.Map{"accounts": rows, "total": count, "binding": binding}, e
+	binding, e := g.DB().GetOne(ctx, `SELECT b.mailbox,b.account_id,`+fields+` FROM bm_webmail_bindings b LEFT JOIN account a ON a.account_id=b.account_id LEFT JOIN bm_departments d ON d.id=a.dept_id WHERE b.mailbox=$1`, mailbox)
+	if e != nil {
+		return nil, e
+	}
+	selected := gdb.Record{}
+	if len(selectedAccount) == 1 && selectedAccount[0] > 0 {
+		selected, e = g.DB().GetOne(ctx, `SELECT a.account_id,`+fields+` FROM account a LEFT JOIN bm_departments d ON d.id=a.dept_id WHERE a.account_id=$2`, mailbox, selectedAccount[0])
+	}
+	return g.Map{"accounts": rows, "total": count.Int(), "binding": binding, "selected_account": selected}, e
 }
+
 func SaveBinding(ctx context.Context, p *governance.Principal, mailbox string, accountID int64) error {
-	if !p.Super {
+	return SaveBindingWithGrant(ctx, p, mailbox, accountID, false)
+}
+
+// Department-wide authorization is never implicit. Only an administrator's
+// explicit choice can create/reactivate a grant, atomically with the binding.
+func SaveBindingWithGrant(ctx context.Context, p *governance.Principal, mailbox string, accountID int64, grantDepartment bool, expectedDepartment ...int64) error {
+	if p == nil || !p.Super {
 		return errors.New("Administrator access required")
 	}
 	mailbox = strings.ToLower(strings.TrimSpace(mailbox))
-	n, e := g.DB().Model("mailbox").Ctx(ctx).Where("username", mailbox).Where("active", 1).Count()
-	if e != nil {
-		return e
+	if mailbox == "" || accountID < 0 {
+		return errors.New("valid mailbox and account required")
 	}
-	if n != 1 {
-		return errors.New("active mailbox required")
-	}
-	if accountID == 0 {
-		_, e = g.DB().Model("bm_webmail_bindings").Ctx(ctx).Where("mailbox", mailbox).Delete()
-	} else {
-		linked, err := governance.Load(ctx, accountID)
-		if err != nil {
-			return err
+	return g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		deptID := int64(0)
+		grantApplied := false
+		if accountID == 0 {
+			// Unbinding is revocation; allow removal of a stale/inactive binding.
+			if _, e := tx.Model("bm_webmail_bindings").Where("mailbox", mailbox).Delete(); e != nil {
+				return e
+			}
+		} else {
+			row, e := tx.Model("mailbox").Where("username", mailbox).Where("active", 1).LockUpdate().One()
+			if e != nil {
+				return e
+			}
+			if row.IsEmpty() {
+				return errors.New("active mailbox required")
+			}
+			if _, e = tx.Model("account").Where("account_id", accountID).LockUpdate().One(); e != nil {
+				return e
+			}
+			linked, e := governance.Load(ctx, accountID)
+			if e != nil {
+				return e
+			}
+			deptID = linked.DeptID
+			if grantDepartment && !linked.Super {
+				if len(expectedDepartment) != 1 || expectedDepartment[0] <= 0 || expectedDepartment[0] != deptID {
+					return errors.New("账号所属部门已变化，请刷新后确认授权")
+				}
+				if _, e = tx.Exec(`INSERT INTO bm_resource_grants(dept_id,sender,active) VALUES($1,$2,true) ON CONFLICT(dept_id,sender) DO UPDATE SET active=true`, deptID, mailbox); e != nil {
+					return e
+				}
+				grantApplied = true
+			}
+			if e = governance.SenderAllowed(ctx, linked, mailbox); e != nil {
+				return e
+			}
+			if _, e = tx.Exec(`INSERT INTO bm_webmail_bindings(mailbox,account_id,updated_by) VALUES($1,$2,$3) ON CONFLICT(mailbox) DO UPDATE SET account_id=excluded.account_id,updated_by=excluded.updated_by,updated_at=now()`, mailbox, accountID, p.ID); e != nil {
+				return e
+			}
 		}
-		if err = governance.SenderAllowed(ctx, linked, mailbox); err != nil {
-			return err
-		}
-		_, e = g.DB().Exec(ctx, `INSERT INTO bm_webmail_bindings(mailbox,account_id,updated_by) VALUES($1,$2,$3) ON CONFLICT(mailbox) DO UPDATE SET account_id=excluded.account_id,updated_by=excluded.updated_by,updated_at=now()`, mailbox, accountID, p.ID)
-	}
-	if e != nil {
-		return e
-	}
-	return governance.Audit(ctx, p, "webmail_binding", accountID, g.Map{"mailbox": mailbox})
+		return governance.Audit(ctx, p, "webmail_binding", accountID, g.Map{"mailbox": mailbox, "dept_id": deptID, "grant_department": grantApplied})
+	})
 }
 func mailboxPrincipal(ctx context.Context, mailbox string) (*governance.Principal, error) {
 	id, e := g.DB().Model("bm_webmail_bindings").Ctx(ctx).Where("mailbox", mailbox).Value("account_id")

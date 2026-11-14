@@ -1,146 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Subscribe - Mailing list</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#20a53a',
-                        secondary: '#36BFFA',
-                        neutral: '#F5F7FA',
-                        dark: '#1D2129',
-                    },
-                    fontFamily: {
-                        inter: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .form-input-focus {
-                @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
-            }
-            .btn-hover {
-                @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
-            }
-        }
-
-        input[type="checkbox"]:checked {
-            background-color: #20a53a !important;
-            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e") !important;
-            border-color: #20a53a !important;
-        }
-
-        input[type="checkbox"]:checked:hover,
-        input[type="checkbox"]:checked:focus {
-            background-color: #20a53a !important;
-            border-color: #20a53a !important;
-        }
-
-        input[type="checkbox"]:focus {
-            --tw-ring-color: rgba(32, 165, 58, 0.3) !important;
-            --tw-ring-opacity: 0.3 !important;
-        }
-
-        .focus\:ring-primary:focus {
-            --tw-ring-color: rgba(32, 165, 58, var(--tw-ring-opacity)) !important;
-        }
-
-        .text-primary {
-            color: #20a53a !important;
-        }
-    </style>
-
-    <link rel="icon" href="/favicon.ico?v=bbe064771e" type="image/png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Subscribe to Our Newsletter</title>
+  <style>
+    :root { color-scheme:light; --ink:#18372d; --muted:#596b64; --green:#176249; --line:#dce7e1; }
+    *,*::before,*::after { box-sizing:border-box; }
+    body { margin:0; min-width:0; min-height:100vh; min-height:100svh; padding:32px 24px; display:flex; align-items:center; justify-content:center; background:#f2f6f3; color:var(--ink); font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,"Microsoft YaHei",sans-serif; -webkit-text-size-adjust:100%; }
+    .container { width:100%; max-width:640px; min-width:0; margin:auto; padding:36px 40px; border:1px solid var(--line); border-top:5px solid var(--green); border-radius:20px; background:#fff; box-shadow:0 18px 50px #17392b12; overflow-wrap:anywhere; }
+    .brand { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding-bottom:24px; margin-bottom:26px; border-bottom:1px solid var(--line); }
+    .brand-mark { flex:0 0 44px; height:44px; display:grid; place-items:center; border-radius:12px; background:var(--green); color:#fff; font-size:25px; font-weight:700; }
+    .brand-name { display:block; font-size:20px; font-weight:700; }
+    .brand-caption { display:block; font-size:12px; color:var(--muted); }
+    h1 { margin:0 0 14px; font-size:clamp(26px,4vw,32px); line-height:1.3; }
+    .lead { margin:0 0 24px; color:var(--muted); }
+    .form-group { margin-bottom:20px; }
+    .form-group>label { display:block; margin-bottom:8px; font-weight:600; }
+    input[type=email],input[type=text] { display:block; width:100%; min-width:0; min-height:52px; padding:12px 14px; border:1px solid #b7c9bf; border-radius:10px; font:inherit; font-size:16px; background:#fbfcfb; color:var(--ink); }
+    input:focus,button:focus-visible,a:focus-visible { outline:3px solid #b4d6c4; outline-offset:2px; }
+    .lists { padding:0; margin:0 0 24px; list-style:none; }
+    .lists label { display:flex; align-items:flex-start; gap:12px; padding:12px; margin-top:10px; border:1px solid var(--line); border-radius:10px; cursor:pointer; }
+    input[type=checkbox] { width:22px; height:22px; flex:0 0 22px; margin:2px 0 0; accent-color:var(--green); }
+    h3 { margin:20px 0 10px; font-size:17px; }
+    button { display:block; width:100%; min-height:52px; padding:12px 16px; border:0; border-radius:10px; background:var(--green); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+    .footer { padding-top:22px; margin-top:28px; border-top:1px solid var(--line); text-align:center; color:var(--muted); font-size:14px; }
+    .footer a { color:var(--green); }
+    @media(max-width:600px) { body { padding:20px 14px; } .container { padding:26px 22px; } }
+  </style>
 </head>
-<body class="font-inter bg-neutral text-dark min-h-screen flex flex-col">
-<div class="container mx-auto px-4 py-8 flex-grow">
-    <header class="header mb-12">
-        <div class="logo flex justify-center">
-            <a href="/subscription/form" class="inline-block">
-                <img src="/static/logo.png?v=bbe064771e" alt="Subscribe" class="h-16 md:h-20" />
-            </a>
-        </div>
+<body>
+  <main class="container">
+    <header class="brand" aria-label="LeadPilot AI">
+      <span class="brand-mark" aria-hidden="true">L</span>
+      <div><span class="brand-name">LeadPilot AI</span><span class="brand-caption">LeadPilot Smart Mail</span></div>
     </header>
-
-    <section class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 transform transition-all hover:shadow-xl">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-center text-dark">Subscribe to our Newsletter</h2>
-
-        <form method="post" action="" class="form space-y-5">
-            <input id="token" type="hidden" name="token" value="{{.CSRFToken}}">
-            <div class="space-y-4">
-                <p>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
-                <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
-                                <i class="fa-regular fa-envelope"></i>
-                            </span>
-                    <input id="email" name="email" required="true" type="email" placeholder="your@email.com"
-                           class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 bg-gray-50 form-input-focus"
-                           autofocus="true">
-                </div>
-                </p>
-
-                <p>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name (optional)</label>
-                <div class="relative">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
-                                <i class="fa-regular fa-user"></i>
-                            </span>
-                    <input id="name" name="name" type="text" placeholder="Your name"
-                           class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 bg-gray-50 form-input-focus">
-                </div>
-                </p>
-
-                <ul class="lists space-y-3 pt-2">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">Choose your subscription</h3>
-
-                    {{range $_, $group := .Groups}}
-                    <li class="flex items-center">
-                        <input checked="true" id="l-{{$group.Id}}" type="checkbox" name="group_ids"
-                               value="{{$group.Id}}"
-                               style="accent-color: #20a53a;"
-                               class="h-5 w-5 text-primary focus:ring-primary border-gray-300 rounded">
-                        <label for="l-{{$group.Id}}"
-                               class="ml-2 block text-sm text-gray-700 cursor-pointer">
-                            {{$group.Name}}
-                        </label>
-                    </li>
-                    {{end}}
-                </ul>
-            </div>
-
-            <p class="pt-2">
-                <button type="submit" class="button w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg shadow btn-hover flex items-center justify-center">
-                    <span>Subscribe</span>
-                    <i class="fa-solid fa-paper-plane ml-2"></i>
-                </button>
-            </p>
-        </form>
-    </section>
-</div>
-
-<footer class="container mx-auto px-4 py-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-    Powered by <a target="_blank" rel="noreferrer" href="https://www.billionmail.com" class="text-primary hover:underline">BillionMail</a>
-</footer>
+    <h1>Stay connected</h1>
+    <p class="lead">Subscribe for product news and business updates from LeadPilot AI.</p>
+    <form method="post" action="" class="form">
+      <input id="token" type="hidden" name="token" value="{{.CSRFToken}}" />
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input id="email" name="email" required type="email" placeholder="you@company.com" autocomplete="email" inputmode="email" />
+      </div>
+      <div class="form-group">
+        <label for="name">Name (Optional)</label>
+        <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" />
+      </div>
+      <h3 data-public-groups-label>Choose your subscription</h3>
+      <ul class="lists">
+        {{range $_, $group := .Groups}}
+        <li><label for="l-{{$group.Id}}"><input checked id="l-{{$group.Id}}" type="checkbox" name="group_ids" value="{{$group.Id}}" /><span data-no-public-translate>{{$group.Name}}</span></label></li>
+        {{end}}
+      </ul>
+      <button type="submit">Subscribe Now</button>
+    </form>
+    <footer class="footer">Powered by <a href="https://github.com/dwjacken-star/LeadPilotAI" target="_blank" rel="noopener noreferrer">LeadPilot AI</a></footer>
+  </main>
+  <script src="/leadpilot-public-layout.js"></script>
+  <script src="/leadpilot-public-i18n.js"></script>
 </body>
 </html>
-    

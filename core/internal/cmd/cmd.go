@@ -158,6 +158,8 @@ var (
 			// Define excluded URIs
 			excludesURIs := map[string]struct{}{
 				"/favicon.ico":                   {},
+				"/leadpilot-public-layout.js":    {},
+				"/leadpilot-public-i18n.js":      {},
 				"/robots.txt":                    {},
 				"/unsubscribe.html":              {},
 				"/unsubscribe_new.html":          {},

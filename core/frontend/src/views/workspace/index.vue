@@ -112,7 +112,7 @@
 						><remote-select v-model="draft.dept_id" type="departments"
 					/></n-form-item>
 					<n-form-item :label="t('workspaceCopy.w13')"
-						><remote-select v-model="draft.sender" type="senders"
+						><remote-select v-model="draft.sender" type="senders" mailbox-inventory
 					/></n-form-item>
 					<n-form-item :label="t('workspaceCopy.w14')"
 						><n-switch v-model:value="draft.active"

@@ -10,7 +10,7 @@ const source = file => fs.readFileSync(path.join(__dirname, '../src', file), 'ut
 function compile(script, dependencies = {}) {
 	const code = ts.transpileModule(script, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText
 	const exports = {}
-	new Function('exports', 'require', ...Object.keys(Vue), code)(exports, name => dependencies[name] || require(name), ...Object.values(Vue))
+	new Function('exports', 'require', ...Object.keys(Vue), code)(exports, name => dependencies[name] || (name === '@/store' ? { useThemeStore: () => ({ theme: 'light' }) } : require(name)), ...Object.values(Vue))
 	return exports
 }
 function component(file, dependencies = {}) {
@@ -24,20 +24,26 @@ const settle = async () => { await new Promise(resolve => setImmediate(resolve))
 
 function mount(Component, props) {
 	const node = (type, text = '') => ({ type, text, props: {}, children: [], parent: null })
-	const remove = el => { if (el.parent) el.parent.children = el.parent.children.filter(v => v !== el) }
+	const remove = el => { if (el?.parent) { el.parent.children = el.parent.children.filter(v => v !== el); el.parent = null } }
 	const renderer = Vue.createRenderer({
 		createElement: node, createText: text => node('#text', text), createComment: () => node('#comment'),
-		insert(el, parent) { remove(el); el.parent = parent; parent.children.push(el) }, remove,
+		insert(el, parent, anchor) { remove(el); el.parent = parent; const index = anchor ? parent.children.indexOf(anchor) : -1; if (index < 0) parent.children.push(el); else parent.children.splice(index, 0, el) }, remove,
 		setText(el, text) { el.text = text }, setElementText(el, text) { el.text = text; el.children = [] },
-		parentNode: el => el.parent, nextSibling: () => null, patchProp(el, key, _, value) { el.props[key] = value },
+		parentNode: el => el?.parent || null, nextSibling: el => { const siblings = el?.parent?.children || []; return siblings[siblings.indexOf(el) + 1] || null }, patchProp(el, key, _, value) { el.props[key] = value },
 	})
 	const root = node('root')
-	const app = renderer.createApp({ setup: () => () => Vue.h(Component, props) })
+	const api = Vue.ref(null)
+	const app = renderer.createApp({ setup: () => () => Vue.h(Component, { ...props, ref: api }) })
 	app.component('n-select', { setup: (_, { attrs }) => () => Vue.h('select', { ...attrs }, (attrs.options || []).map(o => Vue.h('option', {}, o.label))) })
+	for (const name of ['n-modal', 'n-form', 'n-form-item', 'n-alert', 'n-space'])
+		app.component(name, { setup: (_, { attrs, slots }) => () => Vue.h('div', { ...attrs }, slots.default?.()) })
+	app.component('n-input', { setup: (_, { attrs }) => () => Vue.h('input', { ...attrs }) })
+	app.component('n-checkbox', { setup: (_, { attrs, slots }) => () => Vue.h('checkbox', { ...attrs }, slots.default?.()) })
+	app.component('n-button', { setup: (_, { attrs, slots }) => () => Vue.h('button', { ...attrs }, slots.default?.()) })
 	app.config.globalProperties.$t = key => key
 	app.mount(root)
 	const find = (el, type) => el.type === type ? el : el.children.map(c => find(c, type)).find(Boolean)
-	return { app, root, get: type => find(root, type) }
+	return { app, root, api, get: type => find(root, type) }
 }
 function remote(workspace) {
 	return component('features/workspace/RemoteSelect.vue', {
@@ -188,4 +194,97 @@ test('real browser renders preview at desktop and narrow widths without executin
 			assert.equal(await page.evaluate(() => window.previewScriptRan), undefined)
 		}
 	} finally { await browser.close() }
+})
+
+test('preview device labels exist in every catalog and render with real Naive UI radios', async () => {
+	const { renderToString } = require('vue/server-renderer')
+	const { NConfigProvider, NRadioGroup, NRadioButton } = require('naive-ui')
+	const Modal = { setup: (_, { slots }) => () => Vue.h('div', {}, slots.default?.()) }
+	const Preview = component('views/template/components/TemplatePreview.vue', {
+		'@/hooks/modal/useModal': { useModal: () => [Modal, { getState: () => ({ html: '' }) }] },
+	})
+	for (const language of ['en', 'zh', 'ja', 'de', 'tr', 'vi']) {
+		const dictionary = JSON.parse(fs.readFileSync(path.join(__dirname, '../src/i18n/lang', language + '.json'), 'utf8'))
+		const lookup = key => key.split('.').reduce((value, part) => value?.[part], dictionary)
+		assert.ok(lookup('campaignComposer.desktop'))
+		assert.ok(lookup('campaignComposer.mobile'))
+		const app = Vue.createSSRApp({ setup: () => () => Vue.h(NConfigProvider, {}, { default: () => Vue.h(Preview) }) })
+		app.component('n-radio-group', NRadioGroup); app.component('n-radio-button', NRadioButton)
+		app.component('bt-preview', Modal)
+		app.config.globalProperties.$t = lookup
+		const html = await renderToString(app)
+		assert.ok(html.includes(lookup('campaignComposer.desktop')), language + ' desktop label missing')
+		assert.ok(html.includes(lookup('campaignComposer.mobile')), language + ' mobile label missing')
+	}
+})
+
+test('preview colors react to theme changes while authored email styles remain intact', async () => {
+	const theme = Vue.reactive({ theme: 'light' })
+	const Preview = component('components/base/bt-preview/index.vue', { '@/utils/email-preview': preview, '@/store': { useThemeStore: () => theme } })
+	const view = mount(Preview, Vue.reactive({ value: 'Plain text', height: 360 }))
+	try {
+		await settle(); assert.equal(view.get('iframe').props.style.background, '#fff')
+		theme.theme = 'dark'; await settle()
+		assert.equal(view.get('iframe').props.style.background, '#242424')
+		assert.ok(view.get('iframe').props.srcdoc.includes('color:#fff;'))
+		const authored = '<html><head><style>body{background:white;color:navy}</style></head><body>Authored</body></html>'
+		assert.ok(preview.emailPreviewDocument(authored, preview.defaultPreviewPalette(true)).includes('body{background:white;color:navy}'))
+	} finally { view.app.unmount() }
+})
+
+test('grant inventory requests are explicit and use non-virtual options', async () => {
+	const reads = []
+	const Remote = remote(async (_, params) => { reads.push(params); return { list: [mailbox('new@example.org'), mailbox('old@example.org')], total: 2 } })
+	const view = mount(Remote, Vue.reactive({ type: 'senders', modelValue: null, mailboxInventory: true }))
+	try {
+		view.get('select').props['onUpdate:show'](true); await settle()
+		assert.equal(reads[0].data.purpose, 'grant_editor')
+		assert.equal(view.get('select').props.virtualScroll ?? view.get('select').props['virtual-scroll'], false)
+		assert.equal(view.get('select').props.options[0].value, 'new@example.org')
+	} finally { view.app.unmount() }
+})
+
+test('mailbox binding never treats false/unknown flags as authorization or grants implicitly', () => {
+	const binding = compile(source('features/workspace/mailbox-binding.ts'))
+	const account = { account_id: 11, dept_id: 81, eligible: true, super: false, has_sender_grant: false }
+	assert.equal(binding.mailboxBindingState(account), 'needs_grant')
+	assert.equal(binding.mailboxBindingPayload('demo@example.org', account, false).grant_department, false)
+	assert.deepEqual(binding.mailboxBindingPayload('demo@example.org', account, true), { mailbox: 'demo@example.org', account_id: 11, grant_department: true, grant_dept_id: 81 })
+	assert.equal(binding.mailboxBindingState({ ...account, super: 'false', has_sender_grant: 'false' }), 'needs_grant')
+	assert.equal(binding.mailboxBindingPayload('demo@example.org', { ...account, eligible: false }, true).grant_department, false)
+	assert.equal(binding.mailboxBindingState({ ...account, has_sender_grant: true }), 'ready')
+})
+
+test('binding editor requires explicit grant consent and renews consent if the department changes', async () => {
+	const binding = compile(source('features/workspace/mailbox-binding.ts'))
+	let account = { account_id: 11, username: 'Demo operator', dept_id: 81, dept_name: 'Demo department', eligible: true, super: false, has_sender_grant: false }
+	const saves = []
+	const Editor = component('views/mailbox/components/MailboxBusinessAccess.vue', {
+		'vue-i18n': { useI18n: () => ({ t: key => key }) },
+		'@/features/workbench/context': { useWorkbenchActivity: () => Vue.ref(true) },
+		'@/features/workspace/mailbox-binding': binding,
+		'@/features/workspace/api': { workspace: async (action, params) => {
+			if (action === 'save_webmail_binding') { saves.push(params.data); return {} }
+			return { accounts: [account], binding: null, selected_account: params.data.selected_account_id ? account : null, total: 1 }
+		} },
+	})
+	const view = mount(Editor, {})
+	const all = (node, type) => [...(node.type === type ? [node] : []), ...node.children.flatMap(child => all(child, type))]
+	const text = node => node.text + node.children.map(text).join('')
+	const button = key => all(view.root, 'button').find(node => text(node).includes(key))
+	try {
+		await view.api.value.open('demo@example.org'); await settle()
+		view.get('select').props['onUpdate:value'](11); await settle()
+		assert.equal(button('workbench.save').props.disabled, true)
+		view.get('checkbox').props['onUpdate:checked'](true); await settle()
+		assert.equal(button('workbench.save').props.disabled, false)
+		account = { ...account, dept_id: 84, dept_name: 'New department' }
+		button('workbench.binding_refresh').props.onClick(); await settle()
+		assert.equal(button('workbench.save').props.disabled, true, 'department change must require renewed consent')
+		view.get('checkbox').props['onUpdate:checked'](true); await settle()
+		button('workbench.save').props.onClick(); await settle()
+		assert.equal(saves.length, 1)
+		assert.equal(saves[0].grant_department, true)
+		assert.equal(saves[0].grant_dept_id, 84)
+	} finally { view.app.unmount() }
 })

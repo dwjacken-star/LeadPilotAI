@@ -113,9 +113,9 @@ func (c *Controller) Action(ctx context.Context, req *Request) (res *Response, e
 func perform(ctx context.Context, p *governance.Principal, r *Request) (interface{}, error) {
 	switch r.Action {
 	case "webmail_bindings":
-		return webmaildelivery.Bindings(ctx, p, text(r.Data, "mailbox"), r.Keyword, r.Page)
+		return webmaildelivery.Bindings(ctx, p, text(r.Data, "mailbox"), r.Keyword, r.Page, gconv.Int64(r.Data["selected_account_id"]))
 	case "save_webmail_binding":
-		return nil, webmaildelivery.SaveBinding(ctx, p, text(r.Data, "mailbox"), gconv.Int64(r.Data["account_id"]))
+		return nil, webmaildelivery.SaveBindingWithGrant(ctx, p, text(r.Data, "mailbox"), gconv.Int64(r.Data["account_id"]), gconv.Bool(r.Data["grant_department"]), gconv.Int64(r.Data["grant_dept_id"]))
 	case "validation_settings":
 		if !p.Super {
 			return nil, errors.New("Administrator access required")
@@ -252,6 +252,10 @@ func list(ctx context.Context, p *governance.Principal, r *Request) (interface{}
 		r.PageSize = 200
 	}
 	if r.Type == "senders" {
+		inventory := text(r.Data, "purpose") == "grant_editor"
+		if inventory && !p.Super {
+			return nil, errors.New("仅系统管理员可管理邮箱授权库存")
+		}
 		q := g.DB().Model("mailbox").Ctx(ctx).Where("active", 1)
 		if !p.Super {
 			q = q.Where(`username IN (SELECT sender FROM bm_resource_grants WHERE dept_id=? AND active)`, p.DeptID)
@@ -268,7 +272,11 @@ func list(ctx context.Context, p *governance.Principal, r *Request) (interface{}
 		}
 		// Count all filtered rows before applying the multi-column projection.
 		// Otherwise the ORM generates COUNT(username,domain,active), invalid in PostgreSQL.
-		rows, e := q.Fields("username,domain,active").Order(gdb.Raw(smtpidentity.SenderOrder)).Page(r.Page, r.PageSize).All()
+		order := smtpidentity.SenderOrder
+		if inventory {
+			order = "create_time DESC NULLS LAST, username ASC"
+		}
+		rows, e := q.Fields("username,domain,active").Order(gdb.Raw(order)).Page(r.Page, r.PageSize).All()
 		if rows == nil {
 			rows = gdb.Result{}
 		}
@@ -591,7 +599,26 @@ func saveAdmin(ctx context.Context, p *governance.Principal, r *Request) (interf
 			}
 		case "grants":
 			table = "bm_resource_grants"
-			d = g.Map{"dept_id": gconv.Int64(r.Data["dept_id"]), "sender": strings.ToLower(text(r.Data, "sender")), "active": gconv.Bool(r.Data["active"])}
+			deptID := gconv.Int64(r.Data["dept_id"])
+			sender := strings.ToLower(strings.TrimSpace(text(r.Data, "sender")))
+			active := gconv.Bool(r.Data["active"])
+			deptQuery := tx.Model("bm_departments").Where("id", deptID)
+			mailQuery := tx.Model("mailbox").Where("username", sender)
+			if active {
+				deptQuery = deptQuery.Where("active", true)
+				mailQuery = mailQuery.Where("active", 1)
+			}
+			if count, e := deptQuery.Count(); e != nil {
+				return e
+			} else if count != 1 {
+				return errors.New("请选择有效且已启用的部门")
+			}
+			if count, e := mailQuery.Count(); e != nil {
+				return e
+			} else if count != 1 {
+				return errors.New("发件邮箱不存在或已停用")
+			}
+			d = g.Map{"dept_id": deptID, "sender": sender, "active": active}
 		case "policies":
 			var policy governance.Policy
 			if e := gconv.Scan(r.Data["policy"], &policy); e != nil {
