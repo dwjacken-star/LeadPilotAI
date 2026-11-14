@@ -17,6 +17,8 @@ const (
 )
 
 type TempChat struct {
+	OwnerID     int64  `json:"owner_id,omitempty"`
+	DeptID      int64  `json:"dept_id,omitempty"`
 	ChatId      string `json:"chatId"`       // Unique identifier for the chat
 	Domain      string `json:"domain"`       // Domain associated with the chat
 	AddType     int    `json:"add_type"`     // Type of addition (e.g., 0 for new chat, 1 for existing chat)

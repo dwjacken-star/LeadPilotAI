@@ -3,7 +3,7 @@
 		<div class="bt-title">{{ t('template.template') }}</div>
 		<bt-table-layout>
 			<template #toolsLeft>
-				<n-button type="primary" @click="handleAdd">
+				<n-button v-if="can('template:create')" type="primary" @click="handleAdd">
 					{{ t('market.template.actions.add') }}
 				</n-button>
 			</template>
@@ -39,6 +39,7 @@ import { DataTableColumns, NButton, NFlex, NTag } from 'naive-ui'
 import { useModal } from '@/hooks/modal/useModal'
 import { useTableData } from '@/hooks/useTableData'
 import { confirm, formatTime } from '@/utils'
+import { can } from '@/features/workspace/api'
 import { deleteTemplate, duplicateTemplate, getTemplateList ,updateTemplate} from '@/api/modules/market/template'
 import type { Template, TemplateParams } from './interface'
 
@@ -93,14 +94,14 @@ const columns = ref<DataTableColumns<Template>>([
 						type="primary"
 						text
 						onClick={() => {
-							handleEdit(row)
+							can('template:update') && row.can_update !== false ? handleEdit(row) : handlePreview(row.html_content)
 						}}>
 						{row.temp_name}
 					</NButton>
-					<i class="i-ci:edit-pencil-line-01 text-14px cursor-pointer" onClick={()=>{
+					{can('template:update') && row.can_update !== false && <i class="i-ci:edit-pencil-line-01 text-14px cursor-pointer" onClick={()=>{
 						row.isEdit = true
 						row.edit_name = row.temp_name
-						}}></i>
+						}}></i>}
 				</div>
 			} else {
 				return <div class="flex justify-start gap-1.25 items-center">
@@ -161,15 +162,8 @@ const columns = ref<DataTableColumns<Template>>([
 					}}>
 					{t('common.actions.preview')}
 				</NButton>
-				<NButton
-					type="primary"
-					text={true}
-					onClick={() => {
-						handleEdit(row)
-					}}>
-					{t('common.actions.edit')}
-				</NButton>
-				<NButton
+				{can('template:update') && row.can_update !== false && <NButton type="primary" text onClick={() => handleEdit(row)}>{t('common.actions.edit')}</NButton>}
+				{can('template:create') && row.can_copy !== false && <NButton
 					type="primary"
 					text={true}
 					disabled={row.add_type == 2}
@@ -177,15 +171,15 @@ const columns = ref<DataTableColumns<Template>>([
 						handleDuplicate(row)
 					}}>
 					{t('market.template.actions.duplicate')}
-				</NButton>
-				<NButton
+				</NButton>}
+				{can('template:delete') && row.can_delete !== false && <NButton
 					type="error"
 					text={true}
 					onClick={() => {
 						handleDelete(row)
 					}}>
 					{t('common.actions.delete')}
-				</NButton>
+				</NButton>}
 			</NFlex>
 		),
 	},
@@ -204,11 +198,13 @@ const [FormModal, formModalApi] = useModal({
 
 // Handle add template
 const handleAdd = () => {
+	if (!can('template:create')) return
 	createTemplateModalRef.value.open()
 }
 
 // Confirm choose template type
 const handleConfirmTemplateType = (type: string) => {
+	if (!can('template:create')) return
 	if (type == "Drag") {
 		formModalApi.setState({ isEdit: false, type: 1, row: null })
 	} else if (type == "HTML") {
@@ -219,12 +215,14 @@ const handleConfirmTemplateType = (type: string) => {
 
 // Confirm update template's name
 const confirmUpdateTemplateName = async (row:Template)=>{
-	row.temp_name = row.edit_name as string
-	await updateTemplate(row)
+	if (!can('template:update') || row.can_update === false || !row.edit_name?.trim()) return
+	await updateTemplate({ ...row, temp_name: row.edit_name.trim() })
+	row.temp_name = row.edit_name.trim()
 	row.isEdit = false
 }
 // Handle edit
 const handleEdit = (row: Template) => {
+	if (!can('template:update') || row.can_update === false) return
 	if (row.add_type == 2 && row.chat_id) {
 		router.push({ name: "ai-template", params: { chatId: row.chat_id } })
 	} else {
@@ -245,12 +243,14 @@ const handlePreview = (html: string) => {
 
 // Handle duplicate
 const handleDuplicate = async (row: Template) => {
+	if (!can('template:create') || row.can_copy === false || row.add_type === 2) return
 	await duplicateTemplate({ id: row.id })
 	getTableData()
 }
 
 // Handle delete
 const handleDelete = (row: Template) => {
+	if (!can('template:delete') || row.can_delete === false) return
 	confirm({
 		title: t('market.template.delete.title'),
 		content: t('market.template.delete.confirm', { name: row.temp_name }),

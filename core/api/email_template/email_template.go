@@ -11,6 +11,7 @@ import (
 )
 
 type IEmailTemplateV1 interface {
+	Options(ctx context.Context, req *v1.OptionsReq) (res *v1.OptionsRes, err error)
 	CreateTemplate(ctx context.Context, req *v1.CreateTemplateReq) (res *v1.CreateTemplateRes, err error)
 	DeleteTemplate(ctx context.Context, req *v1.DeleteTemplateReq) (res *v1.DeleteTemplateRes, err error)
 	UpdateTemplate(ctx context.Context, req *v1.UpdateTemplateReq) (res *v1.UpdateTemplateRes, err error)

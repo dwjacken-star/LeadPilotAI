@@ -4,6 +4,7 @@ import (
 	v1 "billionmail-core/api/askai/v1"
 	"billionmail-core/internal/service/aimodels"
 	"billionmail-core/internal/service/askai"
+	"billionmail-core/internal/service/governance"
 	"billionmail-core/internal/service/public"
 	"billionmail-core/utility/types/api_v1"
 	"context"
@@ -23,7 +24,25 @@ func (c *ControllerV1) List(ctx context.Context, req *v1.ListReq) (res *v1.ListR
 
 func (c *ControllerV1) Models(ctx context.Context, req *v1.ModelsReq) (res *v1.ModelsRes, err error) {
 	res = &v1.ModelsRes{}
-	res.Data = askai.Models(req.SupplierName)
+	p, e := governance.RequestPrincipal(ctx)
+	if e != nil {
+		return nil, e
+	}
+	if p != nil && !p.Super {
+		models := askai.Models("")
+		if req.SupplierName != "" {
+			filtered := models[:0]
+			for _, model := range models {
+				if model.SupplierName == req.SupplierName {
+					filtered = append(filtered, model)
+				}
+			}
+			models = filtered
+		}
+		res.Data = models
+	} else {
+		res.Data = askai.Models(req.SupplierName)
+	}
 	res.SetSuccess(public.LangCtx(ctx, "List of models retrieved successfully"))
 	return res, nil
 }

@@ -115,16 +115,17 @@ const Workspace = compile(
 function host() {
 	const node = (type, text = '') => ({ type, text, children: [], parent: null })
 	function remove(el) {
-		if (el.parent) el.parent.children = el.parent.children.filter(item => item !== el)
+		if (el?.parent) { el.parent.children = el.parent.children.filter(item => item !== el); el.parent = null }
 	}
 	const renderer = Vue.createRenderer({
 		createElement: node,
 		createText: text => node('#text', text),
 		createComment: text => node('#comment', text),
-		insert(el, parent) {
+		insert(el, parent, anchor) {
 			remove(el)
 			el.parent = parent
-			parent.children.push(el)
+			const index = anchor ? parent.children.indexOf(anchor) : -1
+			if (index < 0) parent.children.push(el); else parent.children.splice(index, 0, el)
 		},
 		remove,
 		setText(el, text) {
@@ -134,8 +135,8 @@ function host() {
 			el.text = text
 			el.children = []
 		},
-		parentNode: el => el.parent,
-		nextSibling: () => null,
+		parentNode: el => el?.parent || null,
+		nextSibling: el => { const siblings = el?.parent?.children || []; return siblings[siblings.indexOf(el) + 1] || null },
 		patchProp() {},
 	})
 	return { renderer, root: node('root') }
@@ -251,6 +252,9 @@ test('business route wrappers load the scoped view for members and preserve the 
 	principal.value = { super: true, roles: [] }
 	assert.equal(await render().type.__asyncLoader(), legacy)
 	assert.equal(legacyLoads, 1)
+	principal.value = { super: false, roles: [{ permissions: ['template:list'] }] }
+	const unifiedTemplateView = scopedBusinessView('templates', async () => ({ __esModule: true, default: legacy }))
+	assert.equal(await unifiedTemplateView.setup()().type.__asyncLoader(), legacy, 'members must use the same template UI as administrators')
 })
 
 test('administrator-style marketing list keeps independent ordinary-role action buttons', async () => {
@@ -337,4 +341,31 @@ test('administrator-style marketing list keeps independent ordinary-role action 
 			app.unmount()
 		}
 	}
+})
+
+test('shared template list has role-controlled creation, preview, edit, copy and delete', async () => {
+ const src = fs.readFileSync(path.join(__dirname, '../src/views/template/index.vue'), 'utf8')
+ const { descriptor } = parse(src)
+ const Template = compile(compileScript(descriptor, { id:'template-role-test', inlineTemplate:true }).content, {
+  vue: Vue, 'naive-ui':{NButton:button,NFlex:plain,NTag:plain}, '@/features/workspace/api':api,
+  '@/hooks/modal/useModal':{useModal:()=>[plain,{setState(){},open(){}}]},
+  '@/hooks/useTableData':{useTableData:()=>({loading:Vue.ref(false),tableParams:Vue.ref({page:1,page_size:10,keyword:''}),tableList:Vue.ref([{id:1,temp_name:'Demo',add_type:0,html_content:'<p>Demo</p>',create_time:1}]),tableTotal:Vue.ref(1),getTableData(){}})},
+  '@/utils':{confirm(){},formatTime:()=>''}, '@/api/modules/market/template':{},
+  './components/TemplateForm.vue':{default:plain},'./components/TemplatePreview.vue':{default:plain},'./components/CreateTplModal.vue':{default:plain},
+ }, {ref:Vue.ref,useI18n:()=>({t:key=>key}),useRouter:()=>({push(){}})}).default
+ for(const operation of ['', 'create','update','delete']){
+  principal.value={super:false,roles:[{permissions:['template:list',...(operation?['template:'+operation]:[])]}]}
+  const {renderer,root}=host();const app=renderer.createApp({render:()=>Vue.h(Template)})
+  for(const name of new Set([...src.matchAll(/<((?:n|bt)-[\w-]+)/g)].map(m=>m[1])))
+   if(name!=='bt-table-layout')app.component(name,name==='n-button'?button:name==='n-data-table'?table:plain)
+  app.component('bt-table-layout',{setup:(_,{slots})=>()=>Vue.h('div',{},Object.values(slots).flatMap(slot=>slot()))})
+  app.mount(root)
+  try{await Vue.nextTick();const labels=buttons(root)
+   assert.ok(labels.includes('common.actions.preview'))
+   assert.equal(labels.includes('market.template.actions.add'),operation==='create')
+   assert.equal(labels.includes('market.template.actions.duplicate'),operation==='create')
+   assert.equal(labels.includes('common.actions.edit'),operation==='update')
+   assert.equal(labels.includes('common.actions.delete'),operation==='delete')
+  }finally{app.unmount()}
+ }
 })

@@ -6,6 +6,9 @@ export interface Template {
 	drag_data: string
 	create_time: number
 	update_time: number
+	can_update?: boolean
+	can_delete?: boolean
+	can_copy?: boolean
 	chat_id:string
 	isEdit?:boolean
 	edit_name?:string

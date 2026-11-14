@@ -14,8 +14,9 @@
 				<div
 					v-for="(item, index) in computedMethodsList"
 					:key="index"
-					:class="['choose-item', { active: choosedMethod == item }]"
-					@click="choosedMethod = item">
+					:class="['choose-item', { active: choosedMethod == item, disabled: item === 'AI' && !canAi }]"
+					:aria-disabled="item === 'AI' && !canAi"
+					@click="(item !== 'AI' || canAi) && (choosedMethod = item)">
 					<span class="item-label">{{ item }}</span>
 				</div>
 			</div>
@@ -31,12 +32,13 @@
 					:render-label="renderLabel">
 				</n-select>
 			</div>
+			<template v-if="choosedMethod === 'AI'">
 			<div v-if="noticeShowFlag == 'normal'" class="desc">
 				{{ $t('template.createTpl.useAiTools') }}
 			</div>
 			<div v-else-if="noticeShowFlag == 'domain-list-empty'">
 				{{ $t('template.createTpl.notices.domainListEmpty') }},
-				<n-button text type="primary" @click="jumpToDomainCreate">{{
+				<n-button v-if="principal?.super" text type="primary" @click="jumpToDomainCreate">{{
 					$t('template.createTpl.buttons.createNow')
 				}}</n-button>
 			</div>
@@ -44,7 +46,7 @@
 				{{ $t('template.createTpl.notices.aiConfigurationInvalid') }},
 				<n-popover trigger="hover" placement="right">
 					<template #trigger>
-						<n-button text type="primary" @click="jumpToAiSettings">{{
+						<n-button v-if="principal?.super" text type="primary" @click="jumpToAiSettings">{{
 							$t('template.createTpl.buttons.configureNow')
 						}}</n-button>
 					</template>
@@ -55,13 +57,14 @@
 				{{ $t('template.createTpl.notices.invalidBrandDomain') }},
 				<n-popover trigger="hover" placement="right">
 					<template #trigger>
-						<n-button text type="primary" @click="jumpToDomainEdit">{{
+						<n-button v-if="principal?.super" text type="primary" @click="jumpToDomainEdit">{{
 							$t('template.createTpl.buttons.createNow')
 						}}</n-button>
 					</template>
 					<n-image :src="brandInfoNotice" width="600"></n-image>
 				</n-popover>
 			</div>
+			</template>
 		</div>
 
 		<template #footer>
@@ -90,13 +93,13 @@ const workbenchActive = useWorkbenchActivity()
 import { instance } from '@/api'
 import { createAiTemplate } from '../pages/AITemplate/controller'
 import { useGlobalStore } from '@/store'
-import { checkAiConfiguration, initAiConfiguration } from '@/api/modules/domain'
+import { initAiConfiguration } from '@/api/modules/domain'
 import aiModelNotice from '@/assets/images/template/model-notice.png'
 import brandInfoNotice from '@/assets/images/template/create-brand-info.png'
 import { SelectOption } from 'naive-ui'
-import { isObject, Message } from '@/utils'
+import { Message } from '@/utils'
 import { updateHasBrandInfo } from '@/views/domain/pages/editDomain/controller/domainConfiguration.controller'
-import { MailDomain } from '@/views/domain/interface'
+import { can, principal } from '@/features/workspace/api'
 // import { TemplateStore } from '../pages/AITemplate/dto'
 
 // const store = inject<TemplateStore>('modelStore')!
@@ -113,6 +116,7 @@ const show = ref(false)
 const emits = defineEmits(['confirmType', 'hasCreateTpl'])
 const domainList = ref<any>([])
 const aiConfigurationStatus = ref(false)
+const canAi = ref(false)
 
 const computedMethodsList = computed(() => {
 	if (props.onlyAi) {
@@ -153,7 +157,7 @@ const domainListHasBrandInfo = computed(() => {
  * @description Whether the button can be used
  */
 const canNotUse = computed(() => {
-	if (choosedMethod.value == 'AI' && domainListHasBrandInfo.value.length == 0) {
+	if (choosedMethod.value == 'AI' && (!canAi.value || domainListHasBrandInfo.value.length == 0 || (!principal.value?.super && noticeShowFlag.value === 'invalid-brand-domain'))) {
 		return true
 	}
 	return false
@@ -163,11 +167,13 @@ const canNotUse = computed(() => {
  * @description open modal
  */
 async function open() {
-	const res = await checkAiConfiguration()
-	if (isObject<{ is_configured: boolean }>(res)) {
-		aiConfigurationStatus.value = res.is_configured
-	}
-	await getDomainList()
+	if (!can('template:create')) return
+	const res = await instance.get('/email_template/options')
+	aiConfigurationStatus.value = !!res.is_configured
+	canAi.value = !!res.can_ai && can('template:update')
+	domainList.value = res.domains || []
+	sourceDomain.value = domainListHasBrandInfo.value[0]?.domain || ''
+	choosedMethod.value = canAi.value ? 'AI' : 'HTML'
 
 	if (globalStore.domainSource) {
 		globalStore.domainSource = sourceDomain.value
@@ -186,8 +192,10 @@ function close() {
  * @description jump
  */
 async function createTemplate() {
+	if (!can('template:create')) return
+	if (choosedMethod.value === 'AI' && canNotUse.value) return
 	if (choosedMethod.value == 'AI') {
-		if (noticeShowFlag.value == 'invalid-brand-domain') {
+		if (noticeShowFlag.value == 'invalid-brand-domain' && principal.value?.super) {
 			const currentDomain = domainList.value.find((item: any) => item.domain === sourceDomain.value)
 			try {
 				await initAiConfiguration({
@@ -203,10 +211,12 @@ async function createTemplate() {
 		const chatId = await createAiTemplate(sourceDomain.value)
 		if (chatId) {
 			globalStore.domainSource = sourceDomain.value
+			close()
 			router.push({ name: 'ai-template', params: { chatId } })
 		}
 	} else {
 		emits('confirmType', choosedMethod.value)
+		close()
 	}
 }
 
@@ -266,31 +276,6 @@ defineExpose({
 /**
  * @description Get domain list
  */
-async function getDomainList() {
-	const res = await instance.get('/domains/list', {
-		params: {
-			page: 1,
-			page_size: 100,
-		},
-	})
-	if (isObject<{ list: MailDomain[] }>(res)) {
-		domainList.value = res.list || []
-	}
-	currentDomainOption.value =
-		domainList.value.find((item: SelectOption) => item.domain === sourceDomain.value) || null
-	if (domainList.value.length == 0) {
-		globalStore.domainSource = ''
-		sourceDomain.value = ''
-		return
-	}
-	if (globalStore.domainSource) {
-		sourceDomain.value = globalStore.domainSource
-	}
-	if (domainListHasBrandInfo.value.length > 0) {
-		sourceDomain.value = domainListHasBrandInfo.value[0].domain
-		globalStore.domainSource = domainListHasBrandInfo.value[0].domain
-	}
-}
 </script>
 
 <style scoped lang="scss">
@@ -352,4 +337,5 @@ async function getDomainList() {
 		color: var(--color-text-3);
 	}
 }
+.choose-item.disabled { opacity: .5; cursor: not-allowed; }
 </style>

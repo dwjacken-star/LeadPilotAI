@@ -16,7 +16,7 @@ export function scopedBusinessView(
 		setup() {
 			const route = useRoute()
 			return () =>
-				principal.value?.super
+				principal.value?.super || section === 'templates'
 					? h(legacyView)
 					: h(scopedView, {
 							key: route.path,

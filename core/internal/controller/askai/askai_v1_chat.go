@@ -3,6 +3,7 @@ package askai
 import (
 	v1 "billionmail-core/api/askai/v1"
 	"billionmail-core/internal/service/askai"
+	"billionmail-core/internal/service/governance"
 	"context"
 )
 
@@ -19,6 +20,20 @@ func (c *ControllerV1) CreateChat(ctx context.Context, req *v1.CreateChatReq) (r
 	if err != nil {
 		res.SetError(err)
 	} else {
+		p, e := governance.RequestPrincipal(ctx)
+		if e != nil {
+			return nil, e
+		}
+		if p != nil {
+			temp, e := askai.GetTempChat(chatId)
+			if e != nil {
+				return nil, e
+			}
+			temp.OwnerID, temp.DeptID = p.ID, p.DeptID
+			if e = askai.SaveTempChat(chatId, temp); e != nil {
+				return nil, e
+			}
+		}
 		res.Data = map[string]string{"chatId": chatId}
 		res.SetSuccess("Chat created successfully")
 	}

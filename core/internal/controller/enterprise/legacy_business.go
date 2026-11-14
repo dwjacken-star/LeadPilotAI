@@ -27,11 +27,20 @@ var legacyBusinessRoutes = map[string]businessRoute{
 	"/api/batch_mail/task/pause":             {"POST", "campaign:pause", "email_tasks", "task_id", "pause"},
 	"/api/batch_mail/task/resume":            {"POST", "campaign:publish", "email_tasks", "task_id", "publish"},
 	"/api/batch_mail/task/send_test":         {"POST", "campaign:publish", "", "", ""},
+	"/api/email_template/list":               {"GET", "template:list", "", "", ""},
+	"/api/email_template/create":             {"POST", "template:create", "", "", ""},
+	"/api/email_template/update":             {"POST", "template:update", "email_templates", "id", ""},
+	"/api/email_template/delete":             {"POST", "template:delete", "email_templates", "id", ""},
+	"/api/email_template/copy":               {"POST", "template:create", "", "", ""},
+	"/api/email_template/options":            {"GET", "template:create", "", "", ""},
 	"/api/email_template/all":                {"GET", "template:list", "", "", ""},
 	"/api/email_template/get":                {"GET", "template:list", "email_templates", "id", ""},
 }
 
 func legacyBusinessAccess(r *ghttp.Request) bool {
+	if templateAIAccess(r) {
+		return true
+	}
 	rule, ok := legacyBusinessRoutes[r.URL.Path]
 	if !ok {
 		return false

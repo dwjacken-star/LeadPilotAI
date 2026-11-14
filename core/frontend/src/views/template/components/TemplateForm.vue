@@ -49,6 +49,7 @@
 import {uiText} from '@/i18n/labels'
 import { UploadFileInfo } from 'naive-ui'
 import { useModal } from '@/hooks/modal/useModal'
+import { can } from '@/features/workspace/api'
 import { addTemplate, updateTemplate } from '@/api/modules/market/template'
 import type { Template } from '../interface'
 
@@ -102,7 +103,7 @@ const [Modal, modalApi] = useModal({
 			const state = modalApi.getState<{ isEdit: boolean; type: number; row: Template }>()
 			const { row } = state
 			isEdit.value = state.isEdit
-			if (state.type)  {
+			if (state.type !== undefined)  {
 				form.add_type = state.type
 			}
 			if (row) {
@@ -121,6 +122,7 @@ const [Modal, modalApi] = useModal({
 		}
 	},
 	onConfirm: async () => {
+		if (!can(isEdit.value ? 'template:update' : 'template:create')) return false
 		if (isEdit.value) {
 			await updateTemplate({ id: id.value, ...toRaw(form) })
 		} else {

@@ -5,6 +5,14 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
+type OptionsReq struct {
+	g.Meta `path:"/email_template/options" method:"get" tags:"EmailTemplate" summary:"Scoped template creation options"`
+}
+type OptionsRes struct {
+	api_v1.StandardRes
+	Data interface{} `json:"data"`
+}
+
 // EmailTemplate defines the email template entity
 type EmailTemplate struct {
 	Id         int    `json:"id"          description:"Template ID"     orm:"id"`
@@ -14,6 +22,9 @@ type EmailTemplate struct {
 	Render     string `json:"drag_data"      description:"Render Data"     orm:"render"`
 	CreateTime int    `json:"create_time" description:"Create Time"     orm:"create_time"`
 	UpdateTime int    `json:"update_time" description:"Update Time"     orm:"update_time"`
+	CanUpdate  bool   `json:"can_update" orm:"-"`
+	CanDelete  bool   `json:"can_delete" orm:"-"`
+	CanCopy    bool   `json:"can_copy" orm:"-"`
 	Chat_id    string `json:"chat_id"     description:"Exclusive AI Email"   orm:"chat_id"`
 }
 
